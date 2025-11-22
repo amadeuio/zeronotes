@@ -8,14 +8,6 @@ const Label = {
     return result.rows;
   },
 
-  findById: async (id) => {
-    const result = await pool.query(
-      'SELECT * FROM labels WHERE id = $1',
-      [id]
-    );
-    return result.rows[0];
-  },
-
   create: async (name) => {
     const result = await pool.query(
       'INSERT INTO labels (name) VALUES ($1) RETURNING *',

@@ -9,21 +9,6 @@ const getAllLabels = async (req, res, next) => {
   }
 };
 
-const getLabelById = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const label = await Label.findById(id);
-
-    if (!label) {
-      return res.status(404).json({ error: 'Label not found' });
-    }
-
-    res.json(label);
-  } catch (error) {
-    next(error);
-  }
-};
-
 const createLabel = async (req, res, next) => {
   try {
     const { name } = req.body;
@@ -77,7 +62,6 @@ const deleteLabel = async (req, res, next) => {
 
 module.exports = {
   getAllLabels,
-  getLabelById,
   createLabel,
   updateLabel,
   deleteLabel,

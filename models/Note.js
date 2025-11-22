@@ -23,33 +23,10 @@ const Note = {
     return result.rows;
   },
 
-  findById: async (id) => {
+  create: async (title, content, colorId = 'default', isPinned = false, isArchived = false) => {
     const result = await pool.query(
-      `SELECT 
-        n.*,
-        COALESCE(
-          json_agg(
-            json_build_object(
-              'id', l.id,
-              'name', l.name
-            )
-          ) FILTER (WHERE l.id IS NOT NULL),
-          '[]'::json
-        ) as labels
-      FROM notes n
-      LEFT JOIN note_labels nl ON n.id = nl.note_id
-      LEFT JOIN labels l ON nl.label_id = l.id
-      WHERE n.id = $1
-      GROUP BY n.id`,
-      [id]
-    );
-    return result.rows[0];
-  },
-
-  create: async (title, content, colorId = 'default', isPinned = false, isArchived = false, isTrashed = false) => {
-    const result = await pool.query(
-      'INSERT INTO notes (title, content, color_id, is_pinned, is_archived, is_trashed) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [title, content, colorId, isPinned, isArchived, isTrashed]
+      'INSERT INTO notes (title, content, color_id, is_pinned, is_archived) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [title, content, colorId, isPinned, isArchived]
     );
     return result.rows[0];
   },
