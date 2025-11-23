@@ -1,5 +1,5 @@
+import { labelsApi } from '@/api';
 import { selectActions, selectNotes, useStore } from '@/store';
-import { labelsApi } from '../api/labels';
 
 export const useLabels = () => {
   const actions = useStore(selectActions);

@@ -1,7 +1,6 @@
 import { selectActions, useStore } from '@/store';
 import { useEffect, useState } from 'react';
-import { labelsApi } from '../api/labels';
-import { notesApi } from '../api/notes';
+import { labelsApi, notesApi } from '../api';
 
 export const useFetchApp = () => {
   const actions = useStore(selectActions);

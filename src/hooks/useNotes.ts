@@ -1,6 +1,6 @@
+import { notesApi } from '@/api';
 import { selectActions, selectNotes, useStore } from '@/store';
 import type { DraftNote } from '@/types';
-import { notesApi } from '../api/notes';
 
 export const useNotes = () => {
   const actions = useStore(selectActions);
