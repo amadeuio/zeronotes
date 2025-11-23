@@ -1,8 +1,10 @@
 export { useClickOutside } from './useClickOutside';
 export { useDrag } from './useDrag';
 export { useEscapeKey } from './useEscapeKey';
+export { useLabels } from './useLabels';
 export { useMobile } from './useMobile';
 export { useMountDelay } from './useMountDelay';
+export { useNotes } from './useNotes';
 export { useNoteTransition } from './useNoteTransition';
 export { useOverflowCorrection } from './useOverflowCorrection';
 export { useSetGridColumns } from './useSetGridColumns';
