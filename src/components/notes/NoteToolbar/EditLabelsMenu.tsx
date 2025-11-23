@@ -1,5 +1,6 @@
 import { Icon } from '@/components';
-import { selectActions, useSelectFilteredLabels, useSelectNoteHasLabel, useStore } from '@/store';
+import { useLabels, useNotes } from '@/hooks';
+import { useSelectFilteredLabels, useSelectNoteHasLabel } from '@/store';
 import type { DisplayNote, Label } from '@/types';
 import { useState } from 'react';
 
@@ -64,14 +65,14 @@ interface MenuItemProps {
 }
 
 const MenuItem = ({ noteId, label }: MenuItemProps) => {
-  const { notes } = useStore(selectActions);
+  const { toggleLabel } = useNotes();
   const isChecked = useSelectNoteHasLabel(noteId, label.id);
 
   return (
     <div
       onClick={(e) => {
         e.stopPropagation();
-        notes.toggleLabel(noteId, label.id);
+        toggleLabel(noteId, label.id);
       }}
       className="flex cursor-pointer items-center gap-x-4 py-2 break-all text-white hover:bg-white/8"
     >
@@ -88,10 +89,10 @@ interface LabelNoteMenuProps {
 const EditLabelsMenu = ({ note }: LabelNoteMenuProps) => {
   const [search, setSearch] = useState('');
   const filteredLabels = useSelectFilteredLabels(search);
-  const { labels } = useStore(selectActions);
+  const { createLabelAndAddToNote } = useLabels();
 
   const handleCreateLabel = () => {
-    labels.createAndAddToNote(search, note.id);
+    createLabelAndAddToNote(search, note.id);
     setSearch('');
   };
 

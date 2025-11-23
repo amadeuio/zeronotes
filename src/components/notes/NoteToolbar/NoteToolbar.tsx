@@ -1,6 +1,6 @@
 import { IconButton, Menu, MenuTrigger } from '@/components';
 import { COLORS } from '@/constants';
-import { selectActions, useStore, type Store } from '@/store';
+import { useNotes } from '@/hooks';
 import type { DisplayNote } from '@/types';
 import { cn } from '@/utils';
 import { useState, type ReactNode } from 'react';
@@ -9,12 +9,12 @@ import EditLabelsMenu from './EditLabelsMenu';
 
 interface MoreMenuProps {
   note: DisplayNote;
-  notes: Store['actions']['notes'];
   children: ReactNode;
   onOpenChange?: (isOpen: boolean) => void;
 }
 
-const MoreMenu = ({ note, notes, children, onOpenChange }: MoreMenuProps) => {
+const MoreMenu = ({ note, children, onOpenChange }: MoreMenuProps) => {
+  const { trashNote } = useNotes();
   const [isEditLabel, setIsEditLabel] = useState(false);
 
   return (
@@ -32,7 +32,7 @@ const MoreMenu = ({ note, notes, children, onOpenChange }: MoreMenuProps) => {
             items={[
               {
                 label: 'Delete note',
-                action: () => notes.trash(note.id),
+                action: () => trashNote(note.id),
               },
               {
                 label: note.labels.length > 0 ? 'Change labels' : 'Add label',
@@ -55,7 +55,7 @@ interface NoteToolbarProps {
 }
 
 const NoteToolbar = ({ note, className, onMenuOpenChange }: NoteToolbarProps) => {
-  const { notes } = useStore(selectActions);
+  const { restoreNote, removeNote, updateColor, toggleArchive } = useNotes();
 
   return (
     <div className={cn('flex items-center', className)}>
@@ -67,7 +67,7 @@ const NoteToolbar = ({ note, className, onMenuOpenChange }: NoteToolbarProps) =>
             size={18}
             label="Restore"
             iconName="restore_from_trash"
-            onClick={() => notes.restore(note.id)}
+            onClick={() => restoreNote(note.id)}
           />
           <IconButton
             className="p-2"
@@ -75,7 +75,7 @@ const NoteToolbar = ({ note, className, onMenuOpenChange }: NoteToolbarProps) =>
             size={18}
             label="Delete forever"
             iconName="delete_forever"
-            onClick={() => notes.remove(note.id)}
+            onClick={() => removeNote(note.id)}
           />
         </>
       ) : (
@@ -85,7 +85,7 @@ const NoteToolbar = ({ note, className, onMenuOpenChange }: NoteToolbarProps) =>
               <BackgroundMenu
                 colors={COLORS}
                 selectedColorId={note.colorId}
-                onColorClick={(color) => notes.updateColor(note.id, color.id)}
+                onColorClick={(color) => updateColor(note.id, color.id)}
               />
             }
             onOpenChange={onMenuOpenChange}
@@ -105,9 +105,9 @@ const NoteToolbar = ({ note, className, onMenuOpenChange }: NoteToolbarProps) =>
             label={note.isArchived ? 'Unarchive' : 'Archive'}
             iconName="archive"
             filled={note.isArchived}
-            onClick={() => notes.toggleArchive(note.id)}
+            onClick={() => toggleArchive(note.id)}
           />
-          <MoreMenu note={note} notes={notes} onOpenChange={onMenuOpenChange}>
+          <MoreMenu note={note} onOpenChange={onMenuOpenChange}>
             <IconButton
               className="p-2"
               iconClassName="text-neutral-300"

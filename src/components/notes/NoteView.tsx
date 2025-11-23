@@ -1,6 +1,6 @@
 import { IconButton } from '@/components';
 import { NOTE_WIDTH } from '@/constants';
-import { useDrag, useMountDelay, useUpdateNoteHeight } from '@/hooks';
+import { useDrag, useMountDelay, useNotes, useUpdateNoteHeight } from '@/hooks';
 import {
   selectActions,
   selectFiltersSearch,
@@ -22,7 +22,8 @@ interface NoteViewProps {
 
 const NoteView = ({ note }: NoteViewProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { notes, activeNote } = useStore(selectActions);
+  const { activeNote } = useStore(selectActions);
+  const { togglePin, removeLabel } = useNotes();
   const isActive = useSelectIsNoteActive(note.id);
   const search = useStore(selectFiltersSearch);
   const position = useSelectPositionFromNoteId(note.id, note.isPinned);
@@ -80,17 +81,13 @@ const NoteView = ({ note }: NoteViewProps) => {
             !isMenuOpen && 'opacity-0 group-hover/note:opacity-100',
           )}
           iconClassName="text-neutral-300"
-          onClick={() => notes.togglePin(note.id)}
+          onClick={() => togglePin(note.id)}
         />
         {note.title && <TextView isTitle value={note.title} searchTerm={search} />}
         <TextView value={note.content} searchTerm={search} />
         <div className="flex flex-wrap gap-1.5">
           {note.labels.map((label) => (
-            <Label
-              key={label.id}
-              label={label}
-              onClose={() => notes.removeLabel(note.id, label.id)}
-            />
+            <Label key={label.id} label={label} onClose={() => removeLabel(note.id, label.id)} />
           ))}
         </div>
         <NoteToolbar

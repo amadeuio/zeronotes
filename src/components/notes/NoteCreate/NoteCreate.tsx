@@ -1,7 +1,6 @@
 import { IconButton } from '@/components';
 import { NOTE_WIDTH_EXPANDED } from '@/constants';
-import { useClickOutside } from '@/hooks';
-import { selectActions, useStore } from '@/store';
+import { useClickOutside, useNotes } from '@/hooks';
 import { cn, getColorValue } from '@/utils';
 import { useReducer, useRef, useState, type MouseEvent } from 'react';
 import Label from '../Label';
@@ -17,7 +16,7 @@ interface NoteCreateProps {
 const NoteCreate = ({ onClick, className }: NoteCreateProps) => {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const [state, dispatch] = useReducer(noteReducer, initialState);
-  const { notes } = useStore(selectActions);
+  const { addNote } = useNotes();
   const [isExpanded, setIsExpanded] = useState(false);
   const colorValue = getColorValue(state.colorId);
 
@@ -27,7 +26,7 @@ const NoteCreate = ({ onClick, className }: NoteCreateProps) => {
       setIsExpanded(false);
       return;
     }
-    notes.add(state);
+    addNote(state);
     dispatch({ type: 'RESET' });
     setIsExpanded(false);
   };

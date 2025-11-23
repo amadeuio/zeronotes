@@ -1,5 +1,5 @@
 import { IconButton } from '@/components';
-import { useEscapeKey, useNoteTransition } from '@/hooks';
+import { useEscapeKey, useNoteTransition, useNotes } from '@/hooks';
 import {
   selectActions,
   selectActiveNoteDisplay,
@@ -13,7 +13,8 @@ import TextEdit from './TextEdit';
 const NoteActive = () => {
   const note = useStore(selectActiveNoteDisplay)!;
   const position = useStore(selectActiveNotePosition);
-  const { activeNote, notes } = useStore(selectActions);
+  const { activeNote } = useStore(selectActions);
+  const { togglePin, updateTitle, updateContent, removeLabel } = useNotes();
   const { positionStyles, backdropStyles, initiateClose } = useNoteTransition({
     position,
     onClose: () => activeNote.set({ id: null, position: null }),
@@ -41,27 +42,23 @@ const NoteActive = () => {
           filled={note.isPinned}
           className="absolute top-2 right-2 p-1"
           iconClassName="text-neutral-300"
-          onClick={() => notes.togglePin(note.id)}
+          onClick={() => togglePin(note.id)}
         />
         <TextEdit
           isTitle
           value={note.title}
-          onChange={(value: string) => notes.updateTitle(note.id, value)}
+          onChange={(value: string) => updateTitle(note.id, value)}
           placeholder="Title"
           className="pr-6"
         />
         <TextEdit
           value={note.content}
-          onChange={(value: string) => notes.updateContent(note.id, value)}
+          onChange={(value: string) => updateContent(note.id, value)}
           placeholder="Take a note..."
         />
         <div className="flex flex-wrap gap-1.5">
           {note.labels.map((label) => (
-            <Label
-              key={label.id}
-              label={label}
-              onClose={() => notes.removeLabel(note.id, label.id)}
-            />
+            <Label key={label.id} label={label} onClose={() => removeLabel(note.id, label.id)} />
           ))}
         </div>
         <NoteToolbar note={note} className="absolute bottom-1.5 left-1.5" />

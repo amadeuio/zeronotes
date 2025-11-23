@@ -1,5 +1,6 @@
 import { IconButton } from '@/components';
-import { selectActions, selectLabels, useStore } from '@/store';
+import { useLabels } from '@/hooks';
+import { selectLabels, useStore } from '@/store';
 import { cn } from '@/utils';
 import { useState } from 'react';
 
@@ -29,11 +30,11 @@ const LabelInput = ({ value, onChange, placeholder, className, onClick }: LabelI
 const CreateLabel = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState('');
-  const { labels } = useStore(selectActions);
+  const { createLabel } = useLabels();
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (name.trim()) {
-      labels.create(name.trim());
+      await createLabel(name.trim());
       setName('');
       setIsEditing(false);
     }
@@ -88,11 +89,11 @@ interface EditLabelProps {
 const EditLabel = ({ id, name }: EditLabelProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [labelName, setLabelName] = useState(name);
-  const { labels } = useStore(selectActions);
+  const { updateLabel, deleteLabel } = useLabels();
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (labelName.trim()) {
-      labels.edit(id, labelName.trim());
+      await updateLabel(id, labelName.trim());
       setIsEditing(false);
     }
   };
@@ -126,7 +127,7 @@ const EditLabel = ({ id, name }: EditLabelProps) => {
             onClick={() => setIsEditing(true)}
           />
         )}
-        <IconButton iconName="delete" label="Delete" size={18} onClick={() => labels.remove(id)} />
+        <IconButton iconName="delete" label="Delete" size={18} onClick={() => deleteLabel(id)} />
       </div>
     </div>
   );

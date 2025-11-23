@@ -1,4 +1,4 @@
-import { labels as initialLabels, notes as initialNotes } from '@/data';
+  import { labels as initialLabels, notes as initialNotes } from '@/data';
 import type { DraftNote, Filters, Label, Note } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
@@ -21,17 +21,9 @@ export interface Store {
   };
   actions: {
     notes: {
-      add: (note: DraftNote) => void;
-      remove: (id: string) => void;
-      updateTitle: (id: string, title: string) => void;
-      updateContent: (id: string, content: string) => void;
-      updateColor: (id: string, colorId: string) => void;
-      removeLabel: (noteId: string, labelId: string) => void;
-      toggleLabel: (noteId: string, labelId: string) => void;
-      toggleArchive: (id: string) => void;
-      togglePin: (id: string) => void;
-      trash: (id: string) => void;
-      restore: (id: string) => void;
+      create: (note: DraftNote) => void;
+      update: (id: string, note: Partial<Note>) => void;
+      delete: (id: string) => void;
     };
     notesOrder: {
       update: (noteId: string, overId: string) => void;
@@ -46,10 +38,9 @@ export interface Store {
       }) => void;
     };
     labels: {
-      create: (name: string) => Label;
-      createAndAddToNote: (name: string, noteId: string) => void;
-      edit: (id: string, newName: string) => void;
-      remove: (id: string) => void;
+      create: (label: Omit<Label, 'id'>) => Label;
+      update: (id: string, label: Omit<Label, 'id'>) => void;
+      delete: (id: string) => void;
     };
     filters: {
       set: (filters: Partial<Filters>) => void;
@@ -84,7 +75,7 @@ export const useStore = create<Store>()(
     },
     actions: {
       notes: {
-        add: (note) => {
+        create: (note) => {
           const { labels, ...rest } = note;
           const newId = uuidv4();
           set((state) => ({
@@ -101,7 +92,12 @@ export const useStore = create<Store>()(
             noteHeights: { ...state.noteHeights, [newId]: null },
           }));
         },
-        remove: (id) => {
+        update: (id, note) => {
+          set((state) => ({
+            notes: state.notes.map((n) => (n.id === id ? { ...n, ...note } : n)),
+          }));
+        },
+        delete: (id) => {
           set((state) => {
             const { [id]: _, ...restHeights } = state.noteHeights;
             return {
@@ -112,78 +108,6 @@ export const useStore = create<Store>()(
                 state.activeNote.id === id ? { id: null, position: null } : state.activeNote,
             };
           });
-        },
-        updateTitle: (id, title) => {
-          set((state) => ({
-            notes: state.notes.map((note) => (note.id === id ? { ...note, title } : note)),
-          }));
-        },
-        updateContent: (id, content) => {
-          set((state) => ({
-            notes: state.notes.map((note) => (note.id === id ? { ...note, content } : note)),
-          }));
-        },
-        updateColor: (id, colorId) => {
-          set((state) => ({
-            notes: state.notes.map((note) => (note.id === id ? { ...note, colorId } : note)),
-          }));
-        },
-        removeLabel: (noteId, labelId) => {
-          set((state) => ({
-            notes: state.notes.map((note) =>
-              note.id === noteId
-                ? { ...note, labelIds: note.labelIds.filter((l) => l !== labelId) }
-                : note,
-            ),
-          }));
-        },
-        toggleLabel: (noteId, labelId) => {
-          set((state) => ({
-            notes: state.notes.map((note) =>
-              note.id === noteId
-                ? {
-                    ...note,
-                    labelIds: note.labelIds.includes(labelId)
-                      ? note.labelIds.filter((l) => l !== labelId)
-                      : [...note.labelIds, labelId],
-                  }
-                : note,
-            ),
-          }));
-        },
-        toggleArchive: (id) => {
-          set((state) => ({
-            notes: state.notes.map((note) =>
-              note.id === id ? { ...note, isArchived: !note.isArchived } : note,
-            ),
-            activeNote:
-              state.activeNote.id === id ? { id: null, position: null } : state.activeNote,
-          }));
-        },
-        togglePin: (id) => {
-          set((state) => ({
-            notes: state.notes.map((note) =>
-              note.id === id ? { ...note, isPinned: !note.isPinned } : note,
-            ),
-          }));
-        },
-        trash: (id) => {
-          set((state) => ({
-            notes: state.notes.map((note) =>
-              note.id === id
-                ? { ...note, isTrashed: true, isPinned: false, isArchived: false }
-                : note,
-            ),
-            activeNote:
-              state.activeNote.id === id ? { id: null, position: null } : state.activeNote,
-          }));
-        },
-        restore: (id) => {
-          set((state) => ({
-            notes: state.notes.map((note) =>
-              note.id === id ? { ...note, isTrashed: false } : note,
-            ),
-          }));
         },
       },
       notesOrder: {
@@ -217,31 +141,18 @@ export const useStore = create<Store>()(
         },
       },
       labels: {
-        create: (name: string) => {
+        create: (label) => {
           const newId = uuidv4();
-          const newLabel = { id: newId, name };
+          const newLabel = { id: newId, ...label };
           set((state) => ({ labels: [...state.labels, newLabel] }));
           return newLabel;
         },
-        createAndAddToNote: (name, noteId) => {
-          set((state) => {
-            const newId = uuidv4();
-            return {
-              notes: state.notes.map((note) =>
-                note.id === noteId ? { ...note, labelIds: [...note.labelIds, newId] } : note,
-              ),
-              labels: [...state.labels, { id: newId, name }],
-            };
-          });
-        },
-        edit: (id, newName) => {
+        update: (id, label) => {
           set((state) => ({
-            labels: state.labels.map((label) =>
-              label.id === id ? { ...label, name: newName } : label,
-            ),
+            labels: state.labels.map((l) => (l.id === id ? { ...l, ...label } : l)),
           }));
         },
-        remove: (id) => {
+        delete: (id) => {
           set((state) => ({
             notes: state.notes.map((note) => ({
               ...note,
