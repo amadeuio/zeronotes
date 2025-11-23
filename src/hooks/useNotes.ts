@@ -1,10 +1,25 @@
 import { selectActions, selectNotes, useStore } from '@/store';
 import type { DraftNote } from '@/types';
+import { useEffect } from 'react';
 import { notesApi } from '../api/notes';
 
 export const useNotes = () => {
   const actions = useStore(selectActions);
   const notes = useStore(selectNotes);
+
+  useEffect(() => {
+    fetchNotes();
+  }, []);
+
+  const fetchNotes = async () => {
+    try {
+      const notes = await notesApi.getAll();
+      actions.notes.set(notes);
+      actions.notesOrder.set(notes.map((n) => n.id));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const addNote = async (note: DraftNote) => {
     actions.notes.create(note);

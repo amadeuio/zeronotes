@@ -27,7 +27,7 @@ export const getColorValue = (colorId: string) =>
   COLORS.find((item) => item.id === colorId)?.value ?? null;
 
 export const mapNoteToDisplay = (note: Note, labels: Label[]): DisplayNote => {
-  const { labelIds, colorId, ...rest } = note;
+  const { labelIds = [], colorId, ...rest } = note;
   const noteLabels = labels.filter((label) => labelIds.includes(label.id));
   const colorValue = getColorValue(colorId);
 

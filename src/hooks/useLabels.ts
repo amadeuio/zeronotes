@@ -1,9 +1,23 @@
 import { selectActions, selectNotes, useStore } from '@/store';
+import { useEffect } from 'react';
 import { labelsApi } from '../api/labels';
 
 export const useLabels = () => {
   const actions = useStore(selectActions);
   const notes = useStore(selectNotes);
+
+  useEffect(() => {
+    fetchLabels();
+  }, []);
+
+  const fetchLabels = async () => {
+    try {
+      const labels = await labelsApi.getAll();
+      actions.labels.set(labels);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const createLabel = async (name: string) => {
     actions.labels.create({ name });

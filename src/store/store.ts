@@ -1,4 +1,3 @@
-  import { labels as initialLabels, notes as initialNotes } from '@/data';
 import type { DraftNote, Filters, Label, Note } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
@@ -21,11 +20,13 @@ export interface Store {
   };
   actions: {
     notes: {
+      set: (notes: Note[]) => void;
       create: (note: DraftNote) => void;
       update: (id: string, note: Partial<Note>) => void;
       delete: (id: string) => void;
     };
     notesOrder: {
+      set: (notesOrder: string[]) => void;
       update: (noteId: string, overId: string) => void;
     };
     noteHeights: {
@@ -38,6 +39,7 @@ export interface Store {
       }) => void;
     };
     labels: {
+      set: (labels: Label[]) => void;
       create: (label: Omit<Label, 'id'>) => Label;
       update: (id: string, label: Omit<Label, 'id'>) => void;
       delete: (id: string) => void;
@@ -56,25 +58,18 @@ export interface Store {
 
 export const useStore = create<Store>()(
   devtools((set) => ({
-    notes: initialNotes,
-    notesOrder: initialNotes.map((n: Note) => n.id),
+    notes: [],
+    notesOrder: [],
     noteHeights: {},
-    activeNote: {
-      id: null,
-      position: null,
-    },
-    labels: initialLabels,
-    filters: {
-      search: '',
-      view: { type: 'notes' },
-    },
-    ui: {
-      isEditLabelsMenuOpen: false,
-      isSidebarCollapsed: false,
-      gridColumns: 5,
-    },
+    activeNote: { id: null, position: null },
+    labels: [],
+    filters: { search: '', view: { type: 'notes' } },
+    ui: { isEditLabelsMenuOpen: false, isSidebarCollapsed: false, gridColumns: 5 },
     actions: {
       notes: {
+        set: (notes) => {
+          set({ notes });
+        },
         create: (note) => {
           const { labels, ...rest } = note;
           const newId = uuidv4();
@@ -111,6 +106,9 @@ export const useStore = create<Store>()(
         },
       },
       notesOrder: {
+        set: (notesOrder) => {
+          set({ notesOrder });
+        },
         update: (noteId, overId) => {
           set((state) => {
             const newOrder = [...state.notesOrder];
@@ -141,6 +139,9 @@ export const useStore = create<Store>()(
         },
       },
       labels: {
+        set: (labels) => {
+          set({ labels });
+        },
         create: (label) => {
           const newId = uuidv4();
           const newLabel = { id: newId, ...label };
