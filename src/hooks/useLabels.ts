@@ -1,5 +1,6 @@
 import { labelsApi, withApiStatus } from '@/api';
 import { selectActions, useStore } from '@/store';
+import type { Label } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useLabels = () => {
@@ -23,5 +24,13 @@ export const useLabels = () => {
     await api.delete(id);
   };
 
-  return { create, update, remove };
+  const createAndCallAction = async (name: string, action: (label: Label) => void) => {
+    const id = uuidv4();
+    const newLabel = { id, name };
+    action(newLabel);
+    actions.labels.create(newLabel);
+    await api.create(newLabel);
+  };
+
+  return { create, update, remove, createAndCallAction };
 };

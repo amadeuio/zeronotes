@@ -1,6 +1,6 @@
 import { Icon } from '@/components';
 import { useLabels } from '@/hooks';
-import { useSelectFilteredLabels, useStore } from '@/store';
+import { useSelectFilteredLabels } from '@/store';
 import type { DraftNote, Label } from '@/types';
 import { useState, type Dispatch } from 'react';
 import type { NoteAction } from '../reducer';
@@ -89,14 +89,10 @@ export interface EditLabelsMenuProps {
 const EditLabelsMenu = ({ state, dispatch }: EditLabelsMenuProps) => {
   const [search, setSearch] = useState('');
   const filteredLabels = useSelectFilteredLabels(search);
-  const { create } = useLabels();
+  const { createAndCallAction } = useLabels();
 
   const handleCreateLabel = async () => {
-    await create(search);
-    const newLabel = useStore.getState().labels.find((l) => l.name === search);
-    if (newLabel) {
-      dispatch({ type: 'ADD_LABEL', payload: newLabel });
-    }
+    await createAndCallAction(search, (label) => dispatch({ type: 'ADD_LABEL', payload: label }));
     setSearch('');
   };
 
