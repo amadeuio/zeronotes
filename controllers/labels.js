@@ -11,13 +11,17 @@ const getAllLabels = async (req, res, next) => {
 
 const createLabel = async (req, res, next) => {
   try {
-    const { name } = req.body;
+    const labelData = req.body;
 
-    if (!name) {
-      return res.status(400).json({ error: 'Name is required' });
+    if (!labelData.id) {
+      return res.status(400).json({ error: 'Label id is required' });
     }
 
-    const label = await Label.create(name);
+    if (!labelData.name) {
+      return res.status(400).json({ error: 'Label name is required' });
+    }
+
+    const label = await Label.create(labelData);
     res.status(201).json(label);
   } catch (error) {
     next(error);

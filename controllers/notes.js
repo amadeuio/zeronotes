@@ -1,4 +1,5 @@
 const Note = require('../models/Note');
+const Label = require('../models/Label');
 
 const getAllNotes = async (req, res, next) => {
   try {
@@ -114,6 +115,37 @@ const removeLabelFromNote = async (req, res, next) => {
   }
 };
 
+const createLabelAndAddToNote = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const labelData = req.body;
+
+    if (!labelData.id) {
+      return res.status(400).json({ error: 'Label id is required' });
+    }
+
+    if (!labelData.name) {
+      return res.status(400).json({ error: 'Label name is required' });
+    }
+
+    const note = await Note.findById(id);
+
+    if (!note) {
+      return res.status(404).json({ error: 'Note not found' });
+    }
+
+    const label = await Label.create(labelData.id, labelData.name);
+    const association = await Note.addLabel(id, label.id);
+
+    res.status(201).json({
+      label,
+      association,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAllNotes,
   createNote,
@@ -121,5 +153,6 @@ module.exports = {
   deleteNote,
   addLabelToNote,
   removeLabelFromNote,
+  createLabelAndAddToNote,
 };
 

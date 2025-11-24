@@ -8,10 +8,10 @@ const Label = {
     return result.rows;
   },
 
-  create: async (name) => {
+  create: async (id, name) => {
     const result = await pool.query(
-      'INSERT INTO labels (name) VALUES ($1) RETURNING *',
-      [name]
+      'INSERT INTO labels (id, name) VALUES ($1, $2) RETURNING *',
+      [id, name]
     );
     return result.rows[0];
   },
