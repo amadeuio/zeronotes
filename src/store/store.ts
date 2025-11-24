@@ -1,5 +1,4 @@
 import type { DraftNote, Filters, Label, Note } from '@/types';
-import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
@@ -40,7 +39,7 @@ export interface Store {
     };
     labels: {
       set: (labels: Label[]) => void;
-      create: (label: Omit<Label, 'id'>) => Label;
+      create: (label: Label) => void;
       update: (id: string, label: Omit<Label, 'id'>) => void;
       delete: (id: string) => void;
     };
@@ -140,10 +139,7 @@ export const useStore = create<Store>()(
           set({ labels });
         },
         create: (label) => {
-          const newId = uuidv4();
-          const newLabel = { id: newId, ...label };
-          set((state) => ({ labels: [...state.labels, newLabel] }));
-          return newLabel;
+          set((state) => ({ labels: [label, ...state.labels] }));
         },
         update: (id, label) => {
           set((state) => ({
