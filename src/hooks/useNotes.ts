@@ -34,23 +34,14 @@ export const useNotes = () => {
     await notesApi.update(id, { colorId });
   };
 
-  const removeLabel = async (noteId: string, labelId: string) => {
-    const note = notes.find((n) => n.id === noteId);
-    const labelIds = note?.labelIds.filter((id) => id !== labelId) || [];
-
-    actions.notes.update(noteId, { labelIds });
-    await notesApi.update(noteId, { labelIds });
+  const addLabel = async (noteId: string, labelId: string) => {
+    actions.notes.addLabel(noteId, labelId);
+    await notesApi.addLabel(noteId, labelId);
   };
 
-  const toggleLabel = async (noteId: string, labelId: string) => {
-    const note = notes.find((n) => n.id === noteId);
-    if (!note) return;
-    const labelIds = note.labelIds.includes(labelId)
-      ? note.labelIds.filter((id) => id !== labelId)
-      : [...note.labelIds, labelId];
-
-    actions.notes.update(noteId, { labelIds });
-    await notesApi.update(noteId, { labelIds });
+  const removeLabel = async (noteId: string, labelId: string) => {
+    actions.notes.removeLabel(noteId, labelId);
+    await notesApi.removeLabel(noteId, labelId);
   };
 
   const updateArchived = async (id: string, isArchived: boolean) => {
@@ -83,8 +74,8 @@ export const useNotes = () => {
     updateTitle,
     updateContent,
     updateColor,
+    addLabel,
     removeLabel,
-    toggleLabel,
     updateArchived,
     togglePin,
     trashNote,

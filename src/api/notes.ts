@@ -32,4 +32,17 @@ export const notesApi = {
   delete: async (id: string): Promise<void> => {
     await fetch(`${API_URL}/notes/${id}`, { method: 'DELETE' });
   },
+
+  addLabel: async (id: string, labelId: string): Promise<any> => {
+    const res = await fetch(`${API_URL}/notes/${id}/labels/${labelId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    const data = await res.json();
+    return toCamelCase(data);
+  },
+
+  removeLabel: async (id: string, labelId: string): Promise<void> => {
+    await fetch(`${API_URL}/notes/${id}/labels/${labelId}`, { method: 'DELETE' });
+  },
 };

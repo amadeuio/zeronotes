@@ -23,6 +23,8 @@ export interface Store {
       create: (note: DraftNote & { id: string }) => void;
       update: (id: string, note: Partial<Note>) => void;
       delete: (id: string) => void;
+      addLabel: (noteId: string, labelId: string) => void;
+      removeLabel: (noteId: string, labelId: string) => void;
     };
     notesOrder: {
       set: (notesOrder: string[]) => void;
@@ -99,6 +101,22 @@ export const useStore = create<Store>()(
                 state.activeNote.id === id ? { id: null, position: null } : state.activeNote,
             };
           });
+        },
+        addLabel: (noteId, labelId) => {
+          set((state) => ({
+            notes: state.notes.map((note) =>
+              note.id === noteId ? { ...note, labelIds: [...note.labelIds, labelId] } : note,
+            ),
+          }));
+        },
+        removeLabel: (noteId, labelId) => {
+          set((state) => ({
+            notes: state.notes.map((note) =>
+              note.id === noteId
+                ? { ...note, labelIds: note.labelIds.filter((id) => id !== labelId) }
+                : note,
+            ),
+          }));
         },
       },
       notesOrder: {

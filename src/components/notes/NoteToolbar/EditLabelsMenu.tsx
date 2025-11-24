@@ -65,14 +65,18 @@ interface MenuItemProps {
 }
 
 const MenuItem = ({ noteId, label }: MenuItemProps) => {
-  const { toggleLabel } = useNotes();
+  const { addLabel, removeLabel } = useNotes();
   const isChecked = useSelectNoteHasLabel(noteId, label.id);
 
   return (
     <div
       onClick={(e) => {
         e.stopPropagation();
-        toggleLabel(noteId, label.id);
+        if (isChecked) {
+          removeLabel(noteId, label.id);
+        } else {
+          addLabel(noteId, label.id);
+        }
       }}
       className="flex cursor-pointer items-center gap-x-4 py-2 break-all text-white hover:bg-white/8"
     >
