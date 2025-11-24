@@ -21,7 +21,7 @@ const createLabel = async (req, res, next) => {
       return res.status(400).json({ error: 'Label name is required' });
     }
 
-    const label = await Label.create(labelData);
+    const label = await Label.create(labelData.id, labelData.name);
     res.status(201).json(label);
   } catch (error) {
     next(error);
