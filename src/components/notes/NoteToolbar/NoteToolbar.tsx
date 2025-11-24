@@ -55,7 +55,7 @@ interface NoteToolbarProps {
 }
 
 const NoteToolbar = ({ note, className, onMenuOpenChange }: NoteToolbarProps) => {
-  const { restoreNote, removeNote, updateColor, toggleArchive } = useNotes();
+  const { restoreNote, removeNote, updateColor, updateArchived } = useNotes();
 
   return (
     <div className={cn('flex items-center', className)}>
@@ -105,7 +105,7 @@ const NoteToolbar = ({ note, className, onMenuOpenChange }: NoteToolbarProps) =>
             label={note.isArchived ? 'Unarchive' : 'Archive'}
             iconName="archive"
             filled={note.isArchived}
-            onClick={() => toggleArchive(note.id)}
+            onClick={() => updateArchived(note.id, !note.isArchived)}
           />
           <MoreMenu note={note} onOpenChange={onMenuOpenChange}>
             <IconButton

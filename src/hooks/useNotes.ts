@@ -53,11 +53,7 @@ export const useNotes = () => {
     await notesApi.update(noteId, { labelIds });
   };
 
-  const toggleArchive = async (id: string) => {
-    const note = notes.find((n) => n.id === id);
-    if (!note) return;
-    const isArchived = !note.isArchived;
-
+  const updateArchived = async (id: string, isArchived: boolean) => {
     actions.notes.update(id, { isArchived });
     await notesApi.update(id, { isArchived });
   };
@@ -89,7 +85,7 @@ export const useNotes = () => {
     updateColor,
     removeLabel,
     toggleLabel,
-    toggleArchive,
+    updateArchived,
     togglePin,
     trashNote,
     restoreNote,
