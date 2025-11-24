@@ -72,10 +72,54 @@ const deleteNote = async (req, res, next) => {
   }
 };
 
+const addLabelToNote = async (req, res, next) => {
+  try {
+    const { id, labelId } = req.params;
+
+    const note = await Note.findById(id);
+    if (!note) {
+      return res.status(404).json({ error: 'Note not found' });
+    }
+
+    const pool = require('../config/database');
+    const labelResult = await pool.query('SELECT * FROM labels WHERE id = $1', [labelId]);
+    if (labelResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Label not found' });
+    }
+
+    const association = await Note.addLabel(id, labelId);
+    res.status(201).json(association);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const removeLabelFromNote = async (req, res, next) => {
+  try {
+    const { id, labelId } = req.params;
+
+    const note = await Note.findById(id);
+    if (!note) {
+      return res.status(404).json({ error: 'Note not found' });
+    }
+
+    const association = await Note.removeLabel(id, labelId);
+    if (!association) {
+      return res.status(404).json({ error: 'Label association not found' });
+    }
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAllNotes,
   createNote,
   updateNote,
   deleteNote,
+  addLabelToNote,
+  removeLabelFromNote,
 };
 

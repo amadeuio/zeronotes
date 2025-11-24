@@ -115,6 +115,39 @@ const Note = {
     );
     return result.rows[0];
   },
+
+  findById: async (id) => {
+    const result = await pool.query(
+      'SELECT * FROM notes WHERE id = $1',
+      [id]
+    );
+    return result.rows[0];
+  },
+
+  addLabel: async (noteId, labelId) => {
+    const existing = await pool.query(
+      'SELECT * FROM note_labels WHERE note_id = $1 AND label_id = $2',
+      [noteId, labelId]
+    );
+
+    if (existing.rows.length > 0) {
+      return existing.rows[0];
+    }
+
+    const result = await pool.query(
+      'INSERT INTO note_labels (note_id, label_id) VALUES ($1, $2) RETURNING *',
+      [noteId, labelId]
+    );
+    return result.rows[0];
+  },
+
+  removeLabel: async (noteId, labelId) => {
+    const result = await pool.query(
+      'DELETE FROM note_labels WHERE note_id = $1 AND label_id = $2 RETURNING *',
+      [noteId, labelId]
+    );
+    return result.rows[0];
+  },
 };
 
 module.exports = Note;
