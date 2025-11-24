@@ -1,14 +1,17 @@
 import { notesApi } from '@/api';
 import { selectActions, selectNotes, useStore } from '@/store';
 import type { DraftNote } from '@/types';
+import { v4 as uuidv4 } from 'uuid';
 
 export const useNotes = () => {
   const actions = useStore(selectActions);
   const notes = useStore(selectNotes);
 
   const addNote = async (note: DraftNote) => {
-    actions.notes.create(note);
-    await notesApi.create(note);
+    const id = uuidv4();
+    const newNote = { ...note, id };
+    actions.notes.create(newNote);
+    await notesApi.create(newNote);
   };
 
   const removeNote = async (id: string) => {
