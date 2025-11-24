@@ -1,5 +1,5 @@
 import { Icon } from '@/components';
-import { selectActions, selectFiltersView, selectLabels, selectUi, useStore } from '@/store';
+import { selectActions, selectFiltersView, selectLabelsArray, selectUi, useStore } from '@/store';
 import { cn } from '@/utils';
 
 interface SidebarItemProps {
@@ -40,7 +40,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ isMobile }: SidebarProps) => {
-  const labels = useStore(selectLabels);
+  const labels = useStore(selectLabelsArray);
   const view = useStore(selectFiltersView);
   const { filters, ui } = useStore(selectActions);
   const { isSidebarCollapsed } = useStore(selectUi);

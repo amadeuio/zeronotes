@@ -10,8 +10,11 @@ import {
   selectNotesOrder,
 } from './base';
 
-export const selectFilteredNotes = createSelector([selectNotes, selectFilters], (notes, filters) =>
-  notes.filter((n) => filterNote(n, filters)),
+export const selectNotesArray = createSelector([selectNotes], (notes) => Object.values(notes));
+
+export const selectFilteredNotes = createSelector(
+  [selectNotesArray, selectFilters],
+  (notes, filters) => notes.filter((n) => filterNote(n, filters)),
 );
 
 export const selectNotesDisplay = createSelector(
@@ -22,7 +25,7 @@ export const selectNotesDisplay = createSelector(
 export const selectActiveNoteDisplay = createSelector(
   [selectNotes, selectActiveNote, selectLabels],
   (notes, activeNote, labels) => {
-    const note = notes.find((n) => n.id === activeNote.id);
+    const note = activeNote.id ? notes[activeNote.id] : null;
     return note ? mapNoteToDisplay(note, labels) : null;
   },
 );

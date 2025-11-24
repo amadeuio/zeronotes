@@ -26,9 +26,9 @@ export const filterNote = (note: Note, filters: Filters): boolean => {
 export const getColorValue = (colorId: string) =>
   COLORS.find((item) => item.id === colorId)?.value ?? null;
 
-export const mapNoteToDisplay = (note: Note, labels: Label[]): DisplayNote => {
+export const mapNoteToDisplay = (note: Note, labels: Record<string, Label>): DisplayNote => {
   const { labelIds = [], colorId, ...rest } = note;
-  const noteLabels = labels.filter((label) => labelIds.includes(label.id));
+  const noteLabels = labelIds.map((id) => labels[id]);
   const colorValue = getColorValue(colorId);
 
   return {

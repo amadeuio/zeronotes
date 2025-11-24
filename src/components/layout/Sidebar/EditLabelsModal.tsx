@@ -1,6 +1,6 @@
 import { IconButton } from '@/components';
 import { useLabels } from '@/hooks';
-import { selectLabels, useStore } from '@/store';
+import { selectLabelsArray, useStore } from '@/store';
 import { cn } from '@/utils';
 import { useState } from 'react';
 
@@ -138,7 +138,7 @@ interface EditLabelsModalProps {
 }
 
 const EditLabelsModal = ({ onClose }: EditLabelsModalProps) => {
-  const labels = useStore(selectLabels);
+  const labels = useStore(selectLabelsArray);
 
   return (
     <div

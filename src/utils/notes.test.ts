@@ -99,7 +99,7 @@ describe('filterNote', () => {
 describe('mapNoteToDisplay', () => {
   it('should map note with no labels', () => {
     const note = createNote();
-    const labels: Label[] = [];
+    const labels: Record<string, Label> = {};
     const result = mapNoteToDisplay(note, labels);
 
     expect(result.labels).toEqual([]);
@@ -116,11 +116,11 @@ describe('mapNoteToDisplay', () => {
 
   it('should map note with matching labels', () => {
     const note = createNote({ labelIds: ['label-1', 'label-2'] });
-    const labels = [
-      createLabel('label-1', 'Work'),
-      createLabel('label-2', 'Personal'),
-      createLabel('label-3', 'Other'),
-    ];
+    const labels: Record<string, Label> = {
+      'label-1': createLabel('label-1', 'Work'),
+      'label-2': createLabel('label-2', 'Personal'),
+      'label-3': createLabel('label-3', 'Other'),
+    };
     const result = mapNoteToDisplay(note, labels);
 
     expect(result.labels).toEqual([
@@ -132,7 +132,9 @@ describe('mapNoteToDisplay', () => {
 
   it('should map note with non-matching labels', () => {
     const note = createNote({ labelIds: ['label-1'] });
-    const labels = [createLabel('label-2', 'Other')];
+    const labels: Record<string, Label> = {
+      'label-2': createLabel('label-2', 'Other'),
+    };
     const result = mapNoteToDisplay(note, labels);
 
     expect(result.labels).toEqual([]);
@@ -140,7 +142,7 @@ describe('mapNoteToDisplay', () => {
 
   it('should include colorValue based on colorId', () => {
     const note = createNote({ colorId: 'coral' });
-    const labels: Label[] = [];
+    const labels: Record<string, Label> = {};
     const result = mapNoteToDisplay(note, labels);
 
     expect(result.colorId).toBe('coral');

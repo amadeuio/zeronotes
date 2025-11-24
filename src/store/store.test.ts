@@ -3,12 +3,27 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { useStore } from './store';
 
 beforeEach(() => {
+  const notesMap = initialNotes.reduce(
+    (acc, note) => {
+      acc[note.id] = note;
+      return acc;
+    },
+    {} as Record<string, (typeof initialNotes)[0]>,
+  );
+  const labelsMap = initialLabels.reduce(
+    (acc, label) => {
+      acc[label.id] = label;
+      return acc;
+    },
+    {} as Record<string, (typeof initialLabels)[0]>,
+  );
+
   useStore.setState({
-    notes: initialNotes,
+    notes: notesMap,
     notesOrder: initialNotes.map((n) => n.id),
     noteHeights: {},
     activeNote: { id: null, position: null },
-    labels: initialLabels,
+    labels: labelsMap,
     filters: { search: '', view: { type: 'notes' } },
     ui: {
       isEditLabelsMenuOpen: false,
