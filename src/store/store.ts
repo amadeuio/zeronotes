@@ -21,7 +21,7 @@ export interface Store {
   actions: {
     notes: {
       set: (notes: Note[]) => void;
-      create: (note: DraftNote) => void;
+      create: (note: DraftNote & { id: string }) => void;
       update: (id: string, note: Partial<Note>) => void;
       delete: (id: string) => void;
     };
@@ -72,19 +72,16 @@ export const useStore = create<Store>()(
         },
         create: (note) => {
           const { labels, ...rest } = note;
-          const newId = uuidv4();
           set((state) => ({
             notes: [
               {
-                id: newId,
                 ...rest,
                 labelIds: labels.map((l) => l.id),
                 isTrashed: false,
               },
               ...state.notes,
             ],
-            notesOrder: [newId, ...state.notesOrder],
-            noteHeights: { ...state.noteHeights, [newId]: null },
+            notesOrder: [note.id, ...state.notesOrder],
           }));
         },
         update: (id, note) => {
