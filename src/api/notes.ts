@@ -1,5 +1,5 @@
 import { API_URL } from '@/constants';
-import type { DraftNote, Note } from '@/types';
+import type { DraftNote, Label, Note } from '@/types';
 import { toCamelCase, toSnakeCase } from './utils';
 
 export const notesApi = {
@@ -44,5 +44,18 @@ export const notesApi = {
 
   removeLabel: async (id: string, labelId: string): Promise<void> => {
     await fetch(`${API_URL}/notes/${id}/labels/${labelId}`, { method: 'DELETE' });
+  },
+
+  createLabelAndAddToNote: async (
+    id: string,
+    label: Label,
+  ): Promise<{ label: any; association: any }> => {
+    const res = await fetch(`${API_URL}/notes/${id}/labels`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(toSnakeCase(label)),
+    });
+    const data = await res.json();
+    return toCamelCase(data);
   },
 };

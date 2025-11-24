@@ -1,5 +1,5 @@
 import { Icon } from '@/components';
-import { useLabels, useNotes } from '@/hooks';
+import { useNotes } from '@/hooks';
 import { useSelectFilteredLabels, useSelectNoteHasLabel } from '@/store';
 import type { DisplayNote, Label } from '@/types';
 import { useState } from 'react';
@@ -93,10 +93,10 @@ interface LabelNoteMenuProps {
 const EditLabelsMenu = ({ note }: LabelNoteMenuProps) => {
   const [search, setSearch] = useState('');
   const filteredLabels = useSelectFilteredLabels(search);
-  const { createLabelAndAddToNote } = useLabels();
+  const { createLabelAndAddToNote } = useNotes();
 
   const handleCreateLabel = () => {
-    createLabelAndAddToNote(search, note.id);
+    createLabelAndAddToNote(note.id, search);
     setSearch('');
   };
 

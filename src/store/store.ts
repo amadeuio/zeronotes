@@ -25,6 +25,7 @@ export interface Store {
       delete: (id: string) => void;
       addLabel: (noteId: string, labelId: string) => void;
       removeLabel: (noteId: string, labelId: string) => void;
+      createLabelAndAddToNote: (noteId: string, label: Label) => void;
     };
     notesOrder: {
       set: (notesOrder: string[]) => void;
@@ -109,6 +110,14 @@ export const useStore = create<Store>()(
               note.id === noteId
                 ? { ...note, labelIds: note.labelIds.filter((id) => id !== labelId) }
                 : note,
+            ),
+          }));
+        },
+        createLabelAndAddToNote: (noteId, label) => {
+          set((state) => ({
+            labels: [label, ...state.labels],
+            notes: state.notes.map((note) =>
+              note.id === noteId ? { ...note, labelIds: [...note.labelIds, label.id] } : note,
             ),
           }));
         },

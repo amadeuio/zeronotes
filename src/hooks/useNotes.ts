@@ -43,6 +43,13 @@ export const useNotes = () => {
     await notesApi.removeLabel(noteId, labelId);
   };
 
+  const createLabelAndAddToNote = async (noteId: string, name: string) => {
+    const id = uuidv4();
+    const newLabel = { id, name };
+    actions.notes.createLabelAndAddToNote(noteId, newLabel);
+    await notesApi.createLabelAndAddToNote(noteId, newLabel);
+  };
+
   return {
     create,
     update,
@@ -51,5 +58,6 @@ export const useNotes = () => {
     restore,
     addLabel,
     removeLabel,
+    createLabelAndAddToNote,
   };
 };
