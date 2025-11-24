@@ -17,6 +17,11 @@ export interface Store {
     isSidebarCollapsed: boolean;
     gridColumns: number;
   };
+  apiStatus: {
+    loading: boolean;
+    success: boolean;
+    error: boolean;
+  };
   actions: {
     notes: {
       set: (notes: Note[]) => void;
@@ -55,6 +60,9 @@ export interface Store {
       closeSidebar: () => void;
       setGridColumns: (columns: number) => void;
     };
+    apiStatus: {
+      set: (status: Partial<Store['apiStatus']>) => void;
+    };
   };
 }
 
@@ -67,6 +75,7 @@ export const useStore = create<Store>()(
     labels: [],
     filters: { search: '', view: { type: 'notes' } },
     ui: { isEditLabelsMenuOpen: false, isSidebarCollapsed: false, gridColumns: 5 },
+    apiStatus: { loading: false, success: true, error: false },
     actions: {
       notes: {
         set: (notes) => {
@@ -198,6 +207,11 @@ export const useStore = create<Store>()(
         },
         setGridColumns: (columns) => {
           set((state) => ({ ui: { ...state.ui, gridColumns: columns } }));
+        },
+      },
+      apiStatus: {
+        set: (status) => {
+          set((state) => ({ apiStatus: { ...state.apiStatus, ...status } }));
         },
       },
     },

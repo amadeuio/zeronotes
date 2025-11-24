@@ -1,5 +1,5 @@
 import logo from '@/assets/logo.png';
-import { IconButton } from '@/components';
+import { ApiStatus, IconButton } from '@/components';
 import { selectActions, useStore } from '@/store';
 import Search from './Search';
 import User from './User';
@@ -24,6 +24,7 @@ const Navbar = () => {
         <Search className="mx-4 md:mx-0" />
       </div>
       <div className="flex items-center gap-x-2">
+        <ApiStatus />
         <IconButton iconName="settings" label="Settings" size={24} className="hidden md:flex" />
         <User />
       </div>

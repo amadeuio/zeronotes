@@ -30,11 +30,11 @@ const LabelInput = ({ value, onChange, placeholder, className, onClick }: LabelI
 const CreateLabel = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState('');
-  const { createLabel } = useLabels();
+  const { create } = useLabels();
 
   const handleSave = async () => {
     if (name.trim()) {
-      await createLabel(name.trim());
+      await create(name.trim());
       setName('');
       setIsEditing(false);
     }
@@ -89,11 +89,11 @@ interface EditLabelProps {
 const EditLabel = ({ id, name }: EditLabelProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [labelName, setLabelName] = useState(name);
-  const { updateLabel, deleteLabel } = useLabels();
+  const { update, remove } = useLabels();
 
   const handleSave = async () => {
     if (labelName.trim()) {
-      await updateLabel(id, labelName.trim());
+      await update(id, labelName.trim());
       setIsEditing(false);
     }
   };
@@ -127,7 +127,7 @@ const EditLabel = ({ id, name }: EditLabelProps) => {
             onClick={() => setIsEditing(true)}
           />
         )}
-        <IconButton iconName="delete" label="Delete" size={18} onClick={() => deleteLabel(id)} />
+        <IconButton iconName="delete" label="Delete" size={18} onClick={() => remove(id)} />
       </div>
     </div>
   );

@@ -13,3 +13,4 @@ export const selectActiveNoteId = (state: Store) => state.activeNote.id;
 export const selectActiveNotePosition = (state: Store) => state.activeNote.position;
 export const selectLabels = (state: Store) => state.labels;
 export const selectGridColumns = (state: Store) => state.ui.gridColumns;
+export const selectApiStatus = (state: Store) => state.apiStatus;

@@ -9,7 +9,7 @@ export const labelsApi = {
     return toCamelCase(data);
   },
 
-  create: async (label: Omit<Label, 'id'>): Promise<Label> => {
+  create: async (label: Label): Promise<Label> => {
     const res = await fetch(`${API_URL}/labels`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

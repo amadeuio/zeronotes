@@ -89,10 +89,10 @@ export interface EditLabelsMenuProps {
 const EditLabelsMenu = ({ state, dispatch }: EditLabelsMenuProps) => {
   const [search, setSearch] = useState('');
   const filteredLabels = useSelectFilteredLabels(search);
-  const { createLabel } = useLabels();
+  const { create } = useLabels();
 
   const handleCreateLabel = async () => {
-    await createLabel(search);
+    await create(search);
     const newLabel = useStore.getState().labels.find((l) => l.name === search);
     if (newLabel) {
       dispatch({ type: 'ADD_LABEL', payload: newLabel });
