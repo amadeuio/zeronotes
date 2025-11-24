@@ -14,7 +14,7 @@ interface MoreMenuProps {
 }
 
 const MoreMenu = ({ note, children, onOpenChange }: MoreMenuProps) => {
-  const { trashNote } = useNotes();
+  const { trash } = useNotes();
   const [isEditLabel, setIsEditLabel] = useState(false);
 
   return (
@@ -32,7 +32,7 @@ const MoreMenu = ({ note, children, onOpenChange }: MoreMenuProps) => {
             items={[
               {
                 label: 'Delete note',
-                action: () => trashNote(note.id),
+                action: () => trash(note.id),
               },
               {
                 label: note.labels.length > 0 ? 'Change labels' : 'Add label',
@@ -55,7 +55,7 @@ interface NoteToolbarProps {
 }
 
 const NoteToolbar = ({ note, className, onMenuOpenChange }: NoteToolbarProps) => {
-  const { restoreNote, removeNote, updateColor, updateArchived } = useNotes();
+  const { restore, remove, update } = useNotes();
 
   return (
     <div className={cn('flex items-center', className)}>
@@ -67,7 +67,7 @@ const NoteToolbar = ({ note, className, onMenuOpenChange }: NoteToolbarProps) =>
             size={18}
             label="Restore"
             iconName="restore_from_trash"
-            onClick={() => restoreNote(note.id)}
+            onClick={() => restore(note.id)}
           />
           <IconButton
             className="p-2"
@@ -75,7 +75,7 @@ const NoteToolbar = ({ note, className, onMenuOpenChange }: NoteToolbarProps) =>
             size={18}
             label="Delete forever"
             iconName="delete_forever"
-            onClick={() => removeNote(note.id)}
+            onClick={() => remove(note.id)}
           />
         </>
       ) : (
@@ -85,7 +85,7 @@ const NoteToolbar = ({ note, className, onMenuOpenChange }: NoteToolbarProps) =>
               <BackgroundMenu
                 colors={COLORS}
                 selectedColorId={note.colorId}
-                onColorClick={(color) => updateColor(note.id, color.id)}
+                onColorClick={(color) => update(note.id, { colorId: color.id })}
               />
             }
             onOpenChange={onMenuOpenChange}
@@ -105,7 +105,7 @@ const NoteToolbar = ({ note, className, onMenuOpenChange }: NoteToolbarProps) =>
             label={note.isArchived ? 'Unarchive' : 'Archive'}
             iconName="archive"
             filled={note.isArchived}
-            onClick={() => updateArchived(note.id, !note.isArchived)}
+            onClick={() => update(note.id, { isArchived: !note.isArchived })}
           />
           <MoreMenu note={note} onOpenChange={onMenuOpenChange}>
             <IconButton

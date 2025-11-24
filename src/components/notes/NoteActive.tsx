@@ -14,7 +14,7 @@ const NoteActive = () => {
   const note = useStore(selectActiveNoteDisplay)!;
   const position = useStore(selectActiveNotePosition);
   const { activeNote } = useStore(selectActions);
-  const { updatePin, updateTitle, updateContent, removeLabel } = useNotes();
+  const { update, removeLabel } = useNotes();
   const { positionStyles, backdropStyles, initiateClose } = useNoteTransition({
     position,
     onClose: () => activeNote.set({ id: null, position: null }),
@@ -42,18 +42,18 @@ const NoteActive = () => {
           filled={note.isPinned}
           className="absolute top-2 right-2 p-1"
           iconClassName="text-neutral-300"
-          onClick={() => updatePin(note.id, !note.isPinned)}
+          onClick={() => update(note.id, { isPinned: !note.isPinned })}
         />
         <TextEdit
           isTitle
           value={note.title}
-          onChange={(value: string) => updateTitle(note.id, value)}
+          onChange={(value: string) => update(note.id, { title: value })}
           placeholder="Title"
           className="pr-6"
         />
         <TextEdit
           value={note.content}
-          onChange={(value: string) => updateContent(note.id, value)}
+          onChange={(value: string) => update(note.id, { content: value })}
           placeholder="Take a note..."
         />
         <div className="flex flex-wrap gap-1.5">

@@ -91,16 +91,10 @@ export const useStore = create<Store>()(
           }));
         },
         delete: (id) => {
-          set((state) => {
-            const { [id]: _, ...restHeights } = state.noteHeights;
-            return {
-              notes: state.notes.filter((note) => note.id !== id),
-              notesOrder: state.notesOrder.filter((noteId) => noteId !== id),
-              noteHeights: restHeights,
-              activeNote:
-                state.activeNote.id === id ? { id: null, position: null } : state.activeNote,
-            };
-          });
+          set((state) => ({
+            notes: state.notes.filter((note) => note.id !== id),
+            notesOrder: state.notesOrder.filter((noteId) => noteId !== id),
+          }));
         },
         addLabel: (noteId, labelId) => {
           set((state) => ({

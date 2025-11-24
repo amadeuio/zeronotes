@@ -1,36 +1,36 @@
 import { notesApi } from '@/api';
 import { selectActions, useStore } from '@/store';
-import type { DraftNote } from '@/types';
+import type { DraftNote, Note } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useNotes = () => {
   const actions = useStore(selectActions);
 
-  const addNote = async (note: DraftNote) => {
+  const create = async (note: DraftNote) => {
     const id = uuidv4();
     const newNote = { ...note, id };
     actions.notes.create(newNote);
     await notesApi.create(newNote);
   };
 
-  const removeNote = async (id: string) => {
+  const update = async (id: string, updates: Partial<Note>) => {
+    actions.notes.update(id, updates);
+    await notesApi.update(id, updates);
+  };
+
+  const remove = async (id: string) => {
     actions.notes.delete(id);
     await notesApi.delete(id);
   };
 
-  const updateTitle = async (id: string, title: string) => {
-    actions.notes.update(id, { title });
-    await notesApi.update(id, { title });
+  const trash = async (id: string) => {
+    actions.notes.update(id, { isTrashed: true, isPinned: false, isArchived: false });
+    await notesApi.update(id, { isTrashed: true, isPinned: false, isArchived: false });
   };
 
-  const updateContent = async (id: string, content: string) => {
-    actions.notes.update(id, { content });
-    await notesApi.update(id, { content });
-  };
-
-  const updateColor = async (id: string, colorId: string) => {
-    actions.notes.update(id, { colorId });
-    await notesApi.update(id, { colorId });
+  const restore = async (id: string) => {
+    actions.notes.update(id, { isTrashed: false });
+    await notesApi.update(id, { isTrashed: false });
   };
 
   const addLabel = async (noteId: string, labelId: string) => {
@@ -43,37 +43,13 @@ export const useNotes = () => {
     await notesApi.removeLabel(noteId, labelId);
   };
 
-  const updateArchived = async (id: string, isArchived: boolean) => {
-    actions.notes.update(id, { isArchived });
-    await notesApi.update(id, { isArchived });
-  };
-
-  const updatePin = async (id: string, isPinned: boolean) => {
-    actions.notes.update(id, { isPinned });
-    await notesApi.update(id, { isPinned });
-  };
-
-  const trashNote = async (id: string) => {
-    actions.notes.update(id, { isTrashed: true, isPinned: false, isArchived: false });
-    await notesApi.update(id, { isTrashed: true, isPinned: false, isArchived: false });
-  };
-
-  const restoreNote = async (id: string) => {
-    actions.notes.update(id, { isTrashed: false });
-    await notesApi.update(id, { isTrashed: false });
-  };
-
   return {
-    addNote,
-    removeNote,
-    updateTitle,
-    updateContent,
-    updateColor,
+    create,
+    update,
+    remove,
+    trash,
+    restore,
     addLabel,
     removeLabel,
-    updateArchived,
-    updatePin,
-    trashNote,
-    restoreNote,
   };
 };

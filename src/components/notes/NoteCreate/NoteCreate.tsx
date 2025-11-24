@@ -16,7 +16,7 @@ interface NoteCreateProps {
 const NoteCreate = ({ onClick, className }: NoteCreateProps) => {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const [state, dispatch] = useReducer(noteReducer, initialState);
-  const { addNote } = useNotes();
+  const { create } = useNotes();
   const [isExpanded, setIsExpanded] = useState(false);
   const colorValue = getColorValue(state.colorId);
 
@@ -26,7 +26,7 @@ const NoteCreate = ({ onClick, className }: NoteCreateProps) => {
       setIsExpanded(false);
       return;
     }
-    addNote(state);
+    create(state);
     dispatch({ type: 'RESET' });
     setIsExpanded(false);
   };
