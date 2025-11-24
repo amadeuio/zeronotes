@@ -7,7 +7,7 @@ export type NoteAction =
   | { type: 'REMOVE_LABEL'; payload: string }
   | { type: 'RESET' }
   | { type: 'SET_COLOR'; payload: Color | null }
-  | { type: 'SET_ARCHIVED'; payload: boolean }
+  | { type: 'TOGGLE_ARCHIVED' }
   | { type: 'TOGGLE_PINNED' };
 
 export const initialState: DraftNote = {
@@ -36,8 +36,8 @@ export const noteReducer = (state: DraftNote, action: NoteAction): DraftNote => 
         ...state,
         colorId: action.payload?.id || 'default',
       };
-    case 'SET_ARCHIVED':
-      return { ...state, isArchived: action.payload };
+    case 'TOGGLE_ARCHIVED':
+      return { ...state, isArchived: !state.isArchived };
     case 'TOGGLE_PINNED':
       return { ...state, isPinned: !state.isPinned };
     default:

@@ -66,9 +66,10 @@ const CreateToolbar = ({ state, dispatch }: CreateToolbarProps) => (
     <IconButton
       className="p-2"
       iconClassName="text-neutral-300"
-      label="Archive"
+      label={state.isArchived ? 'Unarchive' : 'Archive'}
       iconName="archive"
-      onClick={() => dispatch({ type: 'SET_ARCHIVED', payload: true })}
+      filled={state.isArchived}
+      onClick={() => dispatch({ type: 'TOGGLE_ARCHIVED' })}
     />
     <MoreMenu state={state} dispatch={dispatch}>
       <IconButton
