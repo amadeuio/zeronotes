@@ -14,7 +14,7 @@ const NoteActive = () => {
   const note = useStore(selectActiveNoteDisplay)!;
   const position = useStore(selectActiveNotePosition);
   const { activeNote } = useStore(selectActions);
-  const { togglePin, updateTitle, updateContent, removeLabel } = useNotes();
+  const { updatePin, updateTitle, updateContent, removeLabel } = useNotes();
   const { positionStyles, backdropStyles, initiateClose } = useNoteTransition({
     position,
     onClose: () => activeNote.set({ id: null, position: null }),
@@ -42,7 +42,7 @@ const NoteActive = () => {
           filled={note.isPinned}
           className="absolute top-2 right-2 p-1"
           iconClassName="text-neutral-300"
-          onClick={() => togglePin(note.id)}
+          onClick={() => updatePin(note.id, !note.isPinned)}
         />
         <TextEdit
           isTitle

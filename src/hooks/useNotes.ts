@@ -1,11 +1,10 @@
 import { notesApi } from '@/api';
-import { selectActions, selectNotes, useStore } from '@/store';
+import { selectActions, useStore } from '@/store';
 import type { DraftNote } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useNotes = () => {
   const actions = useStore(selectActions);
-  const notes = useStore(selectNotes);
 
   const addNote = async (note: DraftNote) => {
     const id = uuidv4();
@@ -49,11 +48,7 @@ export const useNotes = () => {
     await notesApi.update(id, { isArchived });
   };
 
-  const togglePin = async (id: string) => {
-    const note = notes.find((n) => n.id === id);
-    if (!note) return;
-    const isPinned = !note.isPinned;
-
+  const updatePin = async (id: string, isPinned: boolean) => {
     actions.notes.update(id, { isPinned });
     await notesApi.update(id, { isPinned });
   };
@@ -77,7 +72,7 @@ export const useNotes = () => {
     addLabel,
     removeLabel,
     updateArchived,
-    togglePin,
+    updatePin,
     trashNote,
     restoreNote,
   };

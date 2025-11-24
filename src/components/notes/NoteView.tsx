@@ -23,7 +23,7 @@ interface NoteViewProps {
 const NoteView = ({ note }: NoteViewProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { activeNote } = useStore(selectActions);
-  const { togglePin, removeLabel } = useNotes();
+  const { updatePin, removeLabel } = useNotes();
   const isActive = useSelectIsNoteActive(note.id);
   const search = useStore(selectFiltersSearch);
   const position = useSelectPositionFromNoteId(note.id, note.isPinned);
@@ -81,7 +81,7 @@ const NoteView = ({ note }: NoteViewProps) => {
             !isMenuOpen && 'opacity-0 group-hover/note:opacity-100',
           )}
           iconClassName="text-neutral-300"
-          onClick={() => togglePin(note.id)}
+          onClick={() => updatePin(note.id, !note.isPinned)}
         />
         {note.title && <TextView isTitle value={note.title} searchTerm={search} />}
         <TextView value={note.content} searchTerm={search} />
