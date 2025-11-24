@@ -30,7 +30,7 @@ const createStore = (overrides?: Partial<Store> & { gridColumns?: number }): Sto
       isSidebarCollapsed: false,
       gridColumns,
     },
-    apiStatus: { loading: false, success: false, error: false },
+    apiStatus: { loading: false, error: false },
     actions: {} as Store['actions'],
     ...restOverrides,
   };

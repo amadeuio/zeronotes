@@ -19,7 +19,6 @@ export interface Store {
   };
   apiStatus: {
     loading: boolean;
-    success: boolean;
     error: boolean;
   };
   actions: {
@@ -75,7 +74,7 @@ export const useStore = create<Store>()(
     labels: [],
     filters: { search: '', view: { type: 'notes' } },
     ui: { isEditLabelsMenuOpen: false, isSidebarCollapsed: false, gridColumns: 5 },
-    apiStatus: { loading: false, success: true, error: false },
+    apiStatus: { loading: false, error: false },
     actions: {
       notes: {
         set: (notes) => {

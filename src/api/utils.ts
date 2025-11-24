@@ -58,12 +58,10 @@ export const withApiStatus = <T extends Record<string, (...args: any[]) => Promi
     actions.apiStatus.set({ loading: true, error: false });
     try {
       const result = await apiCall();
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      actions.apiStatus.set({ loading: false, success: true });
+      actions.apiStatus.set({ loading: false });
       return result;
     } catch (error) {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      actions.apiStatus.set({ loading: false, success: false, error: true });
+      actions.apiStatus.set({ loading: false, error: true });
       throw error;
     }
   };
