@@ -20,3 +20,11 @@ const selectFilteredLabels = (searchTerm: string) => {
 
 export const useSelectFilteredLabels = (searchTerm: string) =>
   useStore(useMemo(() => selectFilteredLabels(searchTerm), [searchTerm]));
+
+const selectLabelsByIds = (labelIds: string[]) =>
+  createSelector([selectLabels], (labelsById) =>
+    labelIds.map((id) => labelsById[id]).filter(Boolean),
+  );
+
+export const useSelectLabelsByIds = (labelIds: string[]) =>
+  useStore(useMemo(() => selectLabelsByIds(labelIds), [labelIds]));
