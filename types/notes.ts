@@ -29,4 +29,3 @@ export interface CreateNoteRequest {
   is_archived?: boolean;
   labels?: Array<{ id: number }>;
 }
-

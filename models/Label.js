@@ -1,16 +1,16 @@
-const pool = require('../config/database');
+const pool = require("../config/database");
 
 const Label = {
   findAll: async () => {
     const result = await pool.query(
-      'SELECT * FROM labels ORDER BY created_at DESC'
+      "SELECT * FROM labels ORDER BY created_at DESC"
     );
     return result.rows;
   },
 
   create: async (id, name) => {
     const result = await pool.query(
-      'INSERT INTO labels (id, name) VALUES ($1, $2) RETURNING *',
+      "INSERT INTO labels (id, name) VALUES ($1, $2) RETURNING *",
       [id, name]
     );
     return result.rows[0];
@@ -18,7 +18,7 @@ const Label = {
 
   update: async (id, name) => {
     const result = await pool.query(
-      'UPDATE labels SET name = $1, updated_at = NOW() WHERE id = $2 RETURNING *',
+      "UPDATE labels SET name = $1, updated_at = NOW() WHERE id = $2 RETURNING *",
       [name, id]
     );
     return result.rows[0];
@@ -26,7 +26,7 @@ const Label = {
 
   deleteById: async (id) => {
     const result = await pool.query(
-      'DELETE FROM labels WHERE id = $1 RETURNING *',
+      "DELETE FROM labels WHERE id = $1 RETURNING *",
       [id]
     );
     return result.rows[0];
@@ -34,4 +34,3 @@ const Label = {
 };
 
 module.exports = Label;
-

@@ -9,4 +9,3 @@ export interface CreateLabelRequest {
   id: number;
   name: string;
 }
-

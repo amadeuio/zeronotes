@@ -10,6 +10,7 @@
     "migrate": "ts-node utils/runMigrations.ts",
     "seed": "ts-node utils/runSeeds.ts",
     "schema:dump": "ts-node utils/dumpSchema.ts",
+    "format": "prettier --write \"**/*.{ts,js,json,md}\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -36,6 +37,8 @@
     "@types/node": "^24.10.1",
     "@types/pg": "^8.15.6",
     "nodemon": "^3.1.11",
+    "prettier": "^3.6.2",
+    "prettier-plugin-organize-imports": "^4.3.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }

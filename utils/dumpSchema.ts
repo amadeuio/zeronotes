@@ -1,7 +1,7 @@
-import fs from 'fs';
-import path from 'path';
-import pool from '../config/database';
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
+import pool from "../config/database";
 
 dotenv.config();
 
@@ -29,8 +29,8 @@ interface ForeignKeyRow {
 }
 
 async function dumpSchema(): Promise<void> {
-  const schemaDir = path.join(__dirname, '../schema');
-  const schemaFile = path.join(schemaDir, 'current_schema.sql');
+  const schemaDir = path.join(__dirname, "../schema");
+  const schemaFile = path.join(schemaDir, "current_schema.sql");
 
   // Create schema directory if it doesn't exist
   if (!fs.existsSync(schemaDir)) {
@@ -40,7 +40,7 @@ async function dumpSchema(): Promise<void> {
   const client = await pool.connect();
 
   try {
-    console.log('📋 Generating schema from database...\n');
+    console.log("📋 Generating schema from database...\n");
 
     // Get all tables
     const tablesResult = await client.query<TableRow>(`
@@ -62,7 +62,8 @@ async function dumpSchema(): Promise<void> {
       const tableName = table.table_name;
 
       // Get table columns
-      const columnsResult = await client.query<ColumnRow>(`
+      const columnsResult = await client.query<ColumnRow>(
+        `
         SELECT 
           column_name,
           data_type,
@@ -73,21 +74,27 @@ async function dumpSchema(): Promise<void> {
         WHERE table_schema = 'public' 
         AND table_name = $1
         ORDER BY ordinal_position;
-      `, [tableName]);
+      `,
+        [tableName]
+      );
 
       // Get primary keys
-      const pkResult = await client.query<PrimaryKeyRow>(`
+      const pkResult = await client.query<PrimaryKeyRow>(
+        `
         SELECT a.attname
         FROM pg_index i
         JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey)
         WHERE i.indrelid = $1::regclass
         AND i.indisprimary;
-      `, [tableName]);
+      `,
+        [tableName]
+      );
 
-      const primaryKeys = pkResult.rows.map(row => row.attname);
+      const primaryKeys = pkResult.rows.map((row) => row.attname);
 
       // Get foreign keys
-      const fkResult = await client.query<ForeignKeyRow>(`
+      const fkResult = await client.query<ForeignKeyRow>(
+        `
         SELECT
           kcu.column_name,
           ccu.table_name AS foreign_table_name,
@@ -102,13 +109,15 @@ async function dumpSchema(): Promise<void> {
           ON rc.constraint_name = tc.constraint_name
         WHERE tc.constraint_type = 'FOREIGN KEY'
         AND tc.table_name = $1;
-      `, [tableName]);
+      `,
+        [tableName]
+      );
 
       // Build CREATE TABLE statement
       schemaContent += `-- Table: ${tableName}\n`;
       schemaContent += `CREATE TABLE IF NOT EXISTS ${tableName} (\n`;
 
-      const columnDefs = columnsResult.rows.map(col => {
+      const columnDefs = columnsResult.rows.map((col) => {
         let def = `  ${col.column_name} ${col.data_type.toUpperCase()}`;
 
         // Add length for varchar/text types
@@ -117,8 +126,8 @@ async function dumpSchema(): Promise<void> {
         }
 
         // Add NOT NULL
-        if (col.is_nullable === 'NO') {
-          def += ' NOT NULL';
+        if (col.is_nullable === "NO") {
+          def += " NOT NULL";
         }
 
         // Add default value
@@ -130,33 +139,33 @@ async function dumpSchema(): Promise<void> {
         return def;
       });
 
-      schemaContent += columnDefs.join(',\n');
+      schemaContent += columnDefs.join(",\n");
 
       // Add primary key
       if (primaryKeys.length > 0) {
-        schemaContent += `,\n  PRIMARY KEY (${primaryKeys.join(', ')})`;
+        schemaContent += `,\n  PRIMARY KEY (${primaryKeys.join(", ")})`;
       }
 
-      schemaContent += '\n);\n\n';
+      schemaContent += "\n);\n\n";
 
       // Add foreign keys
       if (fkResult.rows.length > 0) {
         for (const fk of fkResult.rows) {
-          const onDelete = fk.delete_rule === 'CASCADE' ? ' ON DELETE CASCADE' : '';
+          const onDelete =
+            fk.delete_rule === "CASCADE" ? " ON DELETE CASCADE" : "";
           schemaContent += `ALTER TABLE ${tableName} ADD CONSTRAINT fk_${tableName}_${fk.column_name} FOREIGN KEY (${fk.column_name}) REFERENCES ${fk.foreign_table_name}(${fk.foreign_column_name})${onDelete};\n`;
         }
-        schemaContent += '\n';
+        schemaContent += "\n";
       }
     }
 
     // Write to file
-    fs.writeFileSync(schemaFile, schemaContent, 'utf8');
+    fs.writeFileSync(schemaFile, schemaContent, "utf8");
     console.log(`✅ Schema dumped to: ${schemaFile}`);
     console.log(`📊 Found ${tablesResult.rows.length} table(s)\n`);
-
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error('❌ Error generating schema:', errorMessage);
+    console.error("❌ Error generating schema:", errorMessage);
     process.exit(1);
   } finally {
     client.release();
@@ -164,8 +173,7 @@ async function dumpSchema(): Promise<void> {
   }
 }
 
-dumpSchema().catch(error => {
-  console.error('Fatal error:', error);
+dumpSchema().catch((error) => {
+  console.error("Fatal error:", error);
   process.exit(1);
 });
-

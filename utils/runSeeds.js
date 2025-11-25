@@ -1,24 +1,25 @@
-const fs = require('fs');
-const path = require('path');
-const pool = require('../config/database');
-require('dotenv').config();
+const fs = require("fs");
+const path = require("path");
+const pool = require("../config/database");
+require("dotenv").config();
 
 async function runSeeds() {
-  const seedsDir = path.join(__dirname, '../seeds');
-  
+  const seedsDir = path.join(__dirname, "../seeds");
+
   // Check if seeds directory exists
   if (!fs.existsSync(seedsDir)) {
-    console.log('❌ Seeds directory not found');
+    console.log("❌ Seeds directory not found");
     process.exit(1);
   }
 
   // Read all seed files
-  const files = fs.readdirSync(seedsDir)
-    .filter(file => file.endsWith('.sql'))
+  const files = fs
+    .readdirSync(seedsDir)
+    .filter((file) => file.endsWith(".sql"))
     .sort(); // Sort alphabetically (001, 002, 003...)
 
   if (files.length === 0) {
-    console.log('⚠️  No seed files found');
+    console.log("⚠️  No seed files found");
     return;
   }
 
@@ -27,14 +28,14 @@ async function runSeeds() {
   const client = await pool.connect();
 
   try {
-    await client.query('BEGIN');
+    await client.query("BEGIN");
 
     for (const file of files) {
       const filePath = path.join(seedsDir, file);
-      const sql = fs.readFileSync(filePath, 'utf8');
+      const sql = fs.readFileSync(filePath, "utf8");
 
       console.log(`🔄 Running seed: ${file}`);
-      
+
       try {
         await client.query(sql);
         console.log(`✅ Successfully executed: ${file}\n`);
@@ -44,11 +45,11 @@ async function runSeeds() {
       }
     }
 
-    await client.query('COMMIT');
-    console.log('✨ All seeds completed successfully!');
+    await client.query("COMMIT");
+    console.log("✨ All seeds completed successfully!");
   } catch (error) {
-    await client.query('ROLLBACK');
-    console.error('❌ Seeding failed, rolled back:', error.message);
+    await client.query("ROLLBACK");
+    console.error("❌ Seeding failed, rolled back:", error.message);
     process.exit(1);
   } finally {
     client.release();
@@ -56,8 +57,7 @@ async function runSeeds() {
   }
 }
 
-runSeeds().catch(error => {
-  console.error('Fatal error:', error);
+runSeeds().catch((error) => {
+  console.error("Fatal error:", error);
   process.exit(1);
 });
-

@@ -1,5 +1,5 @@
-const Note = require('../models/Note');
-const Label = require('../models/Label');
+const Note = require("../models/Note");
+const Label = require("../models/Label");
 
 const getAllNotes = async (req, res, next) => {
   try {
@@ -12,10 +12,11 @@ const getAllNotes = async (req, res, next) => {
 
 const createNote = async (req, res, next) => {
   try {
-    const { id, title, content, color_id, is_pinned, is_archived, labels } = req.body;
+    const { id, title, content, color_id, is_pinned, is_archived, labels } =
+      req.body;
 
     if (!id) {
-      return res.status(400).json({ error: 'Note id is required' });
+      return res.status(400).json({ error: "Note id is required" });
     }
 
     const note = await Note.create(
@@ -28,7 +29,7 @@ const createNote = async (req, res, next) => {
     );
 
     if (labels && Array.isArray(labels) && labels.length > 0) {
-      const labelIds = labels.map(label => label.id).filter(Boolean);
+      const labelIds = labels.map((label) => label.id).filter(Boolean);
       if (labelIds.length > 0) {
         await Note.addLabels(note.id, labelIds);
       }
@@ -47,7 +48,7 @@ const updateNote = async (req, res, next) => {
 
     const note = await Note.update(id, updates);
     if (!note) {
-      return res.status(404).json({ error: 'Note not found' });
+      return res.status(404).json({ error: "Note not found" });
     }
 
     res.json(note);
@@ -62,7 +63,7 @@ const deleteNote = async (req, res, next) => {
     const note = await Note.deleteById(id);
 
     if (!note) {
-      return res.status(404).json({ error: 'Note not found' });
+      return res.status(404).json({ error: "Note not found" });
     }
 
     res.status(204).send();
@@ -77,13 +78,15 @@ const addLabelToNote = async (req, res, next) => {
 
     const note = await Note.findById(id);
     if (!note) {
-      return res.status(404).json({ error: 'Note not found' });
+      return res.status(404).json({ error: "Note not found" });
     }
 
-    const pool = require('../config/database');
-    const labelResult = await pool.query('SELECT * FROM labels WHERE id = $1', [label_id]);
+    const pool = require("../config/database");
+    const labelResult = await pool.query("SELECT * FROM labels WHERE id = $1", [
+      label_id,
+    ]);
     if (labelResult.rows.length === 0) {
-      return res.status(404).json({ error: 'Label not found' });
+      return res.status(404).json({ error: "Label not found" });
     }
 
     const associations = await Note.addLabels(id, [label_id]);
@@ -99,12 +102,12 @@ const removeLabelFromNote = async (req, res, next) => {
 
     const note = await Note.findById(id);
     if (!note) {
-      return res.status(404).json({ error: 'Note not found' });
+      return res.status(404).json({ error: "Note not found" });
     }
 
     const association = await Note.removeLabel(id, label_id);
     if (!association) {
-      return res.status(404).json({ error: 'Label association not found' });
+      return res.status(404).json({ error: "Label association not found" });
     }
 
     res.status(204).send();
@@ -119,17 +122,17 @@ const createLabelAndAddToNote = async (req, res, next) => {
     const labelData = req.body;
 
     if (!labelData.id) {
-      return res.status(400).json({ error: 'Label id is required' });
+      return res.status(400).json({ error: "Label id is required" });
     }
 
     if (!labelData.name) {
-      return res.status(400).json({ error: 'Label name is required' });
+      return res.status(400).json({ error: "Label name is required" });
     }
 
     const note = await Note.findById(id);
 
     if (!note) {
-      return res.status(404).json({ error: 'Note not found' });
+      return res.status(404).json({ error: "Note not found" });
     }
 
     const label = await Label.create(labelData.id, labelData.name);
@@ -153,4 +156,3 @@ module.exports = {
   removeLabelFromNote,
   createLabelAndAddToNote,
 };
-

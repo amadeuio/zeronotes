@@ -1,5 +1,5 @@
-import pool from '../config/database';
-import { Note as NoteType, NoteUpdate } from '../types/notes';
+import pool from "../config/database";
+import { Note as NoteType, NoteUpdate } from "../types/notes";
 
 const Note = {
   findAll: async (): Promise<NoteType[]> => {
@@ -16,7 +16,7 @@ const Note = {
       GROUP BY n.id
       ORDER BY n.created_at DESC
     `);
-    
+
     return result.rows;
   },
 
@@ -24,12 +24,12 @@ const Note = {
     id: string,
     title: string | null,
     content: string | null,
-    color_id: string = 'default',
+    color_id: string = "default",
     is_pinned: boolean = false,
     is_archived: boolean = false
   ): Promise<NoteType> => {
     const result = await pool.query(
-      'INSERT INTO notes (id, title, content, color_id, is_pinned, is_archived) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      "INSERT INTO notes (id, title, content, color_id, is_pinned, is_archived) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
       [id, title, content, color_id, is_pinned, is_archived]
     );
     return result.rows[0];
@@ -39,7 +39,7 @@ const Note = {
     const fields: string[] = [];
     const values: unknown[] = [];
     let paramCount = 1;
-  
+
     if (updates.title !== undefined) {
       fields.push(`title = $${paramCount++}`);
       values.push(updates.title);
@@ -64,16 +64,18 @@ const Note = {
       fields.push(`is_trashed = $${paramCount++}`);
       values.push(updates.is_trashed);
     }
-  
+
     if (fields.length === 0) {
-      throw new Error('No fields to update');
+      throw new Error("No fields to update");
     }
-  
+
     fields.push(`updated_at = NOW()`);
     values.push(id);
-  
+
     const result = await pool.query(
-      `UPDATE notes SET ${fields.join(', ')} WHERE id = $${paramCount} RETURNING *`,
+      `UPDATE notes SET ${fields.join(
+        ", "
+      )} WHERE id = $${paramCount} RETURNING *`,
       values
     );
     return result.rows[0];
@@ -81,21 +83,21 @@ const Note = {
 
   deleteById: async (id: string): Promise<NoteType | undefined> => {
     const result = await pool.query(
-      'DELETE FROM notes WHERE id = $1 RETURNING *',
+      "DELETE FROM notes WHERE id = $1 RETURNING *",
       [id]
     );
     return result.rows[0];
   },
 
   findById: async (id: string): Promise<NoteType | undefined> => {
-    const result = await pool.query(
-      'SELECT * FROM notes WHERE id = $1',
-      [id]
-    );
+    const result = await pool.query("SELECT * FROM notes WHERE id = $1", [id]);
     return result.rows[0];
   },
 
-  addLabels: async (note_id: string, label_ids: number[]): Promise<Array<{ note_id: string; label_id: number }>> => {
+  addLabels: async (
+    note_id: string,
+    label_ids: number[]
+  ): Promise<Array<{ note_id: string; label_id: number }>> => {
     if (!label_ids || label_ids.length === 0) {
       return [];
     }
@@ -112,7 +114,7 @@ const Note = {
 
     const query = `
       INSERT INTO note_labels (note_id, label_id)
-      VALUES ${values.join(', ')}
+      VALUES ${values.join(", ")}
       ON CONFLICT (note_id, label_id) DO NOTHING
       RETURNING *
     `;
@@ -121,9 +123,12 @@ const Note = {
     return result.rows;
   },
 
-  removeLabel: async (note_id: string, label_id: number): Promise<{ note_id: string; label_id: number } | undefined> => {
+  removeLabel: async (
+    note_id: string,
+    label_id: number
+  ): Promise<{ note_id: string; label_id: number } | undefined> => {
     const result = await pool.query(
-      'DELETE FROM note_labels WHERE note_id = $1 AND label_id = $2 RETURNING *',
+      "DELETE FROM note_labels WHERE note_id = $1 AND label_id = $2 RETURNING *",
       [note_id, label_id]
     );
     return result.rows[0];
@@ -131,4 +136,3 @@ const Note = {
 };
 
 export default Note;
-

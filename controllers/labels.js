@@ -1,4 +1,4 @@
-const Label = require('../models/Label');
+const Label = require("../models/Label");
 
 const getAllLabels = async (req, res, next) => {
   try {
@@ -14,11 +14,11 @@ const createLabel = async (req, res, next) => {
     const labelData = req.body;
 
     if (!labelData.id) {
-      return res.status(400).json({ error: 'Label id is required' });
+      return res.status(400).json({ error: "Label id is required" });
     }
 
     if (!labelData.name) {
-      return res.status(400).json({ error: 'Label name is required' });
+      return res.status(400).json({ error: "Label name is required" });
     }
 
     const label = await Label.create(labelData.id, labelData.name);
@@ -34,13 +34,13 @@ const updateLabel = async (req, res, next) => {
     const { name } = req.body;
 
     if (!name) {
-      return res.status(400).json({ error: 'Name is required' });
+      return res.status(400).json({ error: "Name is required" });
     }
 
     const label = await Label.update(id, name);
 
     if (!label) {
-      return res.status(404).json({ error: 'Label not found' });
+      return res.status(404).json({ error: "Label not found" });
     }
 
     res.json(label);
@@ -55,7 +55,7 @@ const deleteLabel = async (req, res, next) => {
     const label = await Label.deleteById(id);
 
     if (!label) {
-      return res.status(404).json({ error: 'Label not found' });
+      return res.status(404).json({ error: "Label not found" });
     }
 
     res.status(204).send();
@@ -70,4 +70,3 @@ module.exports = {
   updateLabel,
   deleteLabel,
 };
-
