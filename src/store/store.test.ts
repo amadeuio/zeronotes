@@ -19,38 +19,43 @@ beforeEach(() => {
   );
 
   useStore.setState({
-    notes: notesMap,
-    notesOrder: initialNotes.map((n) => n.id),
-    noteHeights: {},
-    activeNote: { id: null, position: null },
-    labels: labelsMap,
+    notes: {
+      byId: notesMap,
+      order: initialNotes.map((n) => n.id),
+      heights: {},
+      active: { id: null, position: null },
+    },
+    labels: {
+      byId: labelsMap,
+    },
     filters: { search: '', view: { type: 'notes' } },
     ui: {
       isEditLabelsMenuOpen: false,
       isSidebarCollapsed: false,
       gridColumns: 5,
     },
+    api: { loading: false, error: false },
   });
 });
 
 describe('notesOrder.update', () => {
   it('should move a note to a new position in the order', () => {
     const store = useStore.getState();
-    const initialOrder = [...store.notesOrder];
+    const initialOrder = [...store.notes.order];
 
     const noteId = initialOrder[0];
     const overId = initialOrder[2];
 
     useStore.getState().actions.notesOrder.update(noteId, overId);
 
-    const newOrder = useStore.getState().notesOrder;
+    const newOrder = useStore.getState().notes.order;
     expect(newOrder[2]).toBe(noteId);
     expect(newOrder.length).toBe(initialOrder.length);
   });
 
   it('should handle moving a note to the end', () => {
     const store = useStore.getState();
-    const initialOrder = [...store.notesOrder];
+    const initialOrder = [...store.notes.order];
     const lastIndex = initialOrder.length - 1;
 
     const noteId = initialOrder[0];
@@ -58,13 +63,13 @@ describe('notesOrder.update', () => {
 
     useStore.getState().actions.notesOrder.update(noteId, overId);
 
-    const newOrder = useStore.getState().notesOrder;
+    const newOrder = useStore.getState().notes.order;
     expect(newOrder[lastIndex]).toBe(noteId);
   });
 
   it('should maintain all note IDs in the order after update', () => {
     const store = useStore.getState();
-    const initialOrder = [...store.notesOrder];
+    const initialOrder = [...store.notes.order];
     const initialSet = new Set(initialOrder);
 
     const noteId = initialOrder[1];
@@ -72,7 +77,7 @@ describe('notesOrder.update', () => {
 
     useStore.getState().actions.notesOrder.update(noteId, overId);
 
-    const newOrder = useStore.getState().notesOrder;
+    const newOrder = useStore.getState().notes.order;
     const newSet = new Set(newOrder);
 
     expect(newSet.size).toBe(initialSet.size);

@@ -19,18 +19,22 @@ const createStore = (overrides?: Partial<Store> & { gridColumns?: number }): Sto
   const gridColumns = overrides?.gridColumns ?? 2;
   const { gridColumns: _, ...restOverrides } = overrides ?? {};
   return {
-    notes: {},
-    notesOrder: [],
-    noteHeights: {},
-    activeNote: { id: null, position: null },
-    labels: {},
+    notes: {
+      byId: {},
+      order: [],
+      heights: {},
+      active: { id: null, position: null },
+    },
+    labels: {
+      byId: {},
+    },
     filters: { search: '', view: { type: 'notes' } },
     ui: {
       isEditLabelsMenuOpen: false,
       isSidebarCollapsed: false,
       gridColumns,
     },
-    apiStatus: { loading: false, error: false },
+    api: { loading: false, error: false },
     actions: {} as Store['actions'],
     ...restOverrides,
   };
@@ -39,9 +43,12 @@ const createStore = (overrides?: Partial<Store> & { gridColumns?: number }): Sto
 describe('selectNoteIdFromPosition', () => {
   it('should find note in pinned section', () => {
     const store = createStore({
-      notes: { '1': createNote({ id: '1', isPinned: true }) },
-      notesOrder: ['1'],
-      noteHeights: { '1': 100 },
+      notes: {
+        byId: { '1': createNote({ id: '1', isPinned: true }) },
+        order: ['1'],
+        heights: { '1': 100 },
+        active: { id: null, position: null },
+      },
       gridColumns: 2,
     });
 
@@ -52,13 +59,16 @@ describe('selectNoteIdFromPosition', () => {
   it('should find note in unpinned section', () => {
     const store = createStore({
       notes: {
-        '1': createNote({ id: '1', isPinned: true }),
-        '2': createNote({ id: '2', isPinned: true }),
-        '3': createNote({ id: '3', isPinned: false }),
-        '4': createNote({ id: '4', isPinned: false }),
+        byId: {
+          '1': createNote({ id: '1', isPinned: true }),
+          '2': createNote({ id: '2', isPinned: true }),
+          '3': createNote({ id: '3', isPinned: false }),
+          '4': createNote({ id: '4', isPinned: false }),
+        },
+        order: ['1', '2', '3', '4'],
+        heights: { '1': 100, '2': 150, '3': 200, '4': 250 },
+        active: { id: null, position: null },
       },
-      notesOrder: ['1', '2', '3', '4'],
-      noteHeights: { '1': 100, '2': 150, '3': 200, '4': 250 },
       gridColumns: 2,
     });
 
@@ -69,13 +79,16 @@ describe('selectNoteIdFromPosition', () => {
   it('should return undefined when clicking outside notes (in gap or outside grid)', () => {
     const store = createStore({
       notes: {
-        '1': createNote({ id: '1', isPinned: true }),
-        '2': createNote({ id: '2', isPinned: true }),
-        '3': createNote({ id: '3', isPinned: false }),
-        '4': createNote({ id: '4', isPinned: false }),
+        byId: {
+          '1': createNote({ id: '1', isPinned: true }),
+          '2': createNote({ id: '2', isPinned: true }),
+          '3': createNote({ id: '3', isPinned: false }),
+          '4': createNote({ id: '4', isPinned: false }),
+        },
+        order: ['1', '2', '3', '4'],
+        heights: { '1': 100, '2': 150, '3': 200, '4': 250 },
+        active: { id: null, position: null },
       },
-      notesOrder: ['1', '2', '3', '4'],
-      noteHeights: { '1': 100, '2': 150, '3': 200, '4': 250 },
       gridColumns: 2,
     });
 
@@ -88,13 +101,16 @@ describe('selectNoteIdFromPosition', () => {
   it('should find note with non-linear notesOrder', () => {
     const store = createStore({
       notes: {
-        '1': createNote({ id: '1', isPinned: true }),
-        '2': createNote({ id: '2', isPinned: true }),
-        '3': createNote({ id: '3', isPinned: true }),
-        '4': createNote({ id: '4', isPinned: true }),
+        byId: {
+          '1': createNote({ id: '1', isPinned: true }),
+          '2': createNote({ id: '2', isPinned: true }),
+          '3': createNote({ id: '3', isPinned: true }),
+          '4': createNote({ id: '4', isPinned: true }),
+        },
+        order: ['3', '1', '4', '2'],
+        heights: { '1': 100, '2': 150, '3': 200, '4': 250 },
+        active: { id: null, position: null },
       },
-      notesOrder: ['3', '1', '4', '2'],
-      noteHeights: { '1': 100, '2': 150, '3': 200, '4': 250 },
       gridColumns: 2,
     });
 
@@ -109,9 +125,12 @@ describe('selectNoteIdFromPosition', () => {
 describe('selectPositionFromNoteId', () => {
   it('should return position for pinned note', () => {
     const store = createStore({
-      notes: { '1': createNote({ id: '1', isPinned: true }) },
-      notesOrder: ['1'],
-      noteHeights: { '1': 100 },
+      notes: {
+        byId: { '1': createNote({ id: '1', isPinned: true }) },
+        order: ['1'],
+        heights: { '1': 100 },
+        active: { id: null, position: null },
+      },
       gridColumns: 2,
     });
 
@@ -122,13 +141,16 @@ describe('selectPositionFromNoteId', () => {
   it('should return position for unpinned note with pinned notes in the grid', () => {
     const store = createStore({
       notes: {
-        '1': createNote({ id: '1', isPinned: true }),
-        '2': createNote({ id: '2', isPinned: true }),
-        '3': createNote({ id: '3', isPinned: false }),
-        '4': createNote({ id: '4', isPinned: false }),
+        byId: {
+          '1': createNote({ id: '1', isPinned: true }),
+          '2': createNote({ id: '2', isPinned: true }),
+          '3': createNote({ id: '3', isPinned: false }),
+          '4': createNote({ id: '4', isPinned: false }),
+        },
+        order: ['1', '2', '3', '4'],
+        heights: { '1': 100, '2': 150, '3': 200, '4': 250 },
+        active: { id: null, position: null },
       },
-      notesOrder: ['1', '2', '3', '4'],
-      noteHeights: { '1': 100, '2': 150, '3': 200, '4': 250 },
       gridColumns: 2,
     });
 
@@ -139,12 +161,15 @@ describe('selectPositionFromNoteId', () => {
   it('should return position for unpinned note when there are no pinned notes', () => {
     const store = createStore({
       notes: {
-        '1': createNote({ id: '1', isPinned: false }),
-        '2': createNote({ id: '2', isPinned: false }),
-        '3': createNote({ id: '3', isPinned: false }),
+        byId: {
+          '1': createNote({ id: '1', isPinned: false }),
+          '2': createNote({ id: '2', isPinned: false }),
+          '3': createNote({ id: '3', isPinned: false }),
+        },
+        order: ['1', '2', '3'],
+        heights: { '1': 100, '2': 150, '3': 200 },
+        active: { id: null, position: null },
       },
-      notesOrder: ['1', '2', '3'],
-      noteHeights: { '1': 100, '2': 150, '3': 200 },
       gridColumns: 2,
     });
 
@@ -155,12 +180,15 @@ describe('selectPositionFromNoteId', () => {
   it('should return position for note in single column layout', () => {
     const store = createStore({
       notes: {
-        '1': createNote({ id: '1', isPinned: true }),
-        '2': createNote({ id: '2', isPinned: false }),
-        '3': createNote({ id: '3', isPinned: false }),
+        byId: {
+          '1': createNote({ id: '1', isPinned: true }),
+          '2': createNote({ id: '2', isPinned: false }),
+          '3': createNote({ id: '3', isPinned: false }),
+        },
+        order: ['1', '2', '3'],
+        heights: { '1': 100, '2': 150, '3': 200 },
+        active: { id: null, position: null },
       },
-      notesOrder: ['1', '2', '3'],
-      noteHeights: { '1': 100, '2': 150, '3': 200 },
       gridColumns: 1,
     });
 
@@ -174,13 +202,16 @@ describe('selectPositionFromNoteId', () => {
   it('should return position for note with non-linear notesOrder', () => {
     const store = createStore({
       notes: {
-        '1': createNote({ id: '1', isPinned: true }),
-        '2': createNote({ id: '2', isPinned: true }),
-        '3': createNote({ id: '3', isPinned: true }),
-        '4': createNote({ id: '4', isPinned: true }),
+        byId: {
+          '1': createNote({ id: '1', isPinned: true }),
+          '2': createNote({ id: '2', isPinned: true }),
+          '3': createNote({ id: '3', isPinned: true }),
+          '4': createNote({ id: '4', isPinned: true }),
+        },
+        order: ['3', '1', '4', '2'],
+        heights: { '1': 100, '2': 150, '3': 200, '4': 250 },
+        active: { id: null, position: null },
       },
-      notesOrder: ['3', '1', '4', '2'],
-      noteHeights: { '1': 100, '2': 150, '3': 200, '4': 250 },
       gridColumns: 2,
     });
 
@@ -202,13 +233,16 @@ describe('selectTotalHeight', () => {
   it('should return sum of pinned and unpinned heights', () => {
     const store = createStore({
       notes: {
-        '1': createNote({ id: '1', isPinned: true }),
-        '2': createNote({ id: '2', isPinned: true }),
-        '3': createNote({ id: '3', isPinned: false }),
-        '4': createNote({ id: '4', isPinned: false }),
+        byId: {
+          '1': createNote({ id: '1', isPinned: true }),
+          '2': createNote({ id: '2', isPinned: true }),
+          '3': createNote({ id: '3', isPinned: false }),
+          '4': createNote({ id: '4', isPinned: false }),
+        },
+        order: ['1', '2', '3', '4'],
+        heights: { '1': 100, '2': 150, '3': 200, '4': 250 },
+        active: { id: null, position: null },
       },
-      notesOrder: ['1', '2', '3', '4'],
-      noteHeights: { '1': 100, '2': 150, '3': 200, '4': 250 },
       gridColumns: 2,
     });
 
@@ -218,13 +252,16 @@ describe('selectTotalHeight', () => {
   it('should return unpinned height when there are no pinned notes', () => {
     const store = createStore({
       notes: {
-        '1': createNote({ id: '1', isPinned: false }),
-        '2': createNote({ id: '2', isPinned: false }),
-        '3': createNote({ id: '3', isPinned: false }),
-        '4': createNote({ id: '4', isPinned: false }),
+        byId: {
+          '1': createNote({ id: '1', isPinned: false }),
+          '2': createNote({ id: '2', isPinned: false }),
+          '3': createNote({ id: '3', isPinned: false }),
+          '4': createNote({ id: '4', isPinned: false }),
+        },
+        order: ['1', '2', '3', '4'],
+        heights: { '1': 100, '2': 150, '3': 200, '4': 250 },
+        active: { id: null, position: null },
       },
-      notesOrder: ['1', '2', '3', '4'],
-      noteHeights: { '1': 100, '2': 150, '3': 200, '4': 250 },
       gridColumns: 2,
     });
 
@@ -233,9 +270,12 @@ describe('selectTotalHeight', () => {
 
   it('should return 0 when there are no notes', () => {
     const store = createStore({
-      notes: {},
-      notesOrder: [],
-      noteHeights: {},
+      notes: {
+        byId: {},
+        order: [],
+        heights: {},
+        active: { id: null, position: null },
+      },
       gridColumns: 2,
     });
 
@@ -245,12 +285,15 @@ describe('selectTotalHeight', () => {
   it('should work correctly with single column layout', () => {
     const store = createStore({
       notes: {
-        '1': createNote({ id: '1', isPinned: true }),
-        '2': createNote({ id: '2', isPinned: false }),
-        '3': createNote({ id: '3', isPinned: false }),
+        byId: {
+          '1': createNote({ id: '1', isPinned: true }),
+          '2': createNote({ id: '2', isPinned: false }),
+          '3': createNote({ id: '3', isPinned: false }),
+        },
+        order: ['1', '2', '3'],
+        heights: { '1': 100, '2': 150, '3': 200 },
+        active: { id: null, position: null },
       },
-      notesOrder: ['1', '2', '3'],
-      noteHeights: { '1': 100, '2': 150, '3': 200 },
       gridColumns: 1,
     });
 
@@ -260,13 +303,16 @@ describe('selectTotalHeight', () => {
   it('should calculate height correctly with non-linear notesOrder', () => {
     const store = createStore({
       notes: {
-        '1': createNote({ id: '1', isPinned: true }),
-        '2': createNote({ id: '2', isPinned: true }),
-        '3': createNote({ id: '3', isPinned: true }),
-        '4': createNote({ id: '4', isPinned: true }),
+        byId: {
+          '1': createNote({ id: '1', isPinned: true }),
+          '2': createNote({ id: '2', isPinned: true }),
+          '3': createNote({ id: '3', isPinned: true }),
+          '4': createNote({ id: '4', isPinned: true }),
+        },
+        order: ['3', '1', '4', '2'],
+        heights: { '1': 100, '2': 150, '3': 200, '4': 250 },
+        active: { id: null, position: null },
       },
-      notesOrder: ['3', '1', '4', '2'],
-      noteHeights: { '1': 100, '2': 150, '3': 200, '4': 250 },
       gridColumns: 2,
     });
 

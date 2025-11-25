@@ -55,13 +55,13 @@ export const withApiStatus = <T extends Record<string, (...args: any[]) => Promi
   actions: Store['actions'],
 ): T => {
   const wrapWithStatus = async <R>(apiCall: () => Promise<R>): Promise<R> => {
-    actions.apiStatus.set({ loading: true, error: false });
+    actions.api.set({ loading: true, error: false });
     try {
       const result = await apiCall();
-      actions.apiStatus.set({ loading: false });
+      actions.api.set({ loading: false });
       return result;
     } catch (error) {
-      actions.apiStatus.set({ loading: false, error: true });
+      actions.api.set({ loading: false, error: true });
       throw error;
     }
   };

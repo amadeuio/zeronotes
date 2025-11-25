@@ -3,21 +3,25 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 export interface Store {
-  notes: Record<string, Note>;
-  notesOrder: string[];
-  noteHeights: Record<string, number | null>;
-  activeNote: {
-    id: string | null;
-    position: { top: number; left: number } | null;
+  notes: {
+    byId: Record<string, Note>;
+    order: string[];
+    heights: Record<string, number | null>;
+    active: {
+      id: string | null;
+      position: { top: number; left: number } | null;
+    };
   };
-  labels: Record<string, Label>;
+  labels: {
+    byId: Record<string, Label>;
+  };
   filters: Filters;
   ui: {
     isEditLabelsMenuOpen: boolean;
     isSidebarCollapsed: boolean;
     gridColumns: number;
   };
-  apiStatus: {
+  api: {
     loading: boolean;
     error: boolean;
   };
@@ -59,105 +63,134 @@ export interface Store {
       closeSidebar: () => void;
       setGridColumns: (columns: number) => void;
     };
-    apiStatus: {
-      set: (status: Partial<Store['apiStatus']>) => void;
+    api: {
+      set: (status: Partial<Store['api']>) => void;
     };
   };
 }
 
 export const useStore = create<Store>()(
   devtools((set) => ({
-    notes: {},
-    notesOrder: [],
-    noteHeights: {},
-    activeNote: { id: null, position: null },
-    labels: {},
+    notes: {
+      byId: {},
+      order: [],
+      heights: {},
+      active: { id: null, position: null },
+    },
+    labels: {
+      byId: {},
+    },
     filters: { search: '', view: { type: 'notes' } },
     ui: { isEditLabelsMenuOpen: false, isSidebarCollapsed: false, gridColumns: 5 },
-    apiStatus: { loading: false, error: false },
+    api: { loading: false, error: false },
     actions: {
       notes: {
         set: (notes) => {
-          const notesMap = notes.reduce(
-            (acc, note) => {
-              acc[note.id] = note;
-              return acc;
+          set((state) => ({
+            notes: {
+              ...state.notes,
+              byId: notes.reduce(
+                (acc, note) => {
+                  acc[note.id] = note;
+                  return acc;
+                },
+                {} as Record<string, Note>,
+              ),
             },
-            {} as Record<string, Note>,
-          );
-          set({ notes: notesMap });
+          }));
         },
         create: (note) => {
           const { labels, ...rest } = note;
           set((state) => ({
             notes: {
-              [note.id]: {
-                ...rest,
-                labelIds: labels.map((l) => l.id),
-                isTrashed: false,
-              },
               ...state.notes,
+              byId: {
+                [note.id]: {
+                  ...rest,
+                  labelIds: labels.map((l) => l.id),
+                  isTrashed: false,
+                },
+                ...state.notes.byId,
+              },
+              order: [note.id, ...state.notes.order],
             },
-            notesOrder: [note.id, ...state.notesOrder],
           }));
         },
         update: (id, note) => {
           set((state) => {
-            const existingNote = state.notes[id];
+            const existingNote = state.notes.byId[id];
             if (!existingNote) return state;
             return {
               notes: {
                 ...state.notes,
-                [id]: { ...existingNote, ...note },
+                byId: {
+                  ...state.notes.byId,
+                  [id]: { ...existingNote, ...note },
+                },
               },
             };
           });
         },
         delete: (id) => {
           set((state) => {
-            const { [id]: deleted, ...remainingNotes } = state.notes;
+            const { [id]: deleted, ...remainingNotes } = state.notes.byId;
             return {
-              notes: remainingNotes,
-              notesOrder: state.notesOrder.filter((noteId) => noteId !== id),
+              notes: {
+                ...state.notes,
+                byId: remainingNotes,
+                order: state.notes.order.filter((noteId) => noteId !== id),
+              },
             };
           });
         },
         addLabel: (noteId, labelId) => {
           set((state) => {
-            const note = state.notes[noteId];
+            const note = state.notes.byId[noteId];
             if (!note) return state;
             return {
               notes: {
                 ...state.notes,
-                [noteId]: { ...note, labelIds: [...note.labelIds, labelId] },
+                byId: {
+                  ...state.notes.byId,
+                  [noteId]: { ...note, labelIds: [...note.labelIds, labelId] },
+                },
               },
             };
           });
         },
         removeLabel: (noteId, labelId) => {
           set((state) => {
-            const note = state.notes[noteId];
+            const note = state.notes.byId[noteId];
             if (!note) return state;
             return {
               notes: {
                 ...state.notes,
-                [noteId]: { ...note, labelIds: note.labelIds.filter((id) => id !== labelId) },
+                byId: {
+                  ...state.notes.byId,
+                  [noteId]: { ...note, labelIds: note.labelIds.filter((id) => id !== labelId) },
+                },
               },
             };
           });
         },
         createLabelAndAddToNote: (noteId, label) => {
           set((state) => {
-            const note = state.notes[noteId];
+            const note = state.notes.byId[noteId];
             if (!note) return state;
             return {
               labels: {
-                [label.id]: label,
                 ...state.labels,
+                byId: {
+                  [label.id]: label,
+                  ...state.labels.byId,
+                },
               },
               notes: {
                 ...state.notes,
-                [noteId]: { ...note, labelIds: [...note.labelIds, label.id] },
+                byId: {
+                  ...state.notes.byId,
+                  [noteId]: { ...note, labelIds: [...note.labelIds, label.id] },
+                },
               },
             };
           });
@@ -165,11 +198,11 @@ export const useStore = create<Store>()(
       },
       notesOrder: {
         set: (notesOrder) => {
-          set({ notesOrder });
+          set((state) => ({ notes: { ...state.notes, order: notesOrder } }));
         },
         update: (noteId, overId) => {
           set((state) => {
-            const newOrder = [...state.notesOrder];
+            const newOrder = [...state.notes.order];
             const fromIndex = newOrder.indexOf(noteId);
             const toIndex = newOrder.indexOf(overId);
 
@@ -179,59 +212,69 @@ export const useStore = create<Store>()(
 
             newOrder.splice(fromIndex, 1);
             newOrder.splice(toIndex, 0, noteId);
-            return { notesOrder: newOrder };
+            return { notes: { ...state.notes, order: newOrder } };
           });
         },
       },
       noteHeights: {
         update: (id, height) => {
           set((state) => {
-            if (state.noteHeights[id] === height) return state;
-            return { noteHeights: { ...state.noteHeights, [id]: height } };
+            if (state.notes.heights[id] === height) return state;
+            return { notes: { ...state.notes, heights: { ...state.notes.heights, [id]: height } } };
           });
         },
       },
       activeNote: {
         set: (activeNote) => {
-          set({ activeNote });
+          set((state) => ({ notes: { ...state.notes, active: activeNote } }));
         },
       },
       labels: {
         set: (labels) => {
-          const labelsMap = labels.reduce(
-            (acc, label) => {
-              acc[label.id] = label;
-              return acc;
+          set((state) => ({
+            labels: {
+              ...state.labels,
+              byId: labels.reduce(
+                (acc, label) => {
+                  acc[label.id] = label;
+                  return acc;
+                },
+                {} as Record<string, Label>,
+              ),
             },
-            {} as Record<string, Label>,
-          );
-          set({ labels: labelsMap });
+          }));
         },
         create: (label) => {
           set((state) => ({
             labels: {
-              [label.id]: label,
               ...state.labels,
+              byId: {
+                [label.id]: label,
+                ...state.labels.byId,
+              },
             },
           }));
         },
         update: (id, label) => {
           set((state) => {
-            const existingLabel = state.labels[id];
+            const existingLabel = state.labels.byId[id];
             if (!existingLabel) return state;
             return {
               labels: {
                 ...state.labels,
-                [id]: { ...existingLabel, ...label },
+                byId: {
+                  ...state.labels.byId,
+                  [id]: { ...existingLabel, ...label },
+                },
               },
             };
           });
         },
         delete: (id) => {
           set((state) => {
-            const { [id]: deleted, ...remainingLabels } = state.labels;
+            const { [id]: deleted, ...remainingLabels } = state.labels.byId;
             const updatedNotes = Object.fromEntries(
-              Object.entries(state.notes).map(([noteId, note]) => [
+              Object.entries(state.notes.byId).map(([noteId, note]) => [
                 noteId,
                 {
                   ...note,
@@ -240,8 +283,14 @@ export const useStore = create<Store>()(
               ]),
             );
             return {
-              notes: updatedNotes,
-              labels: remainingLabels,
+              notes: {
+                ...state.notes,
+                byId: updatedNotes,
+              },
+              labels: {
+                ...state.labels,
+                byId: remainingLabels,
+              },
             };
           });
         },
@@ -269,9 +318,9 @@ export const useStore = create<Store>()(
           set((state) => ({ ui: { ...state.ui, gridColumns: columns } }));
         },
       },
-      apiStatus: {
+      api: {
         set: (status) => {
-          set((state) => ({ apiStatus: { ...state.apiStatus, ...status } }));
+          set((state) => ({ api: { ...state.api, ...status } }));
         },
       },
     },
