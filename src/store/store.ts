@@ -1,4 +1,4 @@
-import type { DraftNote, Filters, Label, Note } from '@/types';
+import type { Filters, Label, Note } from '@/types';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
@@ -28,7 +28,7 @@ export interface Store {
   actions: {
     notes: {
       set: (notes: Note[]) => void;
-      create: (note: DraftNote & { id: string }) => void;
+      create: (note: Omit<Note, 'isTrashed'>) => void;
       update: (id: string, note: Partial<Note>) => void;
       delete: (id: string) => void;
       addLabel: (noteId: string, labelId: string) => void;
@@ -100,14 +100,12 @@ export const useStore = create<Store>()(
           }));
         },
         create: (note) => {
-          const { labels, ...rest } = note;
           set((state) => ({
             notes: {
               ...state.notes,
               byId: {
                 [note.id]: {
-                  ...rest,
-                  labelIds: labels.map((l) => l.id),
+                  ...note,
                   isTrashed: false,
                 },
                 ...state.notes.byId,

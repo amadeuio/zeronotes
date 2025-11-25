@@ -1,9 +1,9 @@
-import type { Color, DraftNote, Label } from '@/types';
+import type { Color, DraftNote } from '@/types';
 
 export type NoteAction =
   | { type: 'SET_TITLE'; payload: string }
   | { type: 'SET_CONTENT'; payload: string }
-  | { type: 'ADD_LABEL'; payload: Label }
+  | { type: 'ADD_LABEL'; payload: string }
   | { type: 'REMOVE_LABEL'; payload: string }
   | { type: 'RESET' }
   | { type: 'SET_COLOR'; payload: Color | null }
@@ -16,7 +16,7 @@ export const initialState: DraftNote = {
   isArchived: false,
   title: '',
   content: '',
-  labels: [],
+  labelIds: [],
 };
 
 export const noteReducer = (state: DraftNote, action: NoteAction): DraftNote => {
@@ -26,9 +26,9 @@ export const noteReducer = (state: DraftNote, action: NoteAction): DraftNote => 
     case 'SET_CONTENT':
       return { ...state, content: action.payload };
     case 'ADD_LABEL':
-      return { ...state, labels: [...state.labels, action.payload] };
+      return { ...state, labelIds: [...state.labelIds, action.payload] };
     case 'REMOVE_LABEL':
-      return { ...state, labels: state.labels.filter((l: Label) => l.id !== action.payload) };
+      return { ...state, labelIds: state.labelIds.filter((id) => id !== action.payload) };
     case 'RESET':
       return initialState;
     case 'SET_COLOR':

@@ -60,13 +60,13 @@ interface MenuItemProps {
 }
 
 const MenuItem = ({ state, dispatch, label }: MenuItemProps) => {
-  const isChecked = state.labels.some((l) => l.id === label.id);
+  const isChecked = state.labelIds.includes(label.id);
 
   const handleClick = () => {
     if (isChecked) {
       dispatch({ type: 'REMOVE_LABEL', payload: label.id });
     } else {
-      dispatch({ type: 'ADD_LABEL', payload: label });
+      dispatch({ type: 'ADD_LABEL', payload: label.id });
     }
   };
 
@@ -92,7 +92,9 @@ const EditLabelsMenu = ({ state, dispatch }: EditLabelsMenuProps) => {
   const { createAndCallAction } = useLabels();
 
   const handleCreateLabel = async () => {
-    await createAndCallAction(search, (label) => dispatch({ type: 'ADD_LABEL', payload: label }));
+    await createAndCallAction(search, (label) =>
+      dispatch({ type: 'ADD_LABEL', payload: label.id }),
+    );
     setSearch('');
   };
 

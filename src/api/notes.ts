@@ -1,5 +1,5 @@
 import { API_URL } from '@/constants';
-import type { DraftNote, Label, Note } from '@/types';
+import type { Label, Note } from '@/types';
 import { toCamelCase, toSnakeCase } from './utils';
 
 export const notesApi = {
@@ -9,7 +9,7 @@ export const notesApi = {
     return toCamelCase(data);
   },
 
-  create: async (note: DraftNote): Promise<Note> => {
+  create: async (note: Omit<Note, 'isTrashed'>): Promise<Note> => {
     const res = await fetch(`${API_URL}/notes`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

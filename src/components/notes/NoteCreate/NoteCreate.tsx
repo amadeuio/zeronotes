@@ -1,8 +1,9 @@
 import { IconButton } from '@/components';
 import { NOTE_WIDTH_EXPANDED } from '@/constants';
 import { useClickOutside, useNotes } from '@/hooks';
+import { selectLabels, useStore } from '@/store';
 import { cn, getColorValue } from '@/utils';
-import { useReducer, useRef, useState, type MouseEvent } from 'react';
+import { useMemo, useReducer, useRef, useState, type MouseEvent } from 'react';
 import Label from '../Label';
 import TextEdit from '../TextEdit';
 import { CreateToolbar } from './CreateToolbar';
@@ -19,6 +20,11 @@ const NoteCreate = ({ onClick, className }: NoteCreateProps) => {
   const { create } = useNotes();
   const [isExpanded, setIsExpanded] = useState(false);
   const colorValue = getColorValue(state.colorId);
+  const labelsById = useStore(selectLabels);
+  const labels = useMemo(
+    () => state.labelIds.map((id) => labelsById[id]).filter(Boolean),
+    [state.labelIds, labelsById],
+  );
 
   const handleCreate = () => {
     if (!state.title && !state.content) {
@@ -80,9 +86,9 @@ const NoteCreate = ({ onClick, className }: NoteCreateProps) => {
       />
       {isExpanded && (
         <>
-          {state.labels.length > 0 && (
+          {labels.length > 0 && (
             <div className="flex gap-1.5">
-              {state.labels.map((label) => (
+              {labels.map((label) => (
                 <Label
                   key={label.id}
                   label={label}
