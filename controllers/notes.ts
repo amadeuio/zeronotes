@@ -1,20 +1,15 @@
 import { NextFunction, Request, Response } from "express";
-import pool from "../config/database";
 import Label from "../models/Label";
 import Note from "../models/Note";
 import NoteLabel from "../models/NoteLabel";
 import { CreateNoteRequest, NoteUpdateRequest } from "../types/notes";
 
-const getAllNotes = async (
-  _req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+const getAllNotes = async (_req: Request, res: Response): Promise<void> => {
   try {
     const notes = await Note.getAll();
     res.json(notes);
   } catch (error) {
-    next(error);
+    res.status(500).json({ error: "get_all_notes_failed" });
   }
 };
 
@@ -52,8 +47,7 @@ const createNote = async (
 
 const updateNote = async (
   req: Request<{ id: string }, {}, NoteUpdateRequest>,
-  res: Response,
-  next: NextFunction
+  res: Response
 ): Promise<void> => {
   try {
     const { id } = req.params;
@@ -68,96 +62,54 @@ const updateNote = async (
 
     res.json(note);
   } catch (error) {
-    next(error);
+    res.status(500).json({ error: "update_note_failed" });
   }
 };
 
 const deleteNote = async (
   req: Request<{ id: string }>,
-  res: Response,
-  next: NextFunction
+  res: Response
 ): Promise<void> => {
   try {
     const { id } = req.params;
     const note = await Note.deleteById(id);
 
     if (!note) {
-      res.status(404).json({ error: "Note not found" });
+      res.status(404).json({ error: "note_not_found" });
       return;
     }
 
     res.status(204).send();
   } catch (error) {
-    next(error);
+    res.status(500).json({ error: "delete_note_failed" });
   }
 };
 
 const addLabelToNote = async (
-  req: Request<{ id: string; label_id: string }>,
-  res: Response,
-  next: NextFunction
+  req: Request<{ id: string; labelId: string }>,
+  res: Response
 ): Promise<void> => {
   try {
-    const { id, label_id } = req.params;
-    const labelIdNum = parseInt(label_id, 10);
+    const { id, labelId } = req.params;
 
-    if (isNaN(labelIdNum)) {
-      res.status(400).json({ error: "Invalid label_id" });
-      return;
-    }
-
-    const note = await Note.findById(id);
-    if (!note) {
-      res.status(404).json({ error: "Note not found" });
-      return;
-    }
-
-    const labelResult = await pool.query("SELECT * FROM labels WHERE id = $1", [
-      labelIdNum,
-    ]);
-    if (labelResult.rows.length === 0) {
-      res.status(404).json({ error: "Label not found" });
-      return;
-    }
-
-    const associations = await Note.addLabels(id, [labelIdNum]);
-    res
-      .status(201)
-      .json(associations[0] || { note_id: id, label_id: labelIdNum });
+    await NoteLabel.addLabelToNote(id, labelId);
+    res.status(204).send();
   } catch (error) {
-    next(error);
+    res.status(500).json({ error: "add_label_to_note_failed" });
   }
 };
 
 const removeLabelFromNote = async (
-  req: Request<{ id: string; label_id: string }>,
-  res: Response,
-  next: NextFunction
+  req: Request<{ id: string; labelId: string }>,
+  res: Response
 ): Promise<void> => {
   try {
-    const { id, label_id } = req.params;
-    const labelIdNum = parseInt(label_id, 10);
+    const { id, labelId } = req.params;
 
-    if (isNaN(labelIdNum)) {
-      res.status(400).json({ error: "Invalid label_id" });
-      return;
-    }
-
-    const note = await Note.findById(id);
-    if (!note) {
-      res.status(404).json({ error: "Note not found" });
-      return;
-    }
-
-    const association = await Note.removeLabel(id, labelIdNum);
-    if (!association) {
-      res.status(404).json({ error: "Label association not found" });
-      return;
-    }
-
+    await NoteLabel.removeLabelFromNote(id, labelId);
     res.status(204).send();
   } catch (error) {
-    next(error);
+    res.status(500).json({ error: "remove_label_from_note_failed" });
   }
 };
 

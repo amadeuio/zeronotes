@@ -44,8 +44,7 @@ const Note = {
     const values = [id, title, content, color_id, is_pinned, is_archived];
 
     const result = await pool.query(query, values);
-    const note = keysToCamel(result.rows[0]);
-    return note;
+    return keysToCamel(result.rows[0]);
   },
 
   update: async (id: string, updates: NoteUpdateRequest): Promise<Note> => {
@@ -90,21 +89,26 @@ const Note = {
     `;
 
     const result = await pool.query(query, values);
-    const note = keysToCamel(result.rows[0]);
-    return note;
+    return keysToCamel(result.rows[0]);
   },
 
   deleteById: async (id: string): Promise<Note | undefined> => {
-    const result = await pool.query(
-      "DELETE FROM notes WHERE id = $1 RETURNING *",
-      [id]
-    );
-    return result.rows[0];
+    const query = `
+      DELETE FROM notes WHERE id = $1 
+      RETURNING id, title, content, color_id, is_pinned, is_archived, is_trashed
+    `;
+
+    const result = await pool.query(query, [id]);
+    return keysToCamel(result.rows[0]);
   },
 
   findById: async (id: string): Promise<Note | undefined> => {
-    const result = await pool.query("SELECT * FROM notes WHERE id = $1", [id]);
-    return result.rows[0];
+    const query = `
+      SELECT * FROM notes WHERE id = $1
+    `;
+
+    const result = await pool.query(query, [id]);
+    return keysToCamel(result.rows[0]);
   },
 
   addLabels: async (
