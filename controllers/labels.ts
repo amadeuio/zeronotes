@@ -54,13 +54,7 @@ const updateLabel = async (
       return;
     }
 
-    const labelId = parseInt(id, 10);
-    if (isNaN(labelId)) {
-      res.status(400).json({ error: "Invalid label id" });
-      return;
-    }
-
-    const label = await Label.update(labelId, name);
+    const label = await Label.update(id, name);
 
     if (!label) {
       res.status(404).json({ error: "Label not found" });
@@ -80,14 +74,8 @@ const deleteLabel = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const labelId = parseInt(id, 10);
 
-    if (isNaN(labelId)) {
-      res.status(400).json({ error: "Invalid label id" });
-      return;
-    }
-
-    const label = await Label.deleteById(labelId);
+    const label = await Label.deleteById(id);
 
     if (!label) {
       res.status(404).json({ error: "Label not found" });

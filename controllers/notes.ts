@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import Label from "../models/Label";
 import Note from "../models/Note";
 import NoteLabel from "../models/NoteLabel";
+import { CreateLabelRequest } from "../types/labels";
 import { CreateNoteRequest, NoteUpdateRequest } from "../types/notes";
 
 const getAllNotes = async (_req: Request, res: Response): Promise<void> => {
@@ -114,38 +115,18 @@ const removeLabelFromNote = async (
 };
 
 const createLabelAndAddToNote = async (
-  req: Request<{ id: string }, {}, { id: number; name: string }>,
+  req: Request<{ id: string }, {}, CreateLabelRequest>,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { id } = req.params;
-    const labelData = req.body;
+    const noteId = req.params.id;
+    const { id: labelId, name } = req.body;
 
-    if (!labelData.id) {
-      res.status(400).json({ error: "Label id is required" });
-      return;
-    }
+    await Label.create(labelId, name);
+    await NoteLabel.addLabelToNote(noteId, labelId);
 
-    if (!labelData.name) {
-      res.status(400).json({ error: "Label name is required" });
-      return;
-    }
-
-    const note = await Note.findById(id);
-
-    if (!note) {
-      res.status(404).json({ error: "Note not found" });
-      return;
-    }
-
-    const label = await Label.create(labelData.id, labelData.name);
-    const associations = await Note.addLabels(id, [label.id]);
-
-    res.status(201).json({
-      label,
-      association: associations[0] || { note_id: id, label_id: label.id },
-    });
+    res.status(201).json({ id: labelId, name });
   } catch (error) {
     next(error);
   }

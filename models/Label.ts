@@ -9,7 +9,7 @@ const Label = {
     return result.rows;
   },
 
-  create: async (id: number, name: string): Promise<LabelType> => {
+  create: async (id: string, name: string): Promise<LabelType> => {
     const result = await pool.query(
       "INSERT INTO labels (id, name) VALUES ($1, $2) RETURNING *",
       [id, name]
@@ -17,7 +17,7 @@ const Label = {
     return result.rows[0];
   },
 
-  update: async (id: number, name: string): Promise<LabelType> => {
+  update: async (id: string, name: string): Promise<LabelType> => {
     const result = await pool.query(
       "UPDATE labels SET name = $1, updated_at = NOW() WHERE id = $2 RETURNING *",
       [name, id]
@@ -25,7 +25,7 @@ const Label = {
     return result.rows[0];
   },
 
-  deleteById: async (id: number): Promise<LabelType | undefined> => {
+  deleteById: async (id: string): Promise<LabelType | undefined> => {
     const result = await pool.query(
       "DELETE FROM labels WHERE id = $1 RETURNING *",
       [id]
