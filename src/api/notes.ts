@@ -6,17 +6,18 @@ export const notesApi = {
   getAll: async (): Promise<Note[]> => {
     const res = await fetch(`${API_URL}/notes`);
     const data = await res.json();
-    return toCamelCase(data);
+    return data;
   },
 
-  create: async (note: Omit<Note, 'isTrashed'>): Promise<Note> => {
+  create: async (note: Omit<Note, 'isTrashed'>): Promise<void> => {
     const res = await fetch(`${API_URL}/notes`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(toSnakeCase(note)),
+      body: JSON.stringify(note),
     });
-    const data = await res.json();
-    return toCamelCase(data);
+    if (!res.ok) {
+      throw new Error('Failed to create note');
+    }
   },
 
   update: async (id: string, note: Partial<Note>): Promise<Note> => {
