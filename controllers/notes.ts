@@ -3,7 +3,7 @@ import pool from "../config/database";
 import Label from "../models/Label";
 import Note from "../models/Note";
 import NoteLabel from "../models/NoteLabel";
-import { CreateNoteRequest } from "../types/notes";
+import { CreateNoteRequest, NoteUpdateRequest } from "../types/notes";
 
 const getAllNotes = async (
   _req: Request,
@@ -25,8 +25,13 @@ const createNote = async (
   const { id, title, content, colorId, isPinned, isArchived, labelIds } =
     req.body;
 
+  if (!id) {
+    res.status(400).json({ error: "missing_id" });
+    return;
+  }
+
   try {
-    const noteId = await Note.create({
+    const note = await Note.create({
       id,
       title,
       content,
@@ -36,18 +41,17 @@ const createNote = async (
     });
 
     if (Array.isArray(labelIds) && labelIds.length > 0) {
-      await NoteLabel.addLabelsToNote(noteId, labelIds);
+      await NoteLabel.addLabelsToNote(note.id, labelIds);
     }
 
-    res.status(201).send();
+    res.status(201).json({ data: note });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Could not create note" });
+    res.status(500).json({ error: "create_note_failed" });
   }
 };
 
 const updateNote = async (
-  req: Request<{ id: string }>,
+  req: Request<{ id: string }, {}, NoteUpdateRequest>,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -56,8 +60,9 @@ const updateNote = async (
     const updates = req.body;
 
     const note = await Note.update(id, updates);
+
     if (!note) {
-      res.status(404).json({ error: "Note not found" });
+      res.status(404).json({ error: "note_not_found" });
       return;
     }
 

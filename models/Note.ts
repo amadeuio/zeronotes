@@ -1,5 +1,9 @@
 import pool from "../config/database";
-import { CreateNoteRequest, type Note, type NoteUpdate } from "../types/notes";
+import {
+  CreateNoteRequest,
+  type Note,
+  type NoteUpdateRequest,
+} from "../types/notes";
 import { keysToCamel, keysToSnake } from "../utils/caseConverter";
 
 const Note = {
@@ -27,9 +31,7 @@ const Note = {
     return result.rows.map(keysToCamel);
   },
 
-  create: async (
-    body: Omit<CreateNoteRequest, "labelIds">
-  ): Promise<string> => {
+  create: async (body: Omit<CreateNoteRequest, "labelIds">): Promise<Note> => {
     const { id, title, content, color_id, is_pinned, is_archived } =
       keysToSnake(body);
 
@@ -42,53 +44,54 @@ const Note = {
     const values = [id, title, content, color_id, is_pinned, is_archived];
 
     const result = await pool.query(query, values);
-    return result.rows[0].id;
+    const note = keysToCamel(result.rows[0]);
+    return note;
   },
 
-  update: async (id: string, updates: NoteUpdate): Promise<Note> => {
-    const fields: string[] = [];
-    const values: unknown[] = [];
+  update: async (id: string, updates: NoteUpdateRequest): Promise<Note> => {
+    const { title, content, color_id, is_pinned, is_archived, is_trashed } =
+      keysToSnake(updates);
+
+    const fields = [];
+    const values = [];
     let paramCount = 1;
 
-    if (updates.title !== undefined) {
+    if (title !== undefined) {
       fields.push(`title = $${paramCount++}`);
-      values.push(updates.title);
+      values.push(title);
     }
-    if (updates.content !== undefined) {
+    if (content !== undefined) {
       fields.push(`content = $${paramCount++}`);
-      values.push(updates.content);
+      values.push(content);
     }
-    if (updates.color_id !== undefined) {
+    if (color_id !== undefined) {
       fields.push(`color_id = $${paramCount++}`);
-      values.push(updates.color_id);
+      values.push(color_id);
     }
-    if (updates.is_pinned !== undefined) {
+    if (is_pinned !== undefined) {
       fields.push(`is_pinned = $${paramCount++}`);
-      values.push(updates.is_pinned);
+      values.push(is_pinned);
     }
-    if (updates.is_archived !== undefined) {
+    if (is_archived !== undefined) {
       fields.push(`is_archived = $${paramCount++}`);
-      values.push(updates.is_archived);
+      values.push(is_archived);
     }
-    if (updates.is_trashed !== undefined) {
+    if (is_trashed !== undefined) {
       fields.push(`is_trashed = $${paramCount++}`);
-      values.push(updates.is_trashed);
-    }
-
-    if (fields.length === 0) {
-      throw new Error("No fields to update");
+      values.push(is_trashed);
     }
 
     fields.push(`updated_at = NOW()`);
     values.push(id);
 
-    const result = await pool.query(
-      `UPDATE notes SET ${fields.join(
-        ", "
-      )} WHERE id = $${paramCount} RETURNING *`,
-      values
-    );
-    return result.rows[0];
+    const query = `
+      UPDATE notes SET ${fields.join(", ")} WHERE id = $${paramCount} 
+      RETURNING id, title, content, color_id, is_pinned, is_archived, is_trashed
+    `;
+
+    const result = await pool.query(query, values);
+    const note = keysToCamel(result.rows[0]);
+    return note;
   },
 
   deleteById: async (id: string): Promise<Note | undefined> => {

@@ -18,11 +18,11 @@ export type CreateNoteRequest = {
   labelIds: string[];
 };
 
-export interface NoteUpdate {
+export interface NoteUpdateRequest {
   title?: string;
   content?: string;
-  color_id?: string;
-  is_pinned?: boolean;
-  is_archived?: boolean;
-  is_trashed?: boolean;
+  colorId?: string;
+  isPinned?: boolean;
+  isArchived?: boolean;
+  isTrashed?: boolean;
 }
