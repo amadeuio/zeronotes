@@ -1,5 +1,6 @@
-import { selectActions, useSelectNoteIdFromPosition, useStore } from '@/store';
-import { useEffect, useRef, useState, type MouseEvent, type RefObject } from 'react';
+import { useNotes } from '@/hooks';
+import { selectActions, selectNoteIdFromPosition, useStore } from '@/store';
+import { useRef, useState, type MouseEvent, type RefObject } from 'react';
 
 interface UseDragProps {
   noteId: string;
@@ -8,9 +9,8 @@ interface UseDragProps {
 }
 
 export const useDrag = ({ noteId, notePosition, noteRef }: UseDragProps) => {
-  const { notesOrder } = useStore(selectActions);
-  const getNoteIdFromPosition = useSelectNoteIdFromPosition();
-  const getNoteIdFromPositionRef = useRef(getNoteIdFromPosition);
+  const { reorderNotes } = useNotes();
+  const actions = useStore(selectActions);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [translate, setTranslate] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const dragStartPos = useRef<{
@@ -23,10 +23,6 @@ export const useDrag = ({ noteId, notePosition, noteRef }: UseDragProps) => {
     id: string | undefined;
     shouldCheck: boolean;
   }>({ id: undefined, shouldCheck: false });
-
-  useEffect(() => {
-    getNoteIdFromPositionRef.current = getNoteIdFromPosition;
-  }, [getNoteIdFromPosition]);
 
   const handleMouseDown = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
@@ -64,7 +60,8 @@ export const useDrag = ({ noteId, notePosition, noteRef }: UseDragProps) => {
 
       const pointerX = notePosition.x + dx + dragStartPos.current.offsetX;
       const pointerY = notePosition.y + dy + dragStartPos.current.offsetY;
-      const overId = getNoteIdFromPositionRef.current(pointerX, pointerY);
+      const getNoteIdFromPosition = selectNoteIdFromPosition(useStore.getState());
+      const overId = getNoteIdFromPosition(pointerX, pointerY);
 
       // Anti-flicker edge case: block note that moves under cursor after reorder and clear it when moving away
       if (blockedNote.current.shouldCheck) {
@@ -75,7 +72,7 @@ export const useDrag = ({ noteId, notePosition, noteRef }: UseDragProps) => {
       }
 
       if (overId && overId !== noteId && overId !== blockedNote.current.id) {
-        notesOrder.swap(noteId, overId);
+        actions.notesOrder.swap(noteId, overId);
         blockedNote.current.shouldCheck = true;
       }
     }
@@ -86,6 +83,9 @@ export const useDrag = ({ noteId, notePosition, noteRef }: UseDragProps) => {
     dragStartPos.current = { mouseX: 0, mouseY: 0, offsetX: 0, offsetY: 0 };
     blockedNote.current = { id: undefined, shouldCheck: false };
     setTranslate({ x: 0, y: 0 });
+
+    const notesOrder = useStore.getState().notes.order;
+    reorderNotes(notesOrder);
 
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);

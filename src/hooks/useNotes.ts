@@ -53,6 +53,10 @@ export const useNotes = () => {
     await api.createLabelAndAddToNote(noteId, newLabel);
   };
 
+  const reorderNotes = async (notesOrder: string[]) => {
+    await api.reorderNotes(notesOrder);
+  };
+
   return {
     create,
     update,
@@ -62,5 +66,6 @@ export const useNotes = () => {
     addLabel,
     removeLabel,
     createLabelAndAddToNote,
+    reorderNotes,
   };
 };

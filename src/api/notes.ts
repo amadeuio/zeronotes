@@ -58,4 +58,15 @@ export const notesApi = {
     const data = await res.json();
     return data;
   },
+
+  reorderNotes: async (noteIds: string[]): Promise<void> => {
+    const res = await fetch(`${API_URL}/notes/reorder`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ noteIds }),
+    });
+    if (!res.ok) {
+      throw new Error('Failed to reorder notes');
+    }
+  },
 };
