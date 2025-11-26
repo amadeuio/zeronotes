@@ -1,6 +1,5 @@
 import { API_URL } from '@/constants';
 import type { Label, Note } from '@/types';
-import { toCamelCase, toSnakeCase } from './utils';
 
 export const notesApi = {
   getAll: async (): Promise<Note[]> => {
@@ -24,10 +23,10 @@ export const notesApi = {
     const res = await fetch(`${API_URL}/notes/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(toSnakeCase(note)),
+      body: JSON.stringify(note),
     });
     const data = await res.json();
-    return toCamelCase(data);
+    return data;
   },
 
   delete: async (id: string): Promise<void> => {
@@ -40,7 +39,7 @@ export const notesApi = {
       headers: { 'Content-Type': 'application/json' },
     });
     const data = await res.json();
-    return toCamelCase(data);
+    return data;
   },
 
   removeLabel: async (id: string, labelId: string): Promise<void> => {
@@ -54,9 +53,9 @@ export const notesApi = {
     const res = await fetch(`${API_URL}/notes/${id}/labels`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(toSnakeCase(label)),
+      body: JSON.stringify(label),
     });
     const data = await res.json();
-    return toCamelCase(data);
+    return data;
   },
 };
