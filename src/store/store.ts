@@ -27,7 +27,7 @@ export interface Store {
   };
   actions: {
     notes: {
-      set: (notes: Note[]) => void;
+      set: (notesMap: Record<string, Note>) => void;
       create: (note: Omit<Note, 'isTrashed'>) => void;
       update: (id: string, note: Partial<Note>) => void;
       delete: (id: string) => void;
@@ -49,7 +49,7 @@ export interface Store {
       }) => void;
     };
     labels: {
-      set: (labels: Label[]) => void;
+      set: (labelsMap: Record<string, Label>) => void;
       create: (label: Label) => void;
       update: (id: string, label: Omit<Label, 'id'>) => void;
       delete: (id: string) => void;
@@ -85,17 +85,11 @@ export const useStore = create<Store>()(
     api: { loading: false, error: false },
     actions: {
       notes: {
-        set: (notes) => {
+        set: (notesMap) => {
           set((state) => ({
             notes: {
               ...state.notes,
-              byId: notes.reduce(
-                (acc, note) => {
-                  acc[note.id] = note;
-                  return acc;
-                },
-                {} as Record<string, Note>,
-              ),
+              byId: notesMap,
             },
           }));
         },
@@ -228,17 +222,11 @@ export const useStore = create<Store>()(
         },
       },
       labels: {
-        set: (labels) => {
+        set: (labelsMap) => {
           set((state) => ({
             labels: {
               ...state.labels,
-              byId: labels.reduce(
-                (acc, label) => {
-                  acc[label.id] = label;
-                  return acc;
-                },
-                {} as Record<string, Label>,
-              ),
+              byId: labelsMap,
             },
           }));
         },

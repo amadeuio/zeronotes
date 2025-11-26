@@ -1,11 +1,17 @@
 import { labelsApi, withApiStatus } from '@/api';
 import { selectActions, useStore } from '@/store';
 import type { Label } from '@/types';
+import { mapLabelDtosToLabelsMap } from '@/utils';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useLabels = () => {
   const actions = useStore(selectActions);
   const api = withApiStatus(labelsApi, actions);
+
+  const getAll = async () => {
+    const labelsDto = await api.getAll();
+    actions.labels.set(mapLabelDtosToLabelsMap(labelsDto));
+  };
 
   const create = async (name: string) => {
     const id = uuidv4();
@@ -32,5 +38,5 @@ export const useLabels = () => {
     await api.create(newLabel);
   };
 
-  return { create, update, remove, createAndCallAction };
+  return { getAll, create, update, remove, createAndCallAction };
 };

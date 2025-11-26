@@ -11,8 +11,15 @@ export interface Note {
   isTrashed: boolean;
 }
 
-export interface DisplayNote extends Omit<Note, 'labelIds'> {
+export type DisplayNote = Omit<Note, 'labelIds'> & {
   labels: Label[];
   colorValue: string | null;
-}
+};
+
 export type DraftNote = Omit<Note, 'id' | 'isTrashed'>;
+
+export type NoteDto = Note & {
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
