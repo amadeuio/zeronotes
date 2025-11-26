@@ -1,13 +1,17 @@
-import { Request, Response } from "express";
-import LabelModel from "../models/Label";
-import NoteModel from "../models/Note";
-import NoteLabelModel from "../models/NoteLabel";
-import { LabelCreateRequest } from "../types/labels";
-import { NoteCreateRequest, NoteUpdateRequest } from "../types/notes";
+import express, { Request, Response } from "express";
+import { labelService } from "../domain/labels/label.service";
+import { LabelCreateRequest } from "../domain/labels/label.types";
+import { noteService } from "../domain/notes/note.service";
+import {
+  NoteCreateRequest,
+  NoteUpdateRequest,
+} from "../domain/notes/note.types";
+
+const router = express.Router();
 
 const getAllNotes = async (_req: Request, res: Response) => {
   try {
-    const notes = await NoteModel.findAll();
+    const notes = await noteService.findAllWithLabels();
     res.json(notes);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch notes" });
@@ -19,28 +23,15 @@ const createNote = async (
   res: Response
 ) => {
   try {
-    const { id, title, content, colorId, isPinned, isArchived, labelIds } =
-      req.body;
+    const data = req.body;
 
-    if (!id) {
+    if (!data.id) {
       res.status(400).json({ error: "id is required" });
       return;
     }
 
-    const note = await NoteModel.create(
-      id,
-      title,
-      content,
-      colorId,
-      isPinned,
-      isArchived
-    );
-
-    if (Array.isArray(labelIds) && labelIds.length > 0) {
-      await NoteLabelModel.addLabelsToNote(note.id, labelIds);
-    }
-
-    res.status(201).json(note);
+    const noteId = await noteService.create(data);
+    res.status(201).json(noteId);
   } catch (error) {
     res.status(500).json({ error: "Failed to create note" });
   }
@@ -52,23 +43,16 @@ const updateNote = async (
 ) => {
   try {
     const { id } = req.params;
-    const { title, content, colorId, isPinned, isArchived } = req.body;
+    const data = req.body;
 
-    const note = await NoteModel.update(
-      id,
-      title,
-      content,
-      colorId,
-      isPinned,
-      isArchived
-    );
+    const noteId = await noteService.update(id, data);
 
-    if (!note) {
+    if (!noteId) {
       res.status(404).json({ error: "Note not found" });
       return;
     }
 
-    res.json(note);
+    res.json(noteId);
   } catch (error) {
     res.status(500).json({ error: "Failed to update note" });
   }
@@ -77,9 +61,9 @@ const updateNote = async (
 const deleteNote = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const { id } = req.params;
-    const note = await NoteModel.delete(id);
+    const deleted = await noteService.delete(id);
 
-    if (!note) {
+    if (!deleted) {
       res.status(404).json({ error: "Note not found" });
       return;
     }
@@ -102,7 +86,7 @@ const addLabelToNote = async (
       return;
     }
 
-    await NoteLabelModel.addLabelToNote(id, labelId);
+    await noteService.addLabel(id, labelId);
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ error: "Failed to add label to note" });
@@ -121,7 +105,7 @@ const removeLabelFromNote = async (
       return;
     }
 
-    await NoteLabelModel.removeLabelFromNote(id, labelId);
+    await noteService.removeLabel(id, labelId);
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ error: "Failed to remove label from note" });
@@ -134,15 +118,15 @@ const createLabelAndAddToNote = async (
 ) => {
   try {
     const { id } = req.params;
-    const { id: labelId, name } = req.body;
+    const labelData = req.body;
 
-    if (!id || !labelId || !name) {
+    if (!id || !labelData.id || !labelData.name) {
       res.status(400).json({ error: "id, labelId and name are required" });
       return;
     }
 
-    const label = await LabelModel.create(labelId, name);
-    await NoteLabelModel.addLabelToNote(id, labelId);
+    const label = await labelService.create(labelData);
+    await noteService.addLabel(id, labelData.id);
 
     res.status(201).json(label);
   } catch (error) {
@@ -150,12 +134,12 @@ const createLabelAndAddToNote = async (
   }
 };
 
-export {
-  addLabelToNote,
-  createLabelAndAddToNote,
-  createNote,
-  deleteNote,
-  getAllNotes,
-  removeLabelFromNote,
-  updateNote,
-};
+router.get("/", getAllNotes);
+router.post("/", createNote);
+router.put("/:id", updateNote);
+router.delete("/:id", deleteNote);
+router.post("/:id/labels/:labelId", addLabelToNote);
+router.delete("/:id/labels/:labelId", removeLabelFromNote);
+router.post("/:id/labels", createLabelAndAddToNote);
+
+export default router;

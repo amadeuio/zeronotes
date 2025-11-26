@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
-import pool from "../config/database";
+import pool from "../src/db/client";
 
 dotenv.config();
 

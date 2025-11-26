@@ -1,9 +1,10 @@
-import pool from "../config/database";
-import { Note, NoteDto } from "../types/notes";
-import { keysToCamel } from "../utils/caseConverter";
+import { NoteDB } from "../../domain/notes/note.types";
+import pool from "../client";
 
-const NoteModel = {
-  findAll: async (): Promise<NoteDto[]> => {
+export const noteQueries = {
+  findAllWithLabels: async (): Promise<
+    (NoteDB & { label_ids: string[] })[]
+  > => {
     const result = await pool.query(`
       SELECT 
         n.*,
@@ -18,37 +19,27 @@ const NoteModel = {
       ORDER BY n.created_at DESC
     `);
 
-    return result.rows.map(keysToCamel);
+    return result.rows;
   },
 
   create: async (
     id: string,
+    order: number,
     title?: string,
     content?: string,
     colorId?: string,
     isPinned?: boolean,
     isArchived?: boolean
-  ): Promise<Note> => {
-    const minPos = await pool.query('SELECT MIN("order") FROM notes');
-    const firstPos = minPos.rows[0].min - 1;
-
+  ): Promise<NoteDB> => {
     const query = `
       INSERT INTO notes (id, "order", title, content, color_id, is_pinned, is_archived) 
       VALUES ($1, $2, $3, $4, $5, $6, $7) 
       RETURNING *
     `;
-    const values = [
-      id,
-      firstPos,
-      title,
-      content,
-      colorId,
-      isPinned,
-      isArchived,
-    ];
+    const values = [id, order, title, content, colorId, isPinned, isArchived];
 
     const result = await pool.query(query, values);
-    return keysToCamel(result.rows[0]);
+    return result.rows[0];
   },
 
   update: async (
@@ -58,7 +49,7 @@ const NoteModel = {
     colorId?: string,
     isPinned?: boolean,
     isArchived?: boolean
-  ): Promise<Note> => {
+  ): Promise<NoteDB> => {
     const fields = [];
     const values = [];
     let paramCount = 1;
@@ -94,7 +85,7 @@ const NoteModel = {
     const query = `UPDATE notes SET ${fields.join(", ")} WHERE id = $${paramCount} RETURNING *`;
 
     const result = await pool.query(query, values);
-    return keysToCamel(result.rows[0]);
+    return result.rows[0];
   },
 
   delete: async (id: string): Promise<boolean> => {
@@ -102,10 +93,8 @@ const NoteModel = {
     return result.rowCount ? result.rowCount > 0 : false;
   },
 
-  findById: async (id: string): Promise<Note | undefined> => {
-    const result = await pool.query("SELECT * FROM notes WHERE id = $1", [id]);
-    return keysToCamel(result.rows[0]);
+  getMinOrder: async (): Promise<number> => {
+    const result = await pool.query('SELECT MIN("order") FROM notes');
+    return result.rows[0].min - 1;
   },
 };
-
-export default NoteModel;

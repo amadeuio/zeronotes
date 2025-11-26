@@ -1,6 +1,6 @@
-import pool from "../config/database";
+import pool from "../client";
 
-const NoteLabelModel = {
+export const noteLabelQueries = {
   addLabelToNote: async (noteId: string, labelId: string): Promise<boolean> => {
     const result = await pool.query(
       "INSERT INTO note_labels (note_id, label_id) VALUES ($1, $2) ON CONFLICT (note_id, label_id) DO NOTHING",
@@ -44,5 +44,3 @@ const NoteLabelModel = {
     return result.rowCount ? result.rowCount > 0 : false;
   },
 };
-
-export default NoteLabelModel;

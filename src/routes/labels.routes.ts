@@ -1,10 +1,15 @@
-import { Request, Response } from "express";
-import LabelModel from "../models/Label";
-import { LabelCreateRequest, LabelUpdateRequest } from "../types/labels";
+import express, { Request, Response } from "express";
+import { labelService } from "../domain/labels/label.service";
+import {
+  LabelCreateRequest,
+  LabelUpdateRequest,
+} from "../domain/labels/label.types";
+
+const router = express.Router();
 
 const getAllLabels = async (_req: Request, res: Response) => {
   try {
-    const labels = await LabelModel.findAll();
+    const labels = await labelService.findAll();
     res.json(labels);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch labels" });
@@ -16,15 +21,15 @@ const createLabel = async (
   res: Response
 ) => {
   try {
-    const { id, name } = req.body;
+    const data = req.body;
 
-    if (!id || !name) {
+    if (!data.id || !data.name) {
       res.status(400).json({ error: "id and name are required" });
       return;
     }
 
-    const label = await LabelModel.create(id, name);
-    res.status(201).json(label);
+    const labelId = await labelService.create(data);
+    res.status(201).json(labelId);
   } catch (error) {
     res.status(500).json({ error: "Failed to create label" });
   }
@@ -36,21 +41,21 @@ const updateLabel = async (
 ) => {
   try {
     const { id } = req.params;
-    const { name } = req.body;
+    const data = req.body;
 
-    if (!name) {
+    if (!data.name) {
       res.status(400).json({ error: "Name is required" });
       return;
     }
 
-    const label = await LabelModel.update(id, name);
+    const labelId = await labelService.update(id, data);
 
-    if (!label) {
+    if (!labelId) {
       res.status(404).json({ error: "Label not found" });
       return;
     }
 
-    res.json(label);
+    res.json(labelId);
   } catch (error) {
     res.status(500).json({ error: "Failed to update label" });
   }
@@ -59,9 +64,9 @@ const updateLabel = async (
 const deleteLabel = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const { id } = req.params;
-    const label = await LabelModel.delete(id);
+    const deleted = await labelService.delete(id);
 
-    if (!label) {
+    if (!deleted) {
       res.status(404).json({ error: "Label not found" });
       return;
     }
@@ -72,4 +77,9 @@ const deleteLabel = async (req: Request<{ id: string }>, res: Response) => {
   }
 };
 
-export { createLabel, deleteLabel, getAllLabels, updateLabel };
+router.get("/", getAllLabels);
+router.post("/", createLabel);
+router.put("/:id", updateLabel);
+router.delete("/:id", deleteLabel);
+
+export default router;

@@ -1,8 +1,13 @@
-export interface Label {
+export interface LabelDB {
   id: string;
   name: string;
-  createdAt: Date;
-  updatedAt: Date;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface LabelAPI {
+  id: string;
+  name: string;
 }
 
 export interface LabelCreateRequest {
