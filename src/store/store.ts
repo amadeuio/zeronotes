@@ -37,7 +37,7 @@ export interface Store {
     };
     notesOrder: {
       set: (notesOrder: string[]) => void;
-      update: (noteId: string, overId: string) => void;
+      swap: (noteId: string, overId: string) => void;
     };
     noteHeights: {
       update: (id: string, height: number | null) => void;
@@ -192,7 +192,7 @@ export const useStore = create<Store>()(
         set: (notesOrder) => {
           set((state) => ({ notes: { ...state.notes, order: notesOrder } }));
         },
-        update: (noteId, overId) => {
+        swap: (noteId, overId) => {
           set((state) => {
             const newOrder = [...state.notes.order];
             const fromIndex = newOrder.indexOf(noteId);

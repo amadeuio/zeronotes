@@ -38,7 +38,7 @@ beforeEach(() => {
   });
 });
 
-describe('notesOrder.update', () => {
+describe('notesOrder.swap', () => {
   it('should move a note to a new position in the order', () => {
     const store = useStore.getState();
     const initialOrder = [...store.notes.order];
@@ -46,7 +46,7 @@ describe('notesOrder.update', () => {
     const noteId = initialOrder[0];
     const overId = initialOrder[2];
 
-    useStore.getState().actions.notesOrder.update(noteId, overId);
+    useStore.getState().actions.notesOrder.swap(noteId, overId);
 
     const newOrder = useStore.getState().notes.order;
     expect(newOrder[2]).toBe(noteId);
@@ -61,7 +61,7 @@ describe('notesOrder.update', () => {
     const noteId = initialOrder[0];
     const overId = initialOrder[lastIndex];
 
-    useStore.getState().actions.notesOrder.update(noteId, overId);
+    useStore.getState().actions.notesOrder.swap(noteId, overId);
 
     const newOrder = useStore.getState().notes.order;
     expect(newOrder[lastIndex]).toBe(noteId);
@@ -75,7 +75,7 @@ describe('notesOrder.update', () => {
     const noteId = initialOrder[1];
     const overId = initialOrder[4];
 
-    useStore.getState().actions.notesOrder.update(noteId, overId);
+    useStore.getState().actions.notesOrder.swap(noteId, overId);
 
     const newOrder = useStore.getState().notes.order;
     const newSet = new Set(newOrder);

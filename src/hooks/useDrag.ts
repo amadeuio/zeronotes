@@ -75,7 +75,7 @@ export const useDrag = ({ noteId, notePosition, noteRef }: UseDragProps) => {
       }
 
       if (overId && overId !== noteId && overId !== blockedNote.current.id) {
-        notesOrder.update(noteId, overId);
+        notesOrder.swap(noteId, overId);
         blockedNote.current.shouldCheck = true;
       }
     }
