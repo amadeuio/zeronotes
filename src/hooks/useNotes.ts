@@ -1,18 +1,11 @@
 import { notesApi, withApiStatus } from '@/api';
 import { selectActions, useStore } from '@/store';
 import type { DraftNote, Note } from '@/types';
-import { getSortedNoteIds, mapNoteDtosToNotesMap } from '@/utils';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useNotes = () => {
   const actions = useStore(selectActions);
   const api = withApiStatus(notesApi, actions);
-
-  const getAll = async () => {
-    const notesDto = await api.getAll();
-    actions.notes.set(mapNoteDtosToNotesMap(notesDto));
-    actions.notesOrder.set(getSortedNoteIds(notesDto));
-  };
 
   const create = async (note: DraftNote) => {
     const id = uuidv4();
@@ -61,7 +54,6 @@ export const useNotes = () => {
   };
 
   return {
-    getAll,
     create,
     update,
     remove,
