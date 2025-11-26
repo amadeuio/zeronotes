@@ -17,9 +17,3 @@ export type DisplayNote = Omit<Note, 'labelIds'> & {
 };
 
 export type DraftNote = Omit<Note, 'id' | 'isTrashed'>;
-
-export type NoteDto = Note & {
-  order: number;
-  createdAt: Date;
-  updatedAt: Date;
-};

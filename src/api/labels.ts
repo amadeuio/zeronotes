@@ -1,8 +1,8 @@
 import { API_URL } from '@/constants';
-import type { Label, LabelDto } from '@/types';
+import type { Label } from '@/types';
 
 export const labelsApi = {
-  getAll: async (): Promise<LabelDto[]> => {
+  getAll: async (): Promise<Label[]> => {
     const res = await fetch(`${API_URL}/labels`);
     const data = await res.json();
     return data;
