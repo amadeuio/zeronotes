@@ -1,10 +1,10 @@
 import { EditLabelsModal, Icon, Main, Navbar, NoteActive, Sidebar } from '@/components';
-import { useFetchApp, useMobile } from '@/hooks';
+import { useBootstrap, useMobile } from '@/hooks';
 import { selectActions, selectActiveNoteId, selectUi, useStore } from '@/store';
 import { cn } from '@/utils';
 
 const App = () => {
-  const isLoading = useFetchApp();
+  const isLoading = useBootstrap();
   const isMobile = useMobile();
   const { isEditLabelsMenuOpen, isSidebarCollapsed } = useStore(selectUi);
   const activeNoteId = useStore(selectActiveNoteId);

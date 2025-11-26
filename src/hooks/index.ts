@@ -1,7 +1,7 @@
+export { useBootstrap } from './useBootstrap';
 export { useClickOutside } from './useClickOutside';
 export { useDrag } from './useDrag';
 export { useEscapeKey } from './useEscapeKey';
-export { useFetchApp } from './useFetchApp';
 export { useLabels } from './useLabels';
 export { useMobile } from './useMobile';
 export { useMountDelay } from './useMountDelay';

@@ -1,5 +1,5 @@
 import { COLORS } from '@/constants';
-import type { DisplayNote, Filters, Label, Note, NoteDto } from '@/types';
+import type { DisplayNote, Filters, Label, Note } from '@/types';
 
 export const filterNote = (note: Note, filters: Filters): boolean => {
   const q = filters.search.trim().toLowerCase();
@@ -38,17 +38,3 @@ export const mapNoteToDisplay = (note: Note, labels: Record<string, Label>): Dis
     colorValue,
   };
 };
-
-export const mapNoteDtosToNotesMap = (notesDto: NoteDto[]): Record<string, Note> => {
-  return notesDto.reduce(
-    (acc, noteDto) => {
-      const { order, createdAt, updatedAt, ...note } = noteDto;
-      acc[noteDto.id] = note;
-      return acc;
-    },
-    {} as Record<string, Note>,
-  );
-};
-
-export const getSortedNoteIds = (notesDto: NoteDto[]): string[] =>
-  [...notesDto].sort((a, b) => a.order - b.order).map((n) => n.id);
