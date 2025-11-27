@@ -1,3 +1,4 @@
+import { fetchWithAuth } from '@/api/utils';
 import { API_URL } from '@/constants';
 import { selectActions, useStore } from '@/store';
 import type { Label, Note } from '@/types';
@@ -10,7 +11,7 @@ export interface BootstrapAPI {
 }
 
 const getBootstrap = async (): Promise<BootstrapAPI> => {
-  const res = await fetch(`${API_URL}/bootstrap`);
+  const res = await fetchWithAuth(`${API_URL}/bootstrap`);
   const data = await res.json();
   return data;
 };
