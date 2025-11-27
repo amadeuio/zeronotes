@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { userQueries } from "../../db/queries/users";
 import { hashPassword, verifyPassword } from "../../utils/crypto";
-import { issueToken } from "../../utils/jwt";
+import { createToken } from "../../utils/jwt";
 import { userMappers } from "./user.mappers";
 import {
   AuthResponse,
@@ -22,7 +22,7 @@ export const userService = {
     const userId = uuidv4();
     const user = await userQueries.create(userId, data.email, passwordHash);
 
-    const token = await issueToken(user.id);
+    const token = await createToken(user.id);
 
     return {
       user: userMappers.dbToAPI(user),
@@ -41,7 +41,7 @@ export const userService = {
       throw new Error("Invalid credentials");
     }
 
-    const token = await issueToken(user.id);
+    const token = await createToken(user.id);
 
     return {
       user: userMappers.dbToAPI(user),

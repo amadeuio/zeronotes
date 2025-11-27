@@ -3,7 +3,7 @@ import { env } from "./env";
 
 const SECRET = new TextEncoder().encode(env.JWT_SECRET);
 
-export const issueToken = async (userId: string): Promise<string> =>
+export const createToken = async (userId: string): Promise<string> =>
   new SignJWT({ userId })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
