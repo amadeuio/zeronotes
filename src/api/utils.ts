@@ -1,6 +1,5 @@
 import type { Store } from '@/store';
 
-// Handle auth at the fetch level
 export const fetchWithAuth = async (url: string, options: RequestInit = {}): Promise<Response> => {
   const SEED_TOKEN = import.meta.env.VITE_SEED_TOKEN;
   const headers = new Headers(options.headers);
@@ -12,7 +11,6 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}): Pro
   });
 };
 
-// Handle status tracking at the API method level
 export const withApiStatus = <T extends Record<string, (...args: any[]) => Promise<any>>>(
   api: T,
   actions: Store['actions'],

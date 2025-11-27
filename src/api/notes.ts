@@ -1,5 +1,5 @@
-import { API_URL } from '@/constants';
 import type { Label, Note } from '@/types';
+import { API_URL } from './constants';
 import { fetchWithAuth } from './utils';
 
 export const notesApi = {
@@ -44,7 +44,9 @@ export const notesApi = {
   },
 
   removeLabel: async (id: string, labelId: string): Promise<void> => {
-    await fetchWithAuth(`${API_URL}/notes/${id}/labels/${labelId}`, { method: 'DELETE' });
+    await fetchWithAuth(`${API_URL}/notes/${id}/labels/${labelId}`, {
+      method: 'DELETE',
+    });
   },
 
   createLabelAndAddToNote: async (

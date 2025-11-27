@@ -1,3 +1,6 @@
+export { authApi } from './auth';
+export { bootstrapApi } from './bootstrap';
+export { API_URL } from './constants';
 export { labelsApi } from './labels';
 export { notesApi } from './notes';
-export { withApiStatus } from './utils';
+export { fetchWithAuth, withApiStatus } from './utils';

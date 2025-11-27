@@ -1,5 +1,5 @@
-import { API_URL } from '@/constants';
 import type { Label } from '@/types';
+import { API_URL } from './constants';
 import { fetchWithAuth } from './utils';
 
 export const labelsApi = {
