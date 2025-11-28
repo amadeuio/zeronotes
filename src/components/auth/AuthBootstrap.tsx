@@ -7,13 +7,13 @@ const AuthBootstrap = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const restoreAuth = async () => {
+    const initializeAuth = async () => {
       setIsLoading(true);
       await initialize();
       setIsLoading(false);
     };
 
-    restoreAuth();
+    initializeAuth();
   }, []);
 
   return isLoading ? (

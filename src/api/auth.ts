@@ -25,6 +25,7 @@ export interface MeResponse {
 
 export const authApi = {
   register: async (credentials: RegisterRequest): Promise<AuthResponse> => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     const res = await fetch(`${API_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -46,6 +47,7 @@ export const authApi = {
   },
 
   login: async (credentials: LoginRequest): Promise<AuthResponse> => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     const res = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -67,7 +69,7 @@ export const authApi = {
   },
 
   me: async (token: string): Promise<MeResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     const res = await fetch(`${API_URL}/auth/me`, {
       headers: {
         Authorization: `Bearer ${token}`,

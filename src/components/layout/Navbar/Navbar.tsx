@@ -1,11 +1,20 @@
 import logo from '@/assets/logo.png';
 import { ApiStatus, IconButton } from '@/components';
+import { useAuth } from '@/hooks';
 import { selectActions, useStore } from '@/store';
+import { useNavigate } from '@tanstack/react-router';
 import Search from './Search';
 import User from './User';
 
 const Navbar = () => {
   const { ui } = useStore(selectActions);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate({ to: '/login' });
+  };
 
   return (
     <nav className="flex h-16 justify-between border-b px-3 py-2">
@@ -26,6 +35,7 @@ const Navbar = () => {
       <div className="flex items-center gap-x-2">
         <ApiStatus />
         <IconButton iconName="settings" label="Settings" size={24} className="hidden md:flex" />
+        <IconButton iconName="logout" label="Logout" size={24} onClick={handleLogout} />
         <User />
       </div>
     </nav>
