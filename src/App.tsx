@@ -8,7 +8,7 @@ const App = () => {
   const isMobile = useMobile();
   const { isEditLabelsMenuOpen, isSidebarCollapsed } = useStore(selectUi);
   const activeNoteId = useStore(selectActiveNoteId);
-  const { ui } = useStore(selectActions);
+  const actions = useStore(selectActions);
 
   return (
     <div className="flex h-screen flex-col">
@@ -30,7 +30,9 @@ const App = () => {
           <Main />
         </div>
       )}
-      {isEditLabelsMenuOpen && <EditLabelsModal onClose={() => ui.setEditLabelsMenuOpen(false)} />}
+      {isEditLabelsMenuOpen && (
+        <EditLabelsModal onClose={() => actions.ui.setEditLabelsMenuOpen(false)} />
+      )}
       {activeNoteId && <NoteActive />}
     </div>
   );

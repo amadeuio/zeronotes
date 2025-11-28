@@ -7,7 +7,7 @@ interface UseUpdateNoteHeightProps {
 }
 
 export const useUpdateNoteHeight = ({ noteId, noteRef }: UseUpdateNoteHeightProps) => {
-  const { noteHeights } = useStore(selectActions);
+  const actions = useStore(selectActions);
   const activeNoteId = useStore(selectActiveNoteId);
 
   useLayoutEffect(() => {
@@ -15,7 +15,7 @@ export const useUpdateNoteHeight = ({ noteId, noteRef }: UseUpdateNoteHeightProp
 
     const updateHeight = () => {
       if (!noteRef.current) return;
-      noteHeights.update(noteId, noteRef.current.offsetHeight);
+      actions.noteHeights.update(noteId, noteRef.current.offsetHeight);
     };
 
     updateHeight();

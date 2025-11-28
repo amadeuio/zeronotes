@@ -7,7 +7,7 @@ import Search from './Search';
 import User from './User';
 
 const Navbar = () => {
-  const { ui } = useStore(selectActions);
+  const actions = useStore(selectActions);
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -24,7 +24,7 @@ const Navbar = () => {
           iconClassName="text-color-primary"
           label="Main menu"
           size={24}
-          onClick={() => ui.toggleSidebar()}
+          onClick={() => actions.ui.toggleSidebar()}
         />
         <div className="mr-22 ml-2 hidden items-center gap-x-2 md:flex">
           <img src={logo} alt="Keep logo" className="size-10" />

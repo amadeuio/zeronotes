@@ -5,7 +5,7 @@ const MOBILE_BREAKPOINT = 768;
 const DEBOUNCE_DELAY = 150;
 
 export const useMobile = () => {
-  const { ui } = useStore(selectActions);
+  const actions = useStore(selectActions);
   const [isMobile, setIsMobile] = useState(window.innerWidth < MOBILE_BREAKPOINT);
 
   useEffect(() => {
@@ -28,9 +28,9 @@ export const useMobile = () => {
 
   useEffect(() => {
     if (isMobile) {
-      ui.closeSidebar();
+      actions.ui.closeSidebar();
     }
-  }, [isMobile, ui]);
+  }, [isMobile, actions]);
 
   return isMobile;
 };

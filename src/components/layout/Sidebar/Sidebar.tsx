@@ -42,7 +42,7 @@ interface SidebarProps {
 const Sidebar = ({ isMobile }: SidebarProps) => {
   const labels = useStore(selectLabelsArray);
   const view = useStore(selectFiltersView);
-  const { filters, ui } = useStore(selectActions);
+  const actions = useStore(selectActions);
   const { isSidebarCollapsed } = useStore(selectUi);
 
   return (
@@ -58,7 +58,7 @@ const Sidebar = ({ isMobile }: SidebarProps) => {
         title="Notes"
         url="#"
         iconName="lightbulb_2"
-        onClick={() => filters.set({ view: { type: 'notes' } })}
+        onClick={() => actions.filters.set({ view: { type: 'notes' } })}
         isActive={view.type === 'notes'}
         isCollapsed={isSidebarCollapsed}
       />
@@ -68,7 +68,7 @@ const Sidebar = ({ isMobile }: SidebarProps) => {
           title={label.name}
           url="#"
           iconName="label"
-          onClick={() => filters.set({ view: { type: 'label', id: label.id } })}
+          onClick={() => actions.filters.set({ view: { type: 'label', id: label.id } })}
           isActive={view.type === 'label' && view.id === label.id}
           isCollapsed={isSidebarCollapsed}
         />
@@ -77,14 +77,14 @@ const Sidebar = ({ isMobile }: SidebarProps) => {
         title="Edit labels"
         url="#"
         iconName="edit"
-        onClick={() => ui.setEditLabelsMenuOpen(true)}
+        onClick={() => actions.ui.setEditLabelsMenuOpen(true)}
         isCollapsed={isSidebarCollapsed}
       />
       <SidebarItem
         title="Archive"
         url="#"
         iconName="archive"
-        onClick={() => filters.set({ view: { type: 'archive' } })}
+        onClick={() => actions.filters.set({ view: { type: 'archive' } })}
         isActive={view.type === 'archive'}
         isCollapsed={isSidebarCollapsed}
       />
@@ -92,7 +92,7 @@ const Sidebar = ({ isMobile }: SidebarProps) => {
         title="Trash"
         url="#"
         iconName="delete"
-        onClick={() => filters.set({ view: { type: 'trash' } })}
+        onClick={() => actions.filters.set({ view: { type: 'trash' } })}
         isActive={view.type === 'trash'}
         isCollapsed={isSidebarCollapsed}
       />

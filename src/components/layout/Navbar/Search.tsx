@@ -57,7 +57,7 @@ interface SearchProps {
 const Search = ({ className }: SearchProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const search = useStore(selectFiltersSearch);
-  const { filters } = useStore(selectActions);
+  const actions = useStore(selectActions);
 
   return (
     <form
@@ -80,13 +80,13 @@ const Search = ({ className }: SearchProps) => {
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         value={search}
-        onChange={(e) => filters.set({ search: e.target.value })}
+        onChange={(e) => actions.filters.set({ search: e.target.value })}
       />
       <SearchIconButton
         iconName="close"
         label="Clear search"
         dark={isFocused}
-        onClick={() => filters.set({ search: '' })}
+        onClick={() => actions.filters.set({ search: '' })}
         className={cn(isFocused ? 'opacity-100' : 'cursor-default opacity-0')}
       />
     </form>

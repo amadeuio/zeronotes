@@ -3,7 +3,7 @@ import { getGridColumnsFromWidth } from '@/utils';
 import { useLayoutEffect, useRef } from 'react';
 
 export const useSetGridColumns = () => {
-  const { ui } = useStore(selectActions);
+  const actions = useStore(selectActions);
   const gridRef = useRef<HTMLDivElement>(null);
   const columnsRef = useRef<number | null>(null);
 
@@ -16,7 +16,7 @@ export const useSetGridColumns = () => {
 
       if (columnsRef.current !== newColumns) {
         columnsRef.current = newColumns;
-        ui.setGridColumns(newColumns);
+        actions.ui.setGridColumns(newColumns);
       }
     };
 
@@ -28,7 +28,7 @@ export const useSetGridColumns = () => {
     }
 
     return () => resizeObserver.disconnect();
-  }, [ui]);
+  }, [actions]);
 
   return gridRef;
 };

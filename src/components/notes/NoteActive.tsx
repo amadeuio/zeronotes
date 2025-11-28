@@ -13,11 +13,11 @@ import TextEdit from './TextEdit';
 const NoteActive = () => {
   const note = useStore(selectActiveNoteDisplay)!;
   const position = useStore(selectActiveNotePosition);
-  const { activeNote } = useStore(selectActions);
+  const actions = useStore(selectActions);
   const { update, removeLabel } = useNotes();
   const { positionStyles, backdropStyles, initiateClose } = useNoteTransition({
     position,
-    onClose: () => activeNote.set({ id: null, position: null }),
+    onClose: () => actions.activeNote.set({ id: null, position: null }),
   });
 
   useEscapeKey({ onEscape: initiateClose });

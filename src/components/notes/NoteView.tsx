@@ -22,7 +22,7 @@ interface NoteViewProps {
 
 const NoteView = ({ note }: NoteViewProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { activeNote } = useStore(selectActions);
+  const actions = useStore(selectActions);
   const { update, removeLabel } = useNotes();
   const isActive = useSelectIsNoteActive(note.id);
   const search = useStore(selectFiltersSearch);
@@ -41,7 +41,7 @@ const NoteView = ({ note }: NoteViewProps) => {
 
   const handleClick = (e: MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    activeNote.set({
+    actions.activeNote.set({
       id: note.id,
       position: {
         top: rect.top,
