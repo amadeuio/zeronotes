@@ -1,4 +1,5 @@
 import { API_URL } from './constants';
+import { fetchWithAuth } from './utils';
 
 export interface RegisterRequest {
   email: string;
@@ -13,6 +14,13 @@ export interface LoginRequest {
 export interface AuthResponse {
   token?: string;
   user?: {
+    id: string;
+    email: string;
+  };
+}
+
+export interface MeResponse {
+  user: {
     id: string;
     email: string;
   };
@@ -55,6 +63,24 @@ export const authApi = {
         throw new Error('Email and password are required');
       }
       throw new Error('Failed to login');
+    }
+
+    const data = await res.json();
+    return data;
+  },
+
+  me: async (): Promise<MeResponse> => {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const res = await fetchWithAuth(`${API_URL}/auth/me`);
+
+    if (!res.ok) {
+      if (res.status === 401) {
+        throw new Error('Unauthorized');
+      }
+      if (res.status === 404) {
+        throw new Error('User not found');
+      }
+      throw new Error('Failed to get user');
     }
 
     const data = await res.json();
