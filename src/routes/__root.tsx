@@ -1,10 +1,42 @@
-import { createRootRoute, createRouter, Outlet } from '@tanstack/react-router';
-import { indexRoute, loginRoute, notesRoute } from './index';
+import App from '@/App';
+import LoginPage from '@/components/auth/LoginPage';
+import { useStore } from '@/store';
+import {
+  createRootRoute,
+  createRoute,
+  createRouter,
+  Outlet,
+  redirect,
+} from '@tanstack/react-router';
 
 export const rootRoute = createRootRoute({
+  beforeLoad: async ({ location }) => {
+    const { isAuthenticated } = useStore.getState().auth;
+    const currentPath = location.pathname;
+
+    if (!isAuthenticated && currentPath !== '/login') {
+      throw redirect({ to: '/login' });
+    }
+
+    if (isAuthenticated && currentPath === '/login') {
+      throw redirect({ to: '/' });
+    }
+  },
   component: () => <Outlet />,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, loginRoute, notesRoute]);
+const loginRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/login',
+  component: LoginPage,
+});
+
+const notesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/',
+  component: App,
+});
+
+const routeTree = rootRoute.addChildren([loginRoute, notesRoute]);
 
 export const router = createRouter({ routeTree });

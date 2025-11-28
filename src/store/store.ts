@@ -25,6 +25,11 @@ export interface Store {
     loading: boolean;
     error: boolean;
   };
+  auth: {
+    isAuthenticated: boolean;
+    user: { id: string; email: string } | null;
+    token: string | null;
+  };
   actions: {
     notes: {
       set: (notesMap: Record<string, Note>) => void;
@@ -66,6 +71,10 @@ export interface Store {
     api: {
       set: (status: Partial<Store['api']>) => void;
     };
+    auth: {
+      set: (auth: Partial<Store['auth']>) => void;
+      clear: () => void;
+    };
   };
 }
 
@@ -83,6 +92,7 @@ export const useStore = create<Store>()(
     filters: { search: '', view: { type: 'notes' } },
     ui: { isEditLabelsMenuOpen: false, isSidebarCollapsed: false, gridColumns: 5 },
     api: { loading: false, error: false },
+    auth: { user: null, token: null, loading: false },
     actions: {
       notes: {
         set: (notesMap) => {
@@ -307,6 +317,14 @@ export const useStore = create<Store>()(
       api: {
         set: (status) => {
           set((state) => ({ api: { ...state.api, ...status } }));
+        },
+      },
+      auth: {
+        set: (auth) => {
+          set((state) => ({ auth: { ...state.auth, ...auth } }));
+        },
+        clear: () => {
+          set({ auth: { user: null, token: null, isAuthenticated: false } });
         },
       },
     },

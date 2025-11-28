@@ -1,4 +1,4 @@
-export { authApi, type LoginRequest } from './auth';
+export { authApi, type LoginRequest, type RegisterRequest } from './auth';
 export { bootstrapApi } from './bootstrap';
 export { API_URL } from './constants';
 export { labelsApi } from './labels';

@@ -1,9 +1,9 @@
-import type { Store } from '@/store';
+import { useStore, type Store } from '@/store';
 
 export const fetchWithAuth = async (url: string, options: RequestInit = {}): Promise<Response> => {
-  const SEED_TOKEN = import.meta.env.VITE_SEED_TOKEN;
+  const { token } = useStore.getState().auth;
   const headers = new Headers(options.headers);
-  headers.set('Authorization', `Bearer ${SEED_TOKEN}`);
+  headers.set('Authorization', `Bearer ${token}`);
 
   return fetch(url, {
     ...options,

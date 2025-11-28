@@ -16,10 +16,10 @@ const LoginPage = () => (
           <img src={logo} alt="Keep logo" className="size-12" />
           <div className="text-[24px]">Zeronotes</div>
         </div>
-        <div className="flex w-full flex-col gap-y-4">
+        <form className="flex w-full flex-col gap-y-4">
           <Input placeholder="Email" type="text" />
           <Input placeholder="Password" type="password" />
-        </div>
+        </form>
         <button className="w-full cursor-pointer rounded-lg bg-white/2 p-4 text-white/80 transition-colors duration-200 ease-in-out hover:bg-white/3">
           <span className="text-white/80">Login</span>
         </button>

@@ -1,5 +1,4 @@
 import { API_URL } from './constants';
-import { fetchWithAuth } from './utils';
 
 export interface RegisterRequest {
   email: string;
@@ -12,18 +11,16 @@ export interface LoginRequest {
 }
 
 export interface AuthResponse {
-  token?: string;
-  user?: {
+  token: string;
+  user: {
     id: string;
     email: string;
   };
 }
 
 export interface MeResponse {
-  user: {
-    id: string;
-    email: string;
-  };
+  id: string;
+  email: string;
 }
 
 export const authApi = {
@@ -69,9 +66,13 @@ export const authApi = {
     return data;
   },
 
-  me: async (): Promise<MeResponse> => {
+  me: async (token: string): Promise<MeResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    const res = await fetchWithAuth(`${API_URL}/auth/me`);
+    const res = await fetch(`${API_URL}/auth/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (!res.ok) {
       if (res.status === 401) {
