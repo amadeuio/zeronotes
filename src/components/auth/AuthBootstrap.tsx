@@ -7,14 +7,8 @@ const AuthBootstrap = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const initializeAuth = async () => {
-      setIsLoading(true);
-      await initialize();
-      setIsLoading(false);
-    };
-
-    initializeAuth();
-  }, []);
+    initialize().finally(() => setIsLoading(false));
+  }, [initialize]);
 
   return isLoading ? (
     <div className="flex h-screen items-center justify-center">
