@@ -21,7 +21,7 @@ export const useAuth = () => {
     actions.auth.clear();
   };
 
-  const initializeMe = async () => {
+  const initialize = async () => {
     const token = localStorage.getItem('token');
     if (!token) return;
 
@@ -38,6 +38,6 @@ export const useAuth = () => {
     login,
     register,
     logout,
-    initializeMe,
+    initialize,
   };
 };

@@ -3,19 +3,17 @@ import { useAuth } from '@/hooks';
 import { useEffect, useState } from 'react';
 
 const AuthBootstrap = ({ children }: { children: React.ReactNode }) => {
-  const { initializeMe } = useAuth();
+  const { initialize } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
-  const GOOD_TOKEN = import.meta.env.VITE_SEED_TOKEN;
-  localStorage.setItem('token', GOOD_TOKEN);
-
   useEffect(() => {
-    const fetchMe = async () => {
+    const restoreAuth = async () => {
       setIsLoading(true);
-      await initializeMe();
+      await initialize();
       setIsLoading(false);
     };
-    fetchMe();
+
+    restoreAuth();
   }, []);
 
   return isLoading ? (
