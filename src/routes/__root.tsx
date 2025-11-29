@@ -1,5 +1,5 @@
 import App from '@/App';
-import LoginPage from '@/components/auth/LoginPage';
+import Login from '@/components/auth/Login';
 import { useStore } from '@/store';
 import {
   createRootRoute,
@@ -28,7 +28,7 @@ export const rootRoute = createRootRoute({
 const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/login',
-  component: LoginPage,
+  component: Login,
 });
 
 const notesRoute = createRoute({

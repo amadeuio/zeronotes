@@ -1,2 +1,2 @@
-export { default as AuthBootstrap } from './AuthBootstrap';
-export { default as LoginPage } from './LoginPage';
+export { default as AuthGate } from './AuthGate';
+export { default as Login } from './Login';

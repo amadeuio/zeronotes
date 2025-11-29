@@ -21,23 +21,9 @@ export const useAuth = () => {
     actions.auth.clear();
   };
 
-  const initialize = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-
-    try {
-      const user = await authApi.me(token);
-      actions.auth.set({ user, token, isAuthenticated: true });
-    } catch (err) {
-      localStorage.removeItem('token');
-      actions.auth.clear();
-    }
-  };
-
   return {
     login,
     register,
     logout,
-    initialize,
   };
 };

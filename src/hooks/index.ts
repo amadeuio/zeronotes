@@ -1,4 +1,5 @@
 export { useAuth } from './useAuth';
+export { useAuthRestore } from './useAuthRestore';
 export { useBootstrap } from './useBootstrap';
 export { useClickOutside } from './useClickOutside';
 export { useDrag } from './useDrag';

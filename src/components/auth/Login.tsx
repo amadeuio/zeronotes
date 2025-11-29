@@ -27,7 +27,7 @@ const Input = ({
   />
 );
 
-const LoginPage = () => {
+const Login = () => {
   const { login } = useAuth();
   const [email, setEmail] = useState('test@example.com');
   const [password, setPassword] = useState('password123');
@@ -96,4 +96,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Login;
