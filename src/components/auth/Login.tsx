@@ -28,11 +28,12 @@ const Input = ({
 );
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, register } = useAuth();
   const [email, setEmail] = useState('test@example.com');
   const [password, setPassword] = useState('password123');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -47,10 +48,16 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      await login({ email, password });
+      if (isSignUp) {
+        await register({ email, password });
+      } else {
+        await login({ email, password });
+      }
       navigate({ to: '/' });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to login');
+      setError(
+        err instanceof Error ? err.message : isSignUp ? 'Failed to sign up' : 'Failed to login',
+      );
     } finally {
       setIsLoading(false);
     }
@@ -87,9 +94,28 @@ const Login = () => {
               disabled={isLoading}
               className="w-full cursor-pointer rounded-lg bg-white/2 p-4 text-white/80 transition-colors duration-200 ease-in-out hover:bg-white/3 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <span className="text-white/80">{isLoading ? 'Logging in...' : 'Login'}</span>
+              <span className="text-white/80">
+                {isLoading
+                  ? isSignUp
+                    ? 'Signing up...'
+                    : 'Logging in...'
+                  : isSignUp
+                    ? 'Sign up'
+                    : 'Login'}
+              </span>
             </button>
           </form>
+          <button
+            type="button"
+            onClick={() => {
+              setError(null);
+              setIsSignUp((prev) => !prev);
+            }}
+            className="mt-4 text-sm text-white/40 transition-colors hover:text-white/70"
+            disabled={isLoading}
+          >
+            {isSignUp ? 'Already have an account? Login' : "Don't have an account? Sign up"}
+          </button>
         </div>
       </div>
     </div>
