@@ -1,7 +1,7 @@
 import logo from '@/assets/logo.png';
 import { useAuth } from '@/hooks';
 import { useNavigate } from '@tanstack/react-router';
-import type { FormEvent } from 'react';
+import type { ChangeEvent, FormEvent } from 'react';
 import { useState } from 'react';
 
 const Input = ({
@@ -14,7 +14,7 @@ const Input = ({
   placeholder: string;
   type: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
 }) => (
   <input
