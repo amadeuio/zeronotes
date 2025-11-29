@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 
 const SpinnerScreen = () => (
   <div className="flex h-screen items-center justify-center">
-    <Icon name="progress_activity" className="animate-spin p-3 text-neutral-400" size={40} />
+    <Icon name="progress_activity" className="animate-spin" size={40} />
   </div>
 );
 
