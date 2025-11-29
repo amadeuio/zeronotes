@@ -1,11 +1,11 @@
-import { Icon } from '@/components';
+import { Icon, Spinner } from '@/components';
 import { selectApiStatus, useStore } from '@/store';
 
 const ApiStatus = () => {
   const { loading, error } = useStore(selectApiStatus);
 
   return loading ? (
-    <Icon name="progress_activity" className="animate-spin p-3 text-neutral-400" size={24} />
+    <Spinner className="p-3" />
   ) : error ? (
     <Icon name="error" className="p-3 text-neutral-400" size={24} />
   ) : (

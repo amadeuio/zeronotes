@@ -1,4 +1,4 @@
-import { EditLabelsModal, Icon, Main, Navbar, NoteActive, Sidebar } from '@/components';
+import { EditLabelsModal, Main, Navbar, NoteActive, Sidebar, Spinner } from '@/components';
 import { useBootstrap, useMobile } from '@/hooks';
 import { selectActions, selectActiveNoteId, selectUi, useStore } from '@/store';
 import { cn } from '@/utils';
@@ -14,11 +14,7 @@ const App = () => {
     <div className="flex h-screen flex-col">
       <Navbar />
       {isLoading ? (
-        <Icon
-          name="progress_activity"
-          className="mx-auto my-auto animate-spin text-neutral-400"
-          size={38}
-        />
+        <Spinner className="mx-auto my-auto" size={40} />
       ) : (
         <div
           className={cn(

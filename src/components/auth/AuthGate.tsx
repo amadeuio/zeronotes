@@ -1,10 +1,10 @@
-import { Icon } from '@/components';
+import { Spinner } from '@/components';
 import { useAuthRestore } from '@/hooks';
 import type { ReactNode } from 'react';
 
 const SpinnerScreen = () => (
   <div className="flex h-screen items-center justify-center">
-    <Icon name="progress_activity" className="animate-spin" size={40} />
+    <Spinner size={40} />
   </div>
 );
 
