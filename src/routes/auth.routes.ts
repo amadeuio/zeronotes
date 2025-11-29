@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import { userService } from "../domain/users/user.service";
+import { authenticate } from "../middleware/auth.middleware";
 
 const router = express.Router();
 
@@ -49,7 +50,28 @@ const login = async (
   }
 };
 
+const me = async (req: Request, res: Response) => {
+  try {
+    const userId = req.userId;
+    if (!userId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const user = await userService.findById(userId);
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to get user" });
+  }
+};
+
 router.post("/register", register);
 router.post("/login", login);
+router.get("/me", authenticate, me);
 
 export default router;
