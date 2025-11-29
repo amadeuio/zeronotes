@@ -2,6 +2,12 @@ import { Icon } from '@/components';
 import { useAuthRestore } from '@/hooks';
 import type { ReactNode } from 'react';
 
+const SpinnerScreen = () => (
+  <div className="flex h-screen items-center justify-center">
+    <Icon name="progress_activity" className="animate-spin p-3 text-neutral-400" size={40} />
+  </div>
+);
+
 interface AuthGateProps {
   children: ReactNode;
 }
@@ -9,13 +15,7 @@ interface AuthGateProps {
 const AuthGate = ({ children }: AuthGateProps) => {
   const { isLoading } = useAuthRestore();
 
-  return isLoading ? (
-    <div className="flex h-screen items-center justify-center">
-      <Icon name="progress_activity" className="animate-spin p-3 text-neutral-400" size={40} />
-    </div>
-  ) : (
-    children
-  );
+  return isLoading ? <SpinnerScreen /> : children;
 };
 
 export default AuthGate;
