@@ -28,7 +28,7 @@ export const getColorValue = (colorId: string) =>
 
 export const mapNoteToDisplay = (note: Note, labels: Record<string, Label>): DisplayNote => {
   const { labelIds = [], colorId, ...rest } = note;
-  const noteLabels = labelIds.map((id) => labels[id]);
+  const noteLabels = labelIds.map((id) => labels[id]).filter(Boolean);
   const colorValue = getColorValue(colorId);
 
   return {
