@@ -35,6 +35,11 @@ const createStore = (overrides?: Partial<Store> & { gridColumns?: number }): Sto
       gridColumns,
     },
     api: { loading: false, error: false },
+    auth: {
+      isAuthenticated: false,
+      user: null,
+      token: null,
+    },
     actions: {} as Store['actions'],
     ...restOverrides,
   };
