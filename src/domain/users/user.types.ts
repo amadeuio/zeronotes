@@ -9,7 +9,6 @@ export interface UserDB {
 export interface UserAPI {
   id: string;
   email: string;
-  createdAt: string;
 }
 
 export interface UserCreateRequest {
@@ -26,4 +25,3 @@ export interface AuthResponse {
   user: UserAPI;
   token: string;
 }
-
