@@ -1,7 +1,12 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { AppError } from "../errors/AppError";
 
-export function errorHandler(err: Error, _req: Request, res: Response) {
+export function errorHandler(
+  err: Error,
+  _req: Request,
+  res: Response,
+  _next: NextFunction
+) {
   console.error(err);
 
   if (err instanceof AppError) {
