@@ -6,7 +6,7 @@ module.exports = {
   testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   moduleNameMapper: {
-    '^jose$': '<rootDir>/__mocks__/jose.ts',
+    '^jose$': '<rootDir>/tests/__mocks__/jose.ts',
   },
   collectCoverageFrom: [
     'src/**/*.ts',
