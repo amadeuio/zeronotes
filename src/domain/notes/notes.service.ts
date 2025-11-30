@@ -1,8 +1,8 @@
 import { noteLabelRepository } from "../noteLabels/noteLabels.repository";
 import { noteMappers } from "./notes.mappers";
+import { noteRepository } from "./notes.repository";
 import { NoteCreateSchema, NoteUpdateSchema } from "./notes.schemas";
 import { NoteAPI } from "./notes.types";
-import { noteRepository } from "./notes.repository";
 
 export const noteService = {
   findAll: async (
@@ -51,7 +51,7 @@ export const noteService = {
     userId: string,
     id: string,
     data: NoteUpdateSchema
-  ): Promise<string> => {
+  ): Promise<string | null> => {
     const note = await noteRepository.update(
       userId,
       id,
@@ -61,8 +61,8 @@ export const noteService = {
       data.isPinned,
       data.isArchived
     );
-
-    return note.id;
+    
+    return note ? note.id : null;
   },
 
   delete: async (userId: string, id: string): Promise<boolean> => {
