@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@zeronotes/shared": ["packages/shared"]
+    }
+  }
+}
+

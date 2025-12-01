@@ -1,5 +1,6 @@
 {
-  "name": "zeronotes-backend",
+  "name": "@zeronotes/backend",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "dist/server.js",

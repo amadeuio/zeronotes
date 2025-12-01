@@ -1,0 +1,1 @@
+export type { NoteShared } from './types';
