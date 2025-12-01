@@ -12,8 +12,10 @@ module.exports = {
     }],
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(jose)/)',
+    'node_modules/(?!(.*\\.pnpm/)?jose)',
+    '<rootDir>/../node_modules/(?!(.*\\.pnpm/)?jose)',
   ],
+  moduleDirectories: ['node_modules', '<rootDir>/../node_modules'],
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/**/*.d.ts',

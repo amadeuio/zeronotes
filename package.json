@@ -1,7 +1,21 @@
 {
   "private": true,
+  "packageManager": "pnpm@10.24.0",
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "test:b": "turbo test --filter=@zeronotes/backend",
+    "test:f": "turbo test --filter=@zeronotes/frontend",
+    "check": "turbo check",
+    "format": "turbo format"
+  },
+  "devDependencies": {
+    "turbo": "^2.6.1"
+  }
 }
