@@ -1,0 +1,29 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-base: #202124;
+  --color-primary: #e8eaed;
+  --color-secondary: #5d5d5d;
+}
+
+@layer base {
+  html {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--color-base);
+    color: var(--color-primary);
+    overflow: hidden;
+  }
+
+  .border,
+  .border-b {
+    border-color: var(--color-secondary);
+  }
+
+  * {
+    scrollbar-color: var(--color-neutral-500) transparent;
+  }
+}
+
+@utility shadow-base {
+  box-shadow: 0.5px 0.5px 6px rgba(0, 0, 0, 0.6);
+}
