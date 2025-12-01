@@ -103,6 +103,20 @@ describe("Auth Endpoints", () => {
 
       expect(response.status).toBe(401);
     });
+
+    it("should not leak any user info on failed login", async () => {
+      const response = await loginUser(
+        `nonexistent${Date.now()}@example.com`,
+        "password123"
+      );
+
+      expect(response.status).toBe(401);
+      expect(response.body).not.toHaveProperty("token");
+      expect(response.body).not.toHaveProperty("user");
+      expect(JSON.stringify(response.body)).not.toMatch(
+        /\b(email|id|password)\b/i
+      );
+    });
   });
 
   describe("GET /api/auth/me", () => {
@@ -141,6 +155,21 @@ describe("Auth Endpoints", () => {
         .set("Authorization", token); // Missing "Bearer" prefix
 
       expect(response.status).toBe(401);
+    });
+
+    it("should not leak any user info on failed authentication", async () => {
+      const response = await api
+        .get("/api/auth/me")
+        .set("Authorization", "Bearer invalid-token");
+
+      expect(response.status).toBe(401);
+      expect(response.body).not.toHaveProperty("token");
+      expect(response.body).not.toHaveProperty("user");
+      expect(response.body).not.toHaveProperty("id");
+      expect(response.body).not.toHaveProperty("email");
+      expect(JSON.stringify(response.body)).not.toMatch(
+        /\b(email|id|password)\b/i
+      );
     });
   });
 });

@@ -64,3 +64,19 @@ export async function createLabel(
     });
   return response;
 }
+
+export function corruptTokenSignature(token: string): string {
+  // JWT format: header.payload.signature
+  const parts = token.split(".");
+  if (parts.length !== 3) {
+    throw new Error("Invalid JWT token format");
+  }
+
+  const signature = parts[2];
+  // Change the last character of the signature
+  const modifiedSignature =
+    signature.slice(0, -1) +
+    (signature[signature.length - 1] === "a" ? "b" : "a");
+
+  return `${parts[0]}.${parts[1]}.${modifiedSignature}`;
+}

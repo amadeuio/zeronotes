@@ -5,9 +5,15 @@ module.exports = {
   roots: ['<rootDir>/src', '<rootDir>/tests'],
   testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  moduleNameMapper: {
-    '^jose$': '<rootDir>/tests/__mocks__/jose.ts',
+  transform: {
+    '^.+\\.ts$': 'ts-jest',
+    '^.+\\.js$': ['ts-jest', {
+      useESM: false,
+    }],
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(jose)/)',
+  ],
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/**/*.d.ts',

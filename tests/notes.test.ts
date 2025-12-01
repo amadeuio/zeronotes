@@ -1,5 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
-import { api, createNote, getAuthToken } from "./helpers/testHelpers";
+import {
+  api,
+  corruptTokenSignature,
+  createNote,
+  getAuthToken,
+} from "./helpers/testHelpers";
 
 describe("Notes Endpoints", () => {
   let token: string;
@@ -251,6 +256,41 @@ describe("Notes Endpoints", () => {
         });
 
       expect(response.status).toBe(400);
+    });
+  });
+
+  describe("Authentication Security", () => {
+    it("should reject slightly modified tokens on all endpoints", async () => {
+      const validToken = await getAuthToken();
+      const corruptedToken = corruptTokenSignature(validToken);
+
+      const getResponse = await api
+        .get("/api/notes")
+        .set("Authorization", `Bearer ${corruptedToken}`);
+      expect(getResponse.status).toBe(401);
+
+      const postResponse = await api
+        .post("/api/notes")
+        .set("Authorization", `Bearer ${corruptedToken}`)
+        .send({ title: "Test", content: "Content" });
+      expect(postResponse.status).toBe(401);
+
+      const putResponse = await api
+        .put(`/api/notes/${uuidv4()}`)
+        .set("Authorization", `Bearer ${corruptedToken}`)
+        .send({ title: "Test", content: "Content" });
+      expect(putResponse.status).toBe(401);
+
+      const deleteResponse = await api
+        .delete(`/api/notes/${uuidv4()}`)
+        .set("Authorization", `Bearer ${corruptedToken}`);
+      expect(deleteResponse.status).toBe(401);
+
+      const reorderResponse = await api
+        .post("/api/notes/reorder")
+        .set("Authorization", `Bearer ${corruptedToken}`)
+        .send({ noteIds: ["id1", "id2"] });
+      expect(reorderResponse.status).toBe(401);
     });
   });
 });
