@@ -28,5 +28,7 @@ module.exports = {
   resetMocks: false,
   restoreMocks: false,
   testTimeout: 30000,
+  setupFilesAfterEnv: ['<rootDir>/tests/setup/global.ts'],
+  maxWorkers: 1,
 };
 

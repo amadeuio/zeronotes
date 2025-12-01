@@ -1,15 +1,19 @@
-import {
-  api,
-  getAuthToken,
-  loginUser,
-  registerUser,
-} from "./helpers/testHelpers";
+import { createTestApi } from "./setup/app";
+import { makeTestHelpers } from "./setup/helpers";
 
 describe("Auth Endpoints", () => {
+  let api: any;
+  let helpers: ReturnType<typeof makeTestHelpers>;
+
+  beforeEach(() => {
+    api = createTestApi();
+    helpers = makeTestHelpers(api);
+  });
+
   describe("POST /api/auth/register", () => {
     it("should register a new user with valid credentials", async () => {
       const uniqueEmail = `test${Date.now()}@example.com`;
-      const response = await registerUser(uniqueEmail, "password123");
+      const response = await helpers.registerUser(uniqueEmail, "password123");
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty("user");
@@ -47,10 +51,10 @@ describe("Auth Endpoints", () => {
       const uniqueEmail = `test${Date.now()}@example.com`;
 
       // Register first time
-      await registerUser(uniqueEmail, "password123");
+      await helpers.registerUser(uniqueEmail, "password123");
 
       // Try to register again with same email
-      const response = await registerUser(uniqueEmail, "password123");
+      const response = await helpers.registerUser(uniqueEmail, "password123");
 
       expect(response.status).toBeGreaterThanOrEqual(400);
     });
@@ -59,9 +63,9 @@ describe("Auth Endpoints", () => {
   describe("POST /api/auth/login", () => {
     it("should login with valid credentials", async () => {
       const uniqueEmail = `test${Date.now()}@example.com`;
-      await registerUser(uniqueEmail, "password123");
+      await helpers.registerUser(uniqueEmail, "password123");
 
-      const response = await loginUser(uniqueEmail, "password123");
+      const response = await helpers.loginUser(uniqueEmail, "password123");
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty("user");
@@ -87,7 +91,7 @@ describe("Auth Endpoints", () => {
     });
 
     it("should return 401 when user does not exist", async () => {
-      const response = await loginUser(
+      const response = await helpers.loginUser(
         `nonexistent${Date.now()}@example.com`,
         "password123"
       );
@@ -97,15 +101,15 @@ describe("Auth Endpoints", () => {
 
     it("should return 401 when password is incorrect", async () => {
       const uniqueEmail = `test${Date.now()}@example.com`;
-      await registerUser(uniqueEmail, "password123");
+      await helpers.registerUser(uniqueEmail, "password123");
 
-      const response = await loginUser(uniqueEmail, "wrongpassword");
+      const response = await helpers.loginUser(uniqueEmail, "wrongpassword");
 
       expect(response.status).toBe(401);
     });
 
     it("should not leak any user info on failed login", async () => {
-      const response = await loginUser(
+      const response = await helpers.loginUser(
         `nonexistent${Date.now()}@example.com`,
         "password123"
       );
@@ -121,7 +125,7 @@ describe("Auth Endpoints", () => {
 
   describe("GET /api/auth/me", () => {
     it("should return user info when authenticated", async () => {
-      const token = await getAuthToken();
+      const token = await helpers.getAuthToken();
 
       const response = await api
         .get("/api/auth/me")
@@ -148,7 +152,7 @@ describe("Auth Endpoints", () => {
     });
 
     it("should return 401 when Authorization header is malformed", async () => {
-      const token = await getAuthToken();
+      const token = await helpers.getAuthToken();
 
       const response = await api
         .get("/api/auth/me")

@@ -1,11 +1,16 @@
 import { v4 as uuidv4 } from "uuid";
-import { api, createLabel, getAuthToken } from "./helpers/testHelpers";
+import { createTestApi } from "./setup/app";
+import { makeTestHelpers } from "./setup/helpers";
 
 describe("Labels Endpoints", () => {
+  let api: any;
+  let helpers: ReturnType<typeof makeTestHelpers>;
   let token: string;
 
   beforeEach(async () => {
-    token = await getAuthToken();
+    api = createTestApi();
+    helpers = makeTestHelpers(api);
+    token = await helpers.getAuthToken();
   });
 
   describe("POST /api/labels", () => {
@@ -15,7 +20,7 @@ describe("Labels Endpoints", () => {
         name: "Important",
       };
 
-      const response = await createLabel(token, labelData);
+      const response = await helpers.createLabel(token, labelData);
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty("id");
@@ -73,11 +78,11 @@ describe("Labels Endpoints", () => {
       // Create a couple of labels
       const label1Id = uuidv4();
       const label2Id = uuidv4();
-      await createLabel(token, {
+      await helpers.createLabel(token, {
         id: label1Id,
         name: "Label 1",
       });
-      await createLabel(token, {
+      await helpers.createLabel(token, {
         id: label2Id,
         name: "Label 2",
       });
@@ -103,13 +108,13 @@ describe("Labels Endpoints", () => {
     it("should not return labels from other users", async () => {
       // Create label with first user
       const labelId = uuidv4();
-      await createLabel(token, {
+      await helpers.createLabel(token, {
         id: labelId,
         name: "User 1 Label",
       });
 
       // Create second user and get their labels
-      const token2 = await getAuthToken();
+      const token2 = await helpers.getAuthToken();
       const response = await api
         .get("/api/labels")
         .set("Authorization", `Bearer ${token2}`);
@@ -125,7 +130,7 @@ describe("Labels Endpoints", () => {
     it("should update a label with valid data", async () => {
       // Create a label first
       const labelId = uuidv4();
-      await createLabel(token, {
+      await helpers.createLabel(token, {
         id: labelId,
         name: "Original Name",
       });
@@ -164,13 +169,13 @@ describe("Labels Endpoints", () => {
     it("should not allow updating another user's label", async () => {
       // Create label with first user
       const labelId = uuidv4();
-      await createLabel(token, {
+      await helpers.createLabel(token, {
         id: labelId,
         name: "User 1 Label",
       });
 
       // Try to update with second user
-      const token2 = await getAuthToken();
+      const token2 = await helpers.getAuthToken();
       const response = await api
         .put(`/api/labels/${labelId}`)
         .set("Authorization", `Bearer ${token2}`)
@@ -186,7 +191,7 @@ describe("Labels Endpoints", () => {
     it("should delete a label", async () => {
       // Create a label first
       const labelId = uuidv4();
-      await createLabel(token, {
+      await helpers.createLabel(token, {
         id: labelId,
         name: "To Delete",
       });
@@ -222,13 +227,13 @@ describe("Labels Endpoints", () => {
     it("should not allow deleting another user's label", async () => {
       // Create label with first user
       const labelId = uuidv4();
-      await createLabel(token, {
+      await helpers.createLabel(token, {
         id: labelId,
         name: "User 1 Label",
       });
 
       // Try to delete with second user
-      const token2 = await getAuthToken();
+      const token2 = await helpers.getAuthToken();
       const response = await api
         .delete(`/api/labels/${labelId}`)
         .set("Authorization", `Bearer ${token2}`);
@@ -237,3 +242,4 @@ describe("Labels Endpoints", () => {
     });
   });
 });
+

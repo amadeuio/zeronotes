@@ -1,29 +1,29 @@
 import { v4 as uuidv4 } from "uuid";
-import {
-  api,
-  createLabel,
-  createNote,
-  getAuthToken,
-} from "./helpers/testHelpers";
+import { createTestApi } from "./setup/app";
+import { makeTestHelpers } from "./setup/helpers";
 
 describe("Notes and Labels Integration", () => {
+  let api: any;
+  let helpers: ReturnType<typeof makeTestHelpers>;
   let token: string;
 
   beforeEach(async () => {
-    token = await getAuthToken();
+    api = createTestApi();
+    helpers = makeTestHelpers(api);
+    token = await helpers.getAuthToken();
   });
 
   describe("Adding and removing labels from notes", () => {
     it("should add a label to a note", async () => {
       // Create a note
-      const noteResponse = await createNote(token, {
+      const noteResponse = await helpers.createNote(token, {
         title: "Test Note",
         content: "Test Content",
       });
       const noteId = noteResponse.body.id;
       // Create a label
       const labelId = uuidv4();
-      await createLabel(token, {
+      await helpers.createLabel(token, {
         id: labelId,
         name: "Test Label",
       });
@@ -38,7 +38,7 @@ describe("Notes and Labels Integration", () => {
 
     it("should remove a label from a note", async () => {
       // Create a note
-      const noteResponse = await createNote(token, {
+      const noteResponse = await helpers.createNote(token, {
         title: "Test Note",
         content: "Test Content",
       });
@@ -46,7 +46,7 @@ describe("Notes and Labels Integration", () => {
 
       // Create a label
       const labelId = uuidv4();
-      await createLabel(token, {
+      await helpers.createLabel(token, {
         id: labelId,
         name: "Test Label",
       });
@@ -66,7 +66,7 @@ describe("Notes and Labels Integration", () => {
 
     it("should create a label and add it to a note in one request", async () => {
       // Create a note
-      const noteResponse = await createNote(token, {
+      const noteResponse = await helpers.createNote(token, {
         title: "Test Note",
         content: "Test Content",
       });
@@ -102,7 +102,7 @@ describe("Notes and Labels Integration", () => {
   describe("Complex scenarios", () => {
     it("should handle multiple labels on a single note", async () => {
       // Create a note
-      const noteResponse = await createNote(token, {
+      const noteResponse = await helpers.createNote(token, {
         title: "Multi-Label Note",
         content: "Content",
       });
@@ -113,9 +113,9 @@ describe("Notes and Labels Integration", () => {
       const label2Id = uuidv4();
       const label3Id = uuidv4();
 
-      await createLabel(token, { id: label1Id, name: "Label 1" });
-      await createLabel(token, { id: label2Id, name: "Label 2" });
-      await createLabel(token, { id: label3Id, name: "Label 3" });
+      await helpers.createLabel(token, { id: label1Id, name: "Label 1" });
+      await helpers.createLabel(token, { id: label2Id, name: "Label 2" });
+      await helpers.createLabel(token, { id: label3Id, name: "Label 3" });
 
       // Add all labels to the note
       await api
@@ -141,11 +141,11 @@ describe("Notes and Labels Integration", () => {
 
     it("should handle deleting a label that's assigned to multiple notes", async () => {
       // Create multiple notes
-      const note1Response = await createNote(token, {
+      const note1Response = await helpers.createNote(token, {
         title: "Note 1",
         content: "Content 1",
       });
-      const note2Response = await createNote(token, {
+      const note2Response = await helpers.createNote(token, {
         title: "Note 2",
         content: "Content 2",
       });
@@ -155,7 +155,7 @@ describe("Notes and Labels Integration", () => {
 
       // Create a label
       const labelId = uuidv4();
-      await createLabel(token, {
+      await helpers.createLabel(token, {
         id: labelId,
         name: "Shared Label",
       });
@@ -200,3 +200,4 @@ describe("Notes and Labels Integration", () => {
     });
   });
 });
+

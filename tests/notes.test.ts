@@ -1,21 +1,21 @@
 import { v4 as uuidv4 } from "uuid";
-import {
-  api,
-  corruptTokenSignature,
-  createNote,
-  getAuthToken,
-} from "./helpers/testHelpers";
+import { createTestApi } from "./setup/app";
+import { makeTestHelpers } from "./setup/helpers";
 
 describe("Notes Endpoints", () => {
+  let api: any;
+  let helpers: ReturnType<typeof makeTestHelpers>;
   let token: string;
 
   beforeEach(async () => {
-    token = await getAuthToken();
+    api = createTestApi();
+    helpers = makeTestHelpers(api);
+    token = await helpers.getAuthToken();
   });
 
   describe("POST /api/notes", () => {
     it("should create a new note with valid data", async () => {
-      const response = await createNote(token, {
+      const response = await helpers.createNote(token, {
         title: "My Note",
         content: "Note content",
       });
@@ -25,7 +25,7 @@ describe("Notes Endpoints", () => {
     });
 
     it("should create a note with empty content", async () => {
-      const response = await createNote(token, {
+      const response = await helpers.createNote(token, {
         title: "Title Only",
         content: "",
       });
@@ -58,8 +58,14 @@ describe("Notes Endpoints", () => {
   describe("GET /api/notes", () => {
     it("should return all notes for authenticated user", async () => {
       // Create a couple of notes
-      await createNote(token, { title: "Note 1", content: "Content 1" });
-      await createNote(token, { title: "Note 2", content: "Content 2" });
+      await helpers.createNote(token, {
+        title: "Note 1",
+        content: "Content 1",
+      });
+      await helpers.createNote(token, {
+        title: "Note 2",
+        content: "Content 2",
+      });
 
       const response = await api
         .get("/api/notes")
@@ -80,10 +86,13 @@ describe("Notes Endpoints", () => {
 
     it("should not return notes from other users", async () => {
       // Create note with first user
-      await createNote(token, { title: "User 1 Note", content: "Content" });
+      await helpers.createNote(token, {
+        title: "User 1 Note",
+        content: "Content",
+      });
 
       // Create second user and get their notes
-      const token2 = await getAuthToken();
+      const token2 = await helpers.getAuthToken();
       const response = await api
         .get("/api/notes")
         .set("Authorization", `Bearer ${token2}`);
@@ -102,7 +111,7 @@ describe("Notes Endpoints", () => {
   describe("PUT /api/notes/:id", () => {
     it("should update a note with valid data", async () => {
       // Create a note first
-      const createResponse = await createNote(token, {
+      const createResponse = await helpers.createNote(token, {
         title: "Original Title",
         content: "Original Content",
       });
@@ -144,14 +153,14 @@ describe("Notes Endpoints", () => {
 
     it("should not allow updating another user's note", async () => {
       // Create note with first user
-      const createResponse = await createNote(token, {
+      const createResponse = await helpers.createNote(token, {
         title: "User 1 Note",
         content: "Content",
       });
       const noteId = createResponse.body.id;
 
       // Try to update with second user
-      const token2 = await getAuthToken();
+      const token2 = await helpers.getAuthToken();
       const response = await api
         .put(`/api/notes/${noteId}`)
         .set("Authorization", `Bearer ${token2}`)
@@ -167,7 +176,7 @@ describe("Notes Endpoints", () => {
   describe("DELETE /api/notes/:id", () => {
     it("should delete a note", async () => {
       // Create a note first
-      const createResponse = await createNote(token, {
+      const createResponse = await helpers.createNote(token, {
         title: "To Delete",
         content: "Delete me",
       });
@@ -203,14 +212,14 @@ describe("Notes Endpoints", () => {
 
     it("should not allow deleting another user's note", async () => {
       // Create note with first user
-      const createResponse = await createNote(token, {
+      const createResponse = await helpers.createNote(token, {
         title: "User 1 Note",
         content: "Content",
       });
       const noteId = createResponse.body.id;
 
       // Try to delete with second user
-      const token2 = await getAuthToken();
+      const token2 = await helpers.getAuthToken();
       const response = await api
         .delete(`/api/notes/${noteId}`)
         .set("Authorization", `Bearer ${token2}`);
@@ -222,9 +231,9 @@ describe("Notes Endpoints", () => {
   describe("POST /api/notes/reorder", () => {
     it("should reorder notes", async () => {
       // Create multiple notes
-      const note1 = await createNote(token, { title: "Note 1" });
-      const note2 = await createNote(token, { title: "Note 2" });
-      const note3 = await createNote(token, { title: "Note 3" });
+      const note1 = await helpers.createNote(token, { title: "Note 1" });
+      const note2 = await helpers.createNote(token, { title: "Note 2" });
+      const note3 = await helpers.createNote(token, { title: "Note 3" });
 
       const noteIds = [note1.body.id, note2.body.id, note3.body.id];
 
@@ -261,8 +270,8 @@ describe("Notes Endpoints", () => {
 
   describe("Authentication Security", () => {
     it("should reject slightly modified tokens on all endpoints", async () => {
-      const validToken = await getAuthToken();
-      const corruptedToken = corruptTokenSignature(validToken);
+      const validToken = await helpers.getAuthToken();
+      const corruptedToken = helpers.corruptTokenSignature(validToken);
 
       const getResponse = await api
         .get("/api/notes")

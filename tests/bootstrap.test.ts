@@ -1,10 +1,15 @@
-import { api, getAuthToken } from "./helpers/testHelpers";
+import { createTestApi } from "./setup/app";
+import { makeTestHelpers } from "./setup/helpers";
 
 describe("Bootstrap Endpoint", () => {
+  let api: any;
+  let helpers: ReturnType<typeof makeTestHelpers>;
   let token: string;
 
   beforeEach(async () => {
-    token = await getAuthToken();
+    api = createTestApi();
+    helpers = makeTestHelpers(api);
+    token = await helpers.getAuthToken();
   });
 
   describe("GET /api/bootstrap", () => {
@@ -34,3 +39,4 @@ describe("Bootstrap Endpoint", () => {
     });
   });
 });
+
