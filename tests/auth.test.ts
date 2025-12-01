@@ -12,8 +12,7 @@ describe("Auth Endpoints", () => {
 
   describe("POST /api/auth/register", () => {
     it("should register a new user with valid credentials", async () => {
-      const uniqueEmail = `test${Date.now()}@example.com`;
-      const response = await helpers.registerUser(uniqueEmail, "password123");
+      const response = await helpers.registerUser();
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty("user");
@@ -48,13 +47,13 @@ describe("Auth Endpoints", () => {
     });
 
     it("should return error when registering duplicate email", async () => {
-      const uniqueEmail = `test${Date.now()}@example.com`;
+      const uniqueEmail = helpers.uniqueEmail();
 
       // Register first time
-      await helpers.registerUser(uniqueEmail, "password123");
+      await helpers.registerUser(uniqueEmail);
 
       // Try to register again with same email
-      const response = await helpers.registerUser(uniqueEmail, "password123");
+      const response = await helpers.registerUser(uniqueEmail);
 
       expect(response.status).toBeGreaterThanOrEqual(400);
     });
@@ -62,8 +61,8 @@ describe("Auth Endpoints", () => {
 
   describe("POST /api/auth/login", () => {
     it("should login with valid credentials", async () => {
-      const uniqueEmail = `test${Date.now()}@example.com`;
-      await helpers.registerUser(uniqueEmail, "password123");
+      const uniqueEmail = helpers.uniqueEmail();
+      await helpers.registerUser(uniqueEmail);
 
       const response = await helpers.loginUser(uniqueEmail, "password123");
 
@@ -100,8 +99,8 @@ describe("Auth Endpoints", () => {
     });
 
     it("should return 401 when password is incorrect", async () => {
-      const uniqueEmail = `test${Date.now()}@example.com`;
-      await helpers.registerUser(uniqueEmail, "password123");
+      const uniqueEmail = helpers.uniqueEmail();
+      await helpers.registerUser(uniqueEmail);
 
       const response = await helpers.loginUser(uniqueEmail, "wrongpassword");
 

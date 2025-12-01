@@ -2,7 +2,12 @@ import { SuperTest, Test } from "supertest";
 import { v4 as uuidv4 } from "uuid";
 
 export function makeTestHelpers(api: SuperTest<Test>) {
+  const uniqueEmail = () =>
+    `test_${Date.now()}_${Math.random().toString(36).slice(2)}@example.com`;
+
   return {
+    uniqueEmail,
+
     registerUser: async (
       email: string = "test@example.com",
       password: string = "password123"
@@ -14,10 +19,11 @@ export function makeTestHelpers(api: SuperTest<Test>) {
     ) => api.post("/api/auth/login").send({ email, password }),
 
     getAuthToken: async (
-      email: string = `test${Date.now()}@example.com`,
+      email: string = uniqueEmail(),
       password: string = "password123"
     ): Promise<string> => {
       await api.post("/api/auth/register").send({ email, password });
+
       const res = await api.post("/api/auth/login").send({ email, password });
       return res.body.token;
     },
