@@ -1,5 +1,16 @@
 import { z } from 'zod';
 
+export const noteSchema = z.object({
+  id: z.string().uuid(),
+  title: z.string(),
+  content: z.string(),
+  colorId: z.string().uuid(),
+  labelIds: z.array(z.string().uuid()),
+  isPinned: z.boolean(),
+  isArchived: z.boolean(),
+  isTrashed: z.boolean(),
+});
+
 export const createNoteSchema = {
   body: z
     .object({
@@ -76,6 +87,7 @@ export const reorderNotesSchema = {
     .strict(),
 };
 
+export type Note = z.infer<typeof noteSchema>;
 export type CreateNoteBody = z.infer<typeof createNoteSchema.body>;
 export type UpdateNoteParams = z.infer<typeof updateNoteSchema.params>;
 export type UpdateNoteBody = z.infer<typeof updateNoteSchema.body>;

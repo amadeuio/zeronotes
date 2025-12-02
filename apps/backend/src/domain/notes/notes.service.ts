@@ -1,24 +1,23 @@
 import { noteLabelRepository } from '../noteLabels/noteLabels.repository';
 import { noteMappers } from './notes.mappers';
 import { noteRepository } from './notes.repository';
-import { CreateNoteBody, UpdateNoteBody } from './notes.schemas';
-import { NoteAPI } from './notes.types';
+import { CreateNoteBody, Note, UpdateNoteBody } from './notes.schemas';
 
 export const noteService = {
   findAll: async (
     userId: string,
   ): Promise<{
-    notesById: Record<string, NoteAPI>;
+    notesById: Record<string, Note>;
     notesOrder: string[];
   }> => {
     const rows = await noteRepository.findAllWithLabels(userId);
     const sortedRows = [...rows].sort((a, b) => a.order - b.order);
 
-    const notesById: Record<string, NoteAPI> = {};
+    const notesById: Record<string, Note> = {};
     const notesOrder: string[] = [];
 
     for (const row of sortedRows) {
-      const note = noteMappers.dbToAPI(row);
+      const note = noteMappers.rowToNote(row);
       notesById[note.id] = note;
       notesOrder.push(note.id);
     }

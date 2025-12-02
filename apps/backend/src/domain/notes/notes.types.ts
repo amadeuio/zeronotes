@@ -1,4 +1,4 @@
-export interface NoteDB {
+export interface NoteRow {
   id: string;
   order: number;
   title: string;
@@ -9,16 +9,4 @@ export interface NoteDB {
   is_trashed: boolean;
   created_at: Date;
   updated_at: Date;
-}
-
-export interface NoteAPI {
-  id: string;
-  order: number;
-  title: string;
-  content: string;
-  colorId: string;
-  labelIds: string[];
-  isPinned: boolean;
-  isArchived: boolean;
-  isTrashed: boolean;
 }

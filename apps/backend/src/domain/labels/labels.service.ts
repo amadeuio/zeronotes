@@ -1,17 +1,16 @@
 import { labelMappers } from './labels.mappers';
 import { labelRepository } from './labels.repository';
-import { CreateLabelBody, UpdateLabelBody } from './labels.schemas';
-import { LabelAPI } from './labels.types';
+import { CreateLabelBody, Label, UpdateLabelBody } from './labels.schemas';
 
 export const labelService = {
-  findAll: async (userId: string): Promise<Record<string, LabelAPI>> => {
+  findAll: async (userId: string): Promise<Record<string, Label>> => {
     const labels = await labelRepository.findAll(userId);
     const labelsById = labels.reduce(
       (acc, label) => {
-        acc[label.id] = labelMappers.dbToAPI(label);
+        acc[label.id] = labelMappers.rowToLabel(label);
         return acc;
       },
-      {} as Record<string, LabelAPI>,
+      {} as Record<string, Label>,
     );
     return labelsById;
   },

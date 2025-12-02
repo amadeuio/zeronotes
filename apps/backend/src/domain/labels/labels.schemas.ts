@@ -1,5 +1,10 @@
 import { z } from 'zod';
 
+export const labelSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+});
+
 export const createLabelSchema = {
   body: z
     .object({
@@ -30,6 +35,7 @@ export const deleteLabelSchema = {
     .strict(),
 };
 
+export type Label = z.infer<typeof labelSchema>;
 export type CreateLabelBody = z.infer<typeof createLabelSchema.body>;
 export type UpdateLabelParams = z.infer<typeof updateLabelSchema.params>;
 export type UpdateLabelBody = z.infer<typeof updateLabelSchema.body>;

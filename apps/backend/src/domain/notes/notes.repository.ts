@@ -1,8 +1,8 @@
 import pool from '../../db/client';
-import { NoteDB } from './notes.types';
+import { NoteRow } from './notes.types';
 
 export const noteRepository = {
-  findAllWithLabels: async (userId: string): Promise<(NoteDB & { label_ids: string[] })[]> => {
+  findAllWithLabels: async (userId: string): Promise<(NoteRow & { label_ids: string[] })[]> => {
     const result = await pool.query(
       `
       SELECT 
@@ -33,7 +33,7 @@ export const noteRepository = {
     colorId?: string,
     isPinned?: boolean,
     isArchived?: boolean,
-  ): Promise<NoteDB> => {
+  ): Promise<NoteRow> => {
     const query = `
       INSERT INTO notes (user_id, id, "order", title, content, color_id, is_pinned, is_archived) 
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
@@ -53,7 +53,7 @@ export const noteRepository = {
     colorId?: string,
     isPinned?: boolean,
     isArchived?: boolean,
-  ): Promise<NoteDB> => {
+  ): Promise<NoteRow> => {
     const fields = [];
     const values = [];
     let paramCount = 1;

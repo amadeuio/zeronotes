@@ -1,9 +1,9 @@
 import { labelService } from '../labels/labels.service';
 import { noteService } from '../notes/notes.service';
-import { BootstrapAPI } from './bootstrap.types';
+import { BootstrapData } from './bootstrap.schemas';
 
 export const bootstrapService = {
-  findAll: async (userId: string): Promise<BootstrapAPI> => {
+  findAll: async (userId: string): Promise<BootstrapData> => {
     const [notes, labelsById] = await Promise.all([
       noteService.findAll(userId),
       labelService.findAll(userId),

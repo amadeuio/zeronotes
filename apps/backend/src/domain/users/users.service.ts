@@ -4,8 +4,7 @@ import { hashPassword, verifyPassword } from '../../utils/crypto';
 import { createToken } from '../../utils/jwt';
 import { userMappers } from './users.mappers';
 import { userRepository } from './users.repository';
-import { LoginBody, RegisterBody } from './users.schemas';
-import { AuthResponse, UserAPI } from './users.types';
+import { AuthResponse, LoginBody, RegisterBody, User } from './users.schemas';
 
 export const userService = {
   register: async (data: RegisterBody): Promise<AuthResponse> => {
@@ -22,7 +21,7 @@ export const userService = {
     const token = await createToken(user.id);
 
     return {
-      user: userMappers.dbToAPI(user),
+      user: userMappers.rowToUser(user),
       token,
     };
   },
@@ -41,13 +40,13 @@ export const userService = {
     const token = await createToken(user.id);
 
     return {
-      user: userMappers.dbToAPI(user),
+      user: userMappers.rowToUser(user),
       token,
     };
   },
 
-  findById: async (id: string): Promise<UserAPI | null> => {
+  findById: async (id: string): Promise<User | null> => {
     const user = await userRepository.findById(id);
-    return user ? userMappers.dbToAPI(user) : null;
+    return user ? userMappers.rowToUser(user) : null;
   },
 };

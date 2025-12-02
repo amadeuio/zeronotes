@@ -1,15 +1,15 @@
-import { NoteAPI, NoteDB } from './notes.types';
+import { Note } from './notes.schemas';
+import { NoteRow } from './notes.types';
 
 export const noteMappers = {
-  dbToAPI: (db: NoteDB & { label_ids?: string[] }): NoteAPI => ({
-    id: db.id,
-    order: db.order,
-    title: db.title,
-    content: db.content,
-    colorId: db.color_id,
-    isPinned: db.is_pinned,
-    isArchived: db.is_archived,
-    isTrashed: db.is_trashed,
-    labelIds: db.label_ids ?? [],
+  rowToNote: (row: NoteRow & { label_ids?: string[] }): Note => ({
+    id: row.id,
+    title: row.title,
+    content: row.content,
+    colorId: row.color_id,
+    isPinned: row.is_pinned,
+    isArchived: row.is_archived,
+    isTrashed: row.is_trashed,
+    labelIds: row.label_ids ?? [],
   }),
 };
