@@ -1,4 +1,10 @@
-import type { Label } from '@zeronotes/shared';
+import type {
+  CreateLabelBody,
+  DeleteLabelParams,
+  Label,
+  UpdateLabelBody,
+  UpdateLabelParams,
+} from '@zeronotes/shared';
 import { API_URL } from './constants';
 import { fetchWithAuth } from './utils';
 
@@ -9,7 +15,7 @@ export const labelsApi = {
     return data;
   },
 
-  create: async (label: Label): Promise<Label> => {
+  create: async (label: CreateLabelBody): Promise<Label> => {
     const res = await fetchWithAuth(`${API_URL}/labels`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -19,7 +25,7 @@ export const labelsApi = {
     return data;
   },
 
-  update: async (id: string, label: Omit<Label, 'id'>): Promise<Label> => {
+  update: async (id: UpdateLabelParams['id'], label: UpdateLabelBody): Promise<Label> => {
     const res = await fetchWithAuth(`${API_URL}/labels/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -29,7 +35,7 @@ export const labelsApi = {
     return data;
   },
 
-  delete: async (id: string): Promise<void> => {
+  delete: async (id: DeleteLabelParams['id']): Promise<void> => {
     await fetchWithAuth(`${API_URL}/labels/${id}`, { method: 'DELETE' });
   },
 };
