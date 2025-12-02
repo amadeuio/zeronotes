@@ -1,10 +1,10 @@
-import express, { Request, Response } from "express";
-import { authenticate } from "../../middleware/auth.middleware";
-import { validate } from "../../middleware/validate.middleware";
-import { NotFoundError } from "../../utils/AppError";
-import { asyncHandler } from "../../utils/asyncHandler";
-import { createLabelSchema } from "../labels/labels.schemas";
-import { labelService } from "../labels/labels.service";
+import express, { Request, Response } from 'express';
+import { authenticate } from '../../middleware/auth.middleware';
+import { validate } from '../../middleware/validate.middleware';
+import { NotFoundError } from '../../utils/AppError';
+import { asyncHandler } from '../../utils/asyncHandler';
+import { createLabelSchema } from '../labels/labels.schemas';
+import { labelService } from '../labels/labels.service';
 import {
   addLabelToNoteSchema,
   createLabelAndAddToNoteSchema,
@@ -13,8 +13,8 @@ import {
   removeLabelFromNoteSchema,
   reorderNotesSchema,
   updateNoteSchema,
-} from "./notes.schemas";
-import { noteService } from "./notes.service";
+} from './notes.schemas';
+import { noteService } from './notes.service';
 
 const router = express.Router();
 
@@ -36,7 +36,7 @@ const updateNote = asyncHandler(async (req: Request, res: Response) => {
   const noteId = await noteService.update(req.userId!, id, data);
 
   if (!noteId) {
-    throw new NotFoundError("Note");
+    throw new NotFoundError('Note');
   }
 
   res.json({ id: noteId });
@@ -47,7 +47,7 @@ const deleteNote = asyncHandler(async (req: Request, res: Response) => {
   const deleted = await noteService.delete(req.userId!, id);
 
   if (!deleted) {
-    throw new NotFoundError("Note");
+    throw new NotFoundError('Note');
   }
 
   res.status(204).send();
@@ -59,24 +59,20 @@ const addLabelToNote = asyncHandler(async (req: Request, res: Response) => {
   res.status(204).send();
 });
 
-const removeLabelFromNote = asyncHandler(
-  async (req: Request, res: Response) => {
-    const { id, labelId } = req.params;
-    await noteService.removeLabel(id, labelId);
-    res.status(204).send();
-  }
-);
-const createLabelAndAddToNote = asyncHandler(
-  async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const labelData = req.body;
+const removeLabelFromNote = asyncHandler(async (req: Request, res: Response) => {
+  const { id, labelId } = req.params;
+  await noteService.removeLabel(id, labelId);
+  res.status(204).send();
+});
+const createLabelAndAddToNote = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const labelData = req.body;
 
-    const label = await labelService.create(req.userId!, labelData);
-    await noteService.addLabel(id, labelData.id);
+  const label = await labelService.create(req.userId!, labelData);
+  await noteService.addLabel(id, labelData.id);
 
-    res.status(201).json({ id: label });
-  }
-);
+  res.status(201).json({ id: label });
+});
 
 const reorderNotes = asyncHandler(async (req: Request, res: Response) => {
   const { noteIds } = req.body;
@@ -84,45 +80,35 @@ const reorderNotes = asyncHandler(async (req: Request, res: Response) => {
   res.status(204).send();
 });
 
-router.get("/", authenticate, getAllNotes);
-router.post("/", authenticate, validate(createNoteSchema.body), createNote);
+router.get('/', authenticate, getAllNotes);
+router.post('/', authenticate, validate(createNoteSchema.body), createNote);
 router.put(
-  "/:id",
+  '/:id',
   authenticate,
-  validate(updateNoteSchema.params, "params"),
+  validate(updateNoteSchema.params, 'params'),
   validate(updateNoteSchema.body),
-  updateNote
+  updateNote,
+);
+router.delete('/:id', authenticate, validate(deleteNoteSchema.params, 'params'), deleteNote);
+router.post(
+  '/:id/labels/:labelId',
+  authenticate,
+  validate(addLabelToNoteSchema.params, 'params'),
+  addLabelToNote,
 );
 router.delete(
-  "/:id",
+  '/:id/labels/:labelId',
   authenticate,
-  validate(deleteNoteSchema.params, "params"),
-  deleteNote
+  validate(removeLabelFromNoteSchema.params, 'params'),
+  removeLabelFromNote,
 );
 router.post(
-  "/:id/labels/:labelId",
+  '/:id/labels',
   authenticate,
-  validate(addLabelToNoteSchema.params, "params"),
-  addLabelToNote
-);
-router.delete(
-  "/:id/labels/:labelId",
-  authenticate,
-  validate(removeLabelFromNoteSchema.params, "params"),
-  removeLabelFromNote
-);
-router.post(
-  "/:id/labels",
-  authenticate,
-  validate(createLabelAndAddToNoteSchema.params, "params"),
+  validate(createLabelAndAddToNoteSchema.params, 'params'),
   validate(createLabelSchema.body),
-  createLabelAndAddToNote
+  createLabelAndAddToNote,
 );
-router.post(
-  "/reorder",
-  authenticate,
-  validate(reorderNotesSchema.body),
-  reorderNotes
-);
+router.post('/reorder', authenticate, validate(reorderNotesSchema.body), reorderNotes);
 
 export default router;

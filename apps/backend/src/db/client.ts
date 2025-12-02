@@ -1,5 +1,5 @@
-import { Pool } from "pg";
-import { env } from "../utils/env";
+import { Pool } from 'pg';
+import { env } from '../utils/env';
 
 const pool = new Pool({
   host: env.DB_HOST,
@@ -9,12 +9,12 @@ const pool = new Pool({
   password: env.DB_PASSWORD,
 });
 
-pool.on("connect", () => {
-  console.log("✅ Connected to PostgreSQL database");
+pool.on('connect', () => {
+  console.log('✅ Connected to PostgreSQL database');
 });
 
-pool.on("error", (err) => {
-  console.error("❌ Unexpected error on idle client", err);
+pool.on('error', (err) => {
+  console.error('❌ Unexpected error on idle client', err);
   process.exit(-1);
 });
 

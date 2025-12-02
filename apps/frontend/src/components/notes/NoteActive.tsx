@@ -27,7 +27,7 @@ const NoteActive = () => {
       <div className="absolute inset-0 bg-neutral-800/60" style={backdropStyles} />
       <div
         onClick={(e) => e.stopPropagation()}
-        className="shadow-base relative flex flex-col gap-4 rounded-lg border px-4.5 pt-4.5 pb-14"
+        className="shadow-base px-4.5 pt-4.5 relative flex flex-col gap-4 rounded-lg border pb-14"
         style={{
           backgroundColor: note.colorValue ?? 'var(--color-base)',
           borderColor: note.colorValue ?? 'var(--color-secondary)',
@@ -40,7 +40,7 @@ const NoteActive = () => {
           iconName="push_pin"
           label={note.isPinned ? 'Unpin note' : 'Pin note'}
           filled={note.isPinned}
-          className="absolute top-2 right-2 p-1"
+          className="absolute right-2 top-2 p-1"
           iconClassName="text-neutral-300"
           onClick={() => update(note.id, { isPinned: !note.isPinned })}
         />

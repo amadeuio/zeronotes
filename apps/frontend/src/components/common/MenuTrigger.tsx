@@ -46,7 +46,7 @@ const MenuTrigger = ({
       {isOpen && (
         <div
           ref={menuRef}
-          className="absolute top-full left-0 z-10"
+          className="absolute left-0 top-full z-10"
           style={{
             transform: `translate(${offset.x}px, ${offset.y}px)`,
           }}

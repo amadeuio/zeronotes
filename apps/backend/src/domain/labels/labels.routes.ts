@@ -1,14 +1,10 @@
-import express, { Request, Response } from "express";
-import { authenticate } from "../../middleware/auth.middleware";
-import { validate } from "../../middleware/validate.middleware";
-import { NotFoundError } from "../../utils/AppError";
-import { asyncHandler } from "../../utils/asyncHandler";
-import {
-  createLabelSchema,
-  deleteLabelSchema,
-  updateLabelSchema,
-} from "./labels.schemas";
-import { labelService } from "./labels.service";
+import express, { Request, Response } from 'express';
+import { authenticate } from '../../middleware/auth.middleware';
+import { validate } from '../../middleware/validate.middleware';
+import { NotFoundError } from '../../utils/AppError';
+import { asyncHandler } from '../../utils/asyncHandler';
+import { createLabelSchema, deleteLabelSchema, updateLabelSchema } from './labels.schemas';
+import { labelService } from './labels.service';
 
 const router = express.Router();
 
@@ -30,7 +26,7 @@ const updateLabel = asyncHandler(async (req: Request, res: Response) => {
   const labelId = await labelService.update(req.userId!, id, data);
 
   if (!labelId) {
-    throw new NotFoundError("Label");
+    throw new NotFoundError('Label');
   }
 
   res.json({ id: labelId });
@@ -41,26 +37,21 @@ const deleteLabel = asyncHandler(async (req: Request, res: Response) => {
   const deleted = await labelService.delete(req.userId!, id);
 
   if (!deleted) {
-    throw new NotFoundError("Label");
+    throw new NotFoundError('Label');
   }
 
   res.status(204).send();
 });
 
-router.get("/", authenticate, getAllLabels);
-router.post("/", authenticate, validate(createLabelSchema.body), createLabel);
+router.get('/', authenticate, getAllLabels);
+router.post('/', authenticate, validate(createLabelSchema.body), createLabel);
 router.put(
-  "/:id",
+  '/:id',
   authenticate,
-  validate(updateLabelSchema.params, "params"),
+  validate(updateLabelSchema.params, 'params'),
   validate(updateLabelSchema.body),
-  updateLabel
+  updateLabel,
 );
-router.delete(
-  "/:id",
-  authenticate,
-  validate(deleteLabelSchema.params, "params"),
-  deleteLabel
-);
+router.delete('/:id', authenticate, validate(deleteLabelSchema.params, 'params'), deleteLabel);
 
 export default router;

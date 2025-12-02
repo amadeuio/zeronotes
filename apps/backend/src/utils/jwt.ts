@@ -1,11 +1,11 @@
-import { SignJWT, jwtVerify } from "jose";
-import { env } from "./env";
+import { SignJWT, jwtVerify } from 'jose';
+import { env } from './env';
 
 const SECRET = new TextEncoder().encode(env.JWT_SECRET);
 
 export const createToken = async (userId: string): Promise<string> =>
   new SignJWT({ userId })
-    .setProtectedHeader({ alg: "HS256" })
+    .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(env.JWT_EXPIRES_IN)
     .sign(SECRET);

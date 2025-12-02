@@ -1,5 +1,5 @@
-import { closeDB, migrateTestDB, resetTestDB } from "./db";
-import "./env";
+import { closeDB, migrateTestDB, resetTestDB } from './db';
+import './env';
 
 beforeAll(async () => {
   await migrateTestDB();

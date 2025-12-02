@@ -1,12 +1,7 @@
-import { NextFunction, Request, Response } from "express";
-import { AppError } from "../utils/AppError";
+import { NextFunction, Request, Response } from 'express';
+import { AppError } from '../utils/AppError';
 
-export function errorHandler(
-  err: Error,
-  _req: Request,
-  res: Response,
-  _next: NextFunction
-) {
+export function errorHandler(err: Error, _req: Request, res: Response, _next: NextFunction) {
   console.error(err);
 
   if (err instanceof AppError) {
@@ -17,14 +12,14 @@ export function errorHandler(
   }
 
   return res.status(500).json({
-    error: "Internal server error",
-    code: "SERVER_ERROR",
+    error: 'Internal server error',
+    code: 'SERVER_ERROR',
   });
 }
 
 export function notFoundHandler(req: Request, res: Response) {
   res.status(404).json({
     error: `Route ${req.method} ${req.path} not found`,
-    code: "NOT_FOUND",
+    code: 'NOT_FOUND',
   });
 }

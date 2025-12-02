@@ -18,7 +18,7 @@ const Input = ({
   disabled?: boolean;
 }) => (
   <input
-    className="rounded-lg bg-white/2 px-4 py-4 text-white/60 outline-none placeholder:text-white/20 disabled:cursor-not-allowed disabled:opacity-50"
+    className="bg-white/2 rounded-lg px-4 py-4 text-white/60 outline-none placeholder:text-white/20 disabled:cursor-not-allowed disabled:opacity-50"
     type={type}
     placeholder={placeholder}
     value={value}
@@ -92,7 +92,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full cursor-pointer rounded-lg bg-white/2 p-4 text-white/80 transition-colors duration-200 ease-in-out hover:bg-white/3 disabled:cursor-not-allowed disabled:opacity-50"
+              className="bg-white/2 hover:bg-white/3 w-full cursor-pointer rounded-lg p-4 text-white/80 transition-colors duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-50"
             >
               <span className="text-white/80">
                 {isLoading

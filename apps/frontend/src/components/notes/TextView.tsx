@@ -29,7 +29,7 @@ interface ViewOnlyTextProps {
 const TextView = ({ value, searchTerm, className, isTitle = false }: ViewOnlyTextProps) => (
   <div
     className={cn(
-      'line-clamp-12 resize-none pr-6 text-[14.3px] leading-relaxed tracking-[-0.2px] whitespace-pre-wrap outline-none placeholder:font-medium placeholder:text-neutral-400',
+      'line-clamp-12 resize-none whitespace-pre-wrap pr-6 text-[14.3px] leading-relaxed tracking-[-0.2px] outline-none placeholder:font-medium placeholder:text-neutral-400',
       isTitle && 'text-xl leading-tight placeholder:text-xl',
       className,
     )}

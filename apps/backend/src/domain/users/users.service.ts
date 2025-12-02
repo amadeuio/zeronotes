@@ -1,17 +1,17 @@
-import { v4 as uuidv4 } from "uuid";
-import { AuthError, ConflictError } from "../../utils/AppError";
-import { hashPassword, verifyPassword } from "../../utils/crypto";
-import { createToken } from "../../utils/jwt";
-import { userMappers } from "./users.mappers";
-import { LoginBody, RegisterBody } from "./users.schemas";
-import { AuthResponse, UserAPI } from "./users.types";
-import { userRepository } from "./users.repository";
+import { v4 as uuidv4 } from 'uuid';
+import { AuthError, ConflictError } from '../../utils/AppError';
+import { hashPassword, verifyPassword } from '../../utils/crypto';
+import { createToken } from '../../utils/jwt';
+import { userMappers } from './users.mappers';
+import { userRepository } from './users.repository';
+import { LoginBody, RegisterBody } from './users.schemas';
+import { AuthResponse, UserAPI } from './users.types';
 
 export const userService = {
   register: async (data: RegisterBody): Promise<AuthResponse> => {
     const existingUser = await userRepository.findByEmail(data.email);
     if (existingUser) {
-      throw new ConflictError("User already exists");
+      throw new ConflictError('User already exists');
     }
 
     const passwordHash = await hashPassword(data.password);
@@ -30,12 +30,12 @@ export const userService = {
   login: async (data: LoginBody): Promise<AuthResponse> => {
     const user = await userRepository.findByEmail(data.email);
     if (!user) {
-      throw new AuthError("Invalid credentials");
+      throw new AuthError('Invalid credentials');
     }
 
     const isValid = await verifyPassword(user.password_hash, data.password);
     if (!isValid) {
-      throw new AuthError("Invalid credentials");
+      throw new AuthError('Invalid credentials');
     }
 
     const token = await createToken(user.id);

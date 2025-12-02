@@ -68,7 +68,7 @@ const NoteCreate = ({ onClick, className }: NoteCreateProps) => {
             iconName="push_pin"
             label={state.isPinned ? 'Unpin note' : 'Pin note'}
             filled={state.isPinned}
-            className="absolute top-2 right-2 p-1"
+            className="absolute right-2 top-2 p-1"
             iconClassName="text-neutral-300"
             onClick={() => dispatch({ type: 'TOGGLE_PINNED' })}
           />
@@ -96,7 +96,7 @@ const NoteCreate = ({ onClick, className }: NoteCreateProps) => {
           <CreateToolbar state={state} dispatch={dispatch} />
           <button
             onClick={handleClose}
-            className="absolute right-4 bottom-2 cursor-pointer rounded px-6 py-1.5 text-sm font-medium text-neutral-200 transition-colors duration-150 ease-in-out hover:bg-white/4"
+            className="hover:bg-white/4 absolute bottom-2 right-4 cursor-pointer rounded px-6 py-1.5 text-sm font-medium text-neutral-200 transition-colors duration-150 ease-in-out"
             type="button"
           >
             Close

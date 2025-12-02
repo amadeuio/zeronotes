@@ -55,7 +55,7 @@ const NoteView = ({ note }: NoteViewProps) => {
       <div
         ref={noteRef}
         className={cn(
-          'group/note hover:shadow-base absolute flex flex-col gap-4 rounded-lg border px-4.5 pt-4.5 pb-14 select-none hover:z-20',
+          'group/note hover:shadow-base px-4.5 pt-4.5 absolute flex select-none flex-col gap-4 rounded-lg border pb-14 hover:z-20',
           isMenuOpen && 'z-30',
         )}
         onMouseDown={handleMouseDown}
@@ -77,7 +77,7 @@ const NoteView = ({ note }: NoteViewProps) => {
           label={note.isPinned ? 'Unpin note' : 'Pin note'}
           filled={note.isPinned}
           className={cn(
-            'absolute top-2 right-2 p-1 transition-opacity duration-400 ease-in-out',
+            'duration-400 absolute right-2 top-2 p-1 transition-opacity ease-in-out',
             !isMenuOpen && 'opacity-0 group-hover/note:opacity-100',
           )}
           iconClassName="text-neutral-300"
@@ -94,7 +94,7 @@ const NoteView = ({ note }: NoteViewProps) => {
           note={note}
           onMenuOpenChange={(isOpen) => setIsMenuOpen(isOpen)}
           className={cn(
-            'absolute bottom-1.5 left-1.5 transition-opacity duration-400 ease-in-out',
+            'duration-400 absolute bottom-1.5 left-1.5 transition-opacity ease-in-out',
             !isMenuOpen && 'opacity-0 group-hover/note:opacity-100',
           )}
         />

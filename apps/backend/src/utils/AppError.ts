@@ -10,25 +10,25 @@ export class AppError extends Error {
 }
 
 export class AuthError extends AppError {
-  constructor(message = "Unauthorized") {
-    super(message, 401, "AUTH_ERROR");
+  constructor(message = 'Unauthorized') {
+    super(message, 401, 'AUTH_ERROR');
   }
 }
 
 export class NotFoundError extends AppError {
-  constructor(resource = "Resource") {
-    super(`${resource} not found`, 404, "NOT_FOUND");
+  constructor(resource = 'Resource') {
+    super(`${resource} not found`, 404, 'NOT_FOUND');
   }
 }
 
 export class ValidationError extends AppError {
-  constructor(message = "Invalid data") {
-    super(message, 400, "VALIDATION_ERROR");
+  constructor(message = 'Invalid data') {
+    super(message, 400, 'VALIDATION_ERROR');
   }
 }
 
 export class ConflictError extends AppError {
-  constructor(message = "Resource already exists") {
-    super(message, 409, "CONFLICT");
+  constructor(message = 'Resource already exists') {
+    super(message, 409, 'CONFLICT');
   }
 }

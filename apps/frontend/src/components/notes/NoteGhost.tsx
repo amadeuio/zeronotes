@@ -16,7 +16,7 @@ const NoteGhost = ({ note, translate, position: notePosition }: NoteGhostProps) 
   return (
     <div
       className={cn(
-        'absolute z-20 flex cursor-move flex-col gap-4 rounded-lg border px-4.5 pt-4.5 pb-14 opacity-96 shadow-[0_1px_12px_rgba(0,0,0,0.5)] select-none',
+        'px-4.5 pt-4.5 opacity-96 absolute z-20 flex cursor-move select-none flex-col gap-4 rounded-lg border pb-14 shadow-[0_1px_12px_rgba(0,0,0,0.5)]',
       )}
       style={{
         width: `${NOTE_WIDTH}px`,

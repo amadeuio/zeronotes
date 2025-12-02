@@ -1,12 +1,12 @@
-import { noteLabelRepository } from "../noteLabels/noteLabels.repository";
-import { noteMappers } from "./notes.mappers";
-import { noteRepository } from "./notes.repository";
-import { CreateNoteBody, UpdateNoteBody } from "./notes.schemas";
-import { NoteAPI } from "./notes.types";
+import { noteLabelRepository } from '../noteLabels/noteLabels.repository';
+import { noteMappers } from './notes.mappers';
+import { noteRepository } from './notes.repository';
+import { CreateNoteBody, UpdateNoteBody } from './notes.schemas';
+import { NoteAPI } from './notes.types';
 
 export const noteService = {
   findAll: async (
-    userId: string
+    userId: string,
   ): Promise<{
     notesById: Record<string, NoteAPI>;
     notesOrder: string[];
@@ -37,7 +37,7 @@ export const noteService = {
       data.content,
       data.colorId,
       data.isPinned,
-      data.isArchived
+      data.isArchived,
     );
 
     if (Array.isArray(data.labelIds) && data.labelIds.length > 0) {
@@ -47,11 +47,7 @@ export const noteService = {
     return note.id;
   },
 
-  update: async (
-    userId: string,
-    id: string,
-    data: UpdateNoteBody
-  ): Promise<string | null> => {
+  update: async (userId: string, id: string, data: UpdateNoteBody): Promise<string | null> => {
     const note = await noteRepository.update(
       userId,
       id,
@@ -59,9 +55,9 @@ export const noteService = {
       data.content,
       data.colorId,
       data.isPinned,
-      data.isArchived
+      data.isArchived,
     );
-    
+
     return note ? note.id : null;
   },
 
@@ -78,9 +74,10 @@ export const noteService = {
   },
 
   reorder: async (userId: string, noteIds: string[]): Promise<void> => {
-    const updates: { id: string; order: number }[] = noteIds.map(
-      (id, index) => ({ id, order: index })
-    );
+    const updates: { id: string; order: number }[] = noteIds.map((id, index) => ({
+      id,
+      order: index,
+    }));
     await noteRepository.updateOrders(userId, updates);
   },
 };

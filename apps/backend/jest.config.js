@@ -7,21 +7,19 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   transform: {
     '^.+\\.ts$': 'ts-jest',
-    '^.+\\.js$': ['ts-jest', {
-      useESM: false,
-    }],
+    '^.+\\.js$': [
+      'ts-jest',
+      {
+        useESM: false,
+      },
+    ],
   },
   transformIgnorePatterns: [
     'node_modules/(?!(.*\\.pnpm/)?jose)',
     '<rootDir>/../node_modules/(?!(.*\\.pnpm/)?jose)',
   ],
   moduleDirectories: ['node_modules', '<rootDir>/../node_modules'],
-  collectCoverageFrom: [
-    'src/**/*.ts',
-    '!src/**/*.d.ts',
-    '!src/**/*.types.ts',
-    '!src/server.ts',
-  ],
+  collectCoverageFrom: ['src/**/*.ts', '!src/**/*.d.ts', '!src/**/*.types.ts', '!src/server.ts'],
   coverageDirectory: 'coverage',
   coveragePathIgnorePatterns: ['/node_modules/', '/dist/'],
   verbose: true,
@@ -33,4 +31,3 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/tests/setup/global.ts'],
   maxWorkers: 1,
 };
-

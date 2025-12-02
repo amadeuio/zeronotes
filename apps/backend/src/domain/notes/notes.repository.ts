@@ -1,10 +1,8 @@
-import pool from "../../db/client";
-import { NoteDB } from "./notes.types";
+import pool from '../../db/client';
+import { NoteDB } from './notes.types';
 
 export const noteRepository = {
-  findAllWithLabels: async (
-    userId: string
-  ): Promise<(NoteDB & { label_ids: string[] })[]> => {
+  findAllWithLabels: async (userId: string): Promise<(NoteDB & { label_ids: string[] })[]> => {
     const result = await pool.query(
       `
       SELECT 
@@ -20,7 +18,7 @@ export const noteRepository = {
       GROUP BY n.id
       ORDER BY n.created_at DESC
     `,
-      [userId]
+      [userId],
     );
 
     return result.rows;
@@ -34,23 +32,14 @@ export const noteRepository = {
     content?: string,
     colorId?: string,
     isPinned?: boolean,
-    isArchived?: boolean
+    isArchived?: boolean,
   ): Promise<NoteDB> => {
     const query = `
       INSERT INTO notes (user_id, id, "order", title, content, color_id, is_pinned, is_archived) 
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
       RETURNING *
     `;
-    const values = [
-      userId,
-      id,
-      order,
-      title,
-      content,
-      colorId,
-      isPinned,
-      isArchived,
-    ];
+    const values = [userId, id, order, title, content, colorId, isPinned, isArchived];
 
     const result = await pool.query(query, values);
     return result.rows[0];
@@ -63,7 +52,7 @@ export const noteRepository = {
     content?: string,
     colorId?: string,
     isPinned?: boolean,
-    isArchived?: boolean
+    isArchived?: boolean,
   ): Promise<NoteDB> => {
     const fields = [];
     const values = [];
@@ -97,41 +86,36 @@ export const noteRepository = {
     fields.push(`updated_at = NOW()`);
     values.push(id, userId);
 
-    const query = `UPDATE notes SET ${fields.join(", ")} WHERE id = $${paramCount} AND user_id = $${paramCount + 1} RETURNING *`;
+    const query = `UPDATE notes SET ${fields.join(', ')} WHERE id = $${paramCount} AND user_id = $${paramCount + 1} RETURNING *`;
 
     const result = await pool.query(query, values);
     return result.rows[0];
   },
 
   delete: async (userId: string, id: string): Promise<boolean> => {
-    const result = await pool.query(
-      "DELETE FROM notes WHERE id = $1 AND user_id = $2",
-      [id, userId]
-    );
+    const result = await pool.query('DELETE FROM notes WHERE id = $1 AND user_id = $2', [
+      id,
+      userId,
+    ]);
     return result.rowCount ? result.rowCount > 0 : false;
   },
 
   getMinOrder: async (userId: string): Promise<number> => {
-    const result = await pool.query(
-      'SELECT MIN("order") FROM notes WHERE user_id = $1',
-      [userId]
-    );
+    const result = await pool.query('SELECT MIN("order") FROM notes WHERE user_id = $1', [userId]);
     const minOrder = result.rows[0].min;
     return minOrder !== null ? minOrder - 1 : -1;
   },
 
   updateOrders: async (
     userId: string,
-    updates: Array<{ id: string; order: number }>
+    updates: Array<{ id: string; order: number }>,
   ): Promise<void> => {
     const values: any[] = [];
     const valuePlaceholders: string[] = [];
     let paramCount = 1;
 
     for (const update of updates) {
-      valuePlaceholders.push(
-        `($${paramCount++}::uuid, $${paramCount++}::integer)`
-      );
+      valuePlaceholders.push(`($${paramCount++}::uuid, $${paramCount++}::integer)`);
       values.push(update.id, update.order);
     }
 
@@ -140,7 +124,7 @@ export const noteRepository = {
     const query = `
       UPDATE notes
       SET "order" = v.order_value, updated_at = NOW()
-      FROM (VALUES ${valuePlaceholders.join(", ")}) AS v(id, order_value)
+      FROM (VALUES ${valuePlaceholders.join(', ')}) AS v(id, order_value)
       WHERE notes.id = v.id AND notes.user_id = $${paramCount}
     `;
 

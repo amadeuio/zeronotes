@@ -1,10 +1,10 @@
-import express, { Request, Response } from "express";
-import { authenticate } from "../../middleware/auth.middleware";
-import { validate } from "../../middleware/validate.middleware";
-import { AuthError, NotFoundError } from "../../utils/AppError";
-import { asyncHandler } from "../../utils/asyncHandler";
-import { loginSchema, registerSchema } from "./users.schemas";
-import { userService } from "./users.service";
+import express, { Request, Response } from 'express';
+import { authenticate } from '../../middleware/auth.middleware';
+import { validate } from '../../middleware/validate.middleware';
+import { AuthError, NotFoundError } from '../../utils/AppError';
+import { asyncHandler } from '../../utils/asyncHandler';
+import { loginSchema, registerSchema } from './users.schemas';
+import { userService } from './users.service';
 
 const router = express.Router();
 
@@ -28,14 +28,14 @@ const me = asyncHandler(async (req: Request, res: Response) => {
 
   const user = await userService.findById(userId);
   if (!user) {
-    throw new NotFoundError("User");
+    throw new NotFoundError('User');
   }
 
   res.json(user);
 });
 
-router.post("/register", validate(registerSchema.body), register);
-router.post("/login", validate(loginSchema.body), login);
-router.get("/me", authenticate, me);
+router.post('/register', validate(registerSchema.body), register);
+router.post('/login', validate(loginSchema.body), login);
+router.get('/me', authenticate, me);
 
 export default router;

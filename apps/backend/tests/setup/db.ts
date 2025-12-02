@@ -1,11 +1,11 @@
-import fs from "fs";
-import path from "path";
-import pool from "../../src/db/client";
+import fs from 'fs';
+import path from 'path';
+import pool from '../../src/db/client';
 
 export async function migrateTestDB() {
-  const migrationsDir = path.join(__dirname, "..", "..", "db");
-  const schemaPath = path.join(migrationsDir, "schema.sql");
-  const sql = fs.readFileSync(schemaPath, "utf8");
+  const migrationsDir = path.join(__dirname, '..', '..', 'db');
+  const schemaPath = path.join(migrationsDir, 'schema.sql');
+  const sql = fs.readFileSync(schemaPath, 'utf8');
 
   const client = await pool.connect();
   try {

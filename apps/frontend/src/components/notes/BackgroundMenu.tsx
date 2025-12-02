@@ -37,18 +37,18 @@ const ColorCircle = ({ color, isSelected, onClick }: ColorCircleProps) => {
         <Icon
           name="format_color_reset"
           size={18}
-          className="absolute top-[5.5px] left-[5px] text-neutral-200"
+          className="absolute left-[5px] top-[5.5px] text-neutral-200"
         />
       )}
       {isSelected && (
         <Icon
-          className="absolute -top-1.5 -right-1.5 rounded-full bg-purple-500 text-white"
+          className="absolute -right-1.5 -top-1.5 rounded-full bg-purple-500 text-white"
           name="check"
           size={18}
         />
       )}
       {isTooltipVisible && (
-        <div className="absolute top-full left-1/2 z-20 -translate-x-1/2 translate-y-1 rounded bg-neutral-700 px-2 py-1 text-xs whitespace-nowrap text-white shadow-lg">
+        <div className="absolute left-1/2 top-full z-20 -translate-x-1/2 translate-y-1 whitespace-nowrap rounded bg-neutral-700 px-2 py-1 text-xs text-white shadow-lg">
           {color.label}
         </div>
       )}
@@ -63,7 +63,7 @@ interface BackgroundMenuProps {
 }
 
 const BackgroundMenu = ({ colors, selectedColorId, onColorClick }: BackgroundMenuProps) => (
-  <div className="bg-base shadow-base flex w-58 flex-wrap gap-1 rounded-sm p-2 sm:w-auto sm:flex-nowrap">
+  <div className="bg-base shadow-base w-58 flex flex-wrap gap-1 rounded-sm p-2 sm:w-auto sm:flex-nowrap">
     {colors.map((color) => (
       <ColorCircle
         key={color.label}
