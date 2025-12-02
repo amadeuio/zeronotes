@@ -4,7 +4,7 @@ export const noteSchema = z.object({
   id: z.string().uuid(),
   title: z.string(),
   content: z.string(),
-  colorId: z.string().uuid(),
+  colorId: z.string(),
   labelIds: z.array(z.string().uuid()),
   isPinned: z.boolean(),
   isArchived: z.boolean(),
@@ -20,7 +20,7 @@ export const createNoteSchema = {
         .max(500, "Title must be at most 500 characters")
         .optional(),
       content: z.string().optional(),
-      colorId: z.string().uuid("Invalid color UUID format").optional(),
+      colorId: z.string().optional(),
       isPinned: z.boolean().optional(),
       isArchived: z.boolean().optional(),
       labelIds: z
@@ -43,7 +43,7 @@ export const updateNoteSchema = {
         .max(500, "Title must be at most 500 characters")
         .optional(),
       content: z.string().optional(),
-      colorId: z.string().uuid("Invalid color UUID format").optional(),
+      colorId: z.string().optional(),
       isPinned: z.boolean().optional(),
       isArchived: z.boolean().optional(),
       isTrashed: z.boolean().optional(),
