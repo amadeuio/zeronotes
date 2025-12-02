@@ -42,7 +42,7 @@ const SearchIconButton = ({
         )}
       />
       {isTooltipVisible && (
-        <div className="absolute left-1/2 top-full z-20 -translate-x-1/2 translate-y-1 whitespace-nowrap rounded bg-neutral-700 px-2 py-1 text-xs text-white shadow-lg">
+        <div className="absolute top-full left-1/2 z-20 -translate-x-1/2 translate-y-1 rounded bg-neutral-700 px-2 py-1 text-xs whitespace-nowrap text-white shadow-lg">
           {label}
         </div>
       )}

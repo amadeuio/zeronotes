@@ -17,7 +17,7 @@ const Label = ({ label, onClick, onClose }: LabelProps) => (
       label="Remove label"
       iconName="close"
       size={11}
-      className="absolute right-[2px] top-[4px] p-[2px] opacity-0 group-hover/label:opacity-100"
+      className="absolute top-[4px] right-[2px] p-[2px] opacity-0 group-hover/label:opacity-100"
       onClick={onClose}
     />
   </div>

@@ -11,7 +11,7 @@ const MenuItem = ({ label, action }: MenuItemType) => (
       e.stopPropagation();
       action();
     }}
-    className="hover:bg-white/8 cursor-pointer whitespace-nowrap px-6 py-2 text-white"
+    className="cursor-pointer px-6 py-2 whitespace-nowrap text-white hover:bg-white/8"
   >
     {label}
   </div>

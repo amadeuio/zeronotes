@@ -11,10 +11,10 @@ interface CheckboxProps {
 const Checkbox = ({ checked }: CheckboxProps) => (
   <div
     onClick={(e) => e.stopPropagation()}
-    className="rounded-xs relative size-[12px] flex-shrink-0 border border-neutral-300"
+    className="relative size-[12px] flex-shrink-0 rounded-xs border border-neutral-300"
   >
     {checked && (
-      <Icon name="check" size={12} className="absolute -left-[1px] top-0 text-neutral-300" />
+      <Icon name="check" size={12} className="absolute top-0 -left-[1px] text-neutral-300" />
     )}
   </div>
 );
@@ -51,7 +51,7 @@ const CreateLabel = ({ name, onClick }: CreateLabelProps) => {
         e.stopPropagation();
         onClick();
       }}
-      className="hover:bg-white/8 flex cursor-pointer items-center gap-x-2 break-all py-2 text-white"
+      className="flex cursor-pointer items-center gap-x-2 py-2 break-all text-white hover:bg-white/8"
     >
       <Icon name="add" />
       Create '{name}'
@@ -78,7 +78,7 @@ const MenuItem = ({ noteId, label }: MenuItemProps) => {
           addLabel(noteId, label.id);
         }
       }}
-      className="hover:bg-white/8 flex cursor-pointer items-center gap-x-4 break-all py-2 text-white"
+      className="flex cursor-pointer items-center gap-x-4 py-2 break-all text-white hover:bg-white/8"
     >
       <Checkbox checked={isChecked} />
       {label.name}

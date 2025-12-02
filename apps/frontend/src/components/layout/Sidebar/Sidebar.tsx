@@ -25,7 +25,7 @@ const SidebarItem = ({
       'transition-width flex items-center gap-x-8 overflow-hidden rounded-full py-3 text-sm font-[500] duration-100 ease-in-out',
       isActive ? 'bg-[#41331c]' : 'hover:bg-white/6',
       isCollapsed
-        ? 'mx-2.75 pl-3.25 group-hover:w-70 w-12 group-hover:mx-0 group-hover:rounded-l-none group-hover:pl-6'
+        ? 'mx-2.75 w-12 pl-3.25 group-hover:mx-0 group-hover:w-70 group-hover:rounded-l-none group-hover:pl-6'
         : 'w-70 rounded-l-none pl-6',
     )}
     onClick={onClick}
