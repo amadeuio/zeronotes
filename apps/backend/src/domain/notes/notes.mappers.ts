@@ -1,4 +1,4 @@
-import { Note } from './notes.schemas';
+import { Note } from '@zeronotes/shared';
 import { NoteRow } from './notes.types';
 
 export const noteMappers = {

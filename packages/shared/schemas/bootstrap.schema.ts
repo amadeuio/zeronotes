@@ -1,6 +1,6 @@
-import { z } from 'zod';
-import { labelSchema } from '../labels/labels.schemas';
-import { noteSchema } from '../notes/notes.schemas';
+import { z } from "zod";
+import { labelSchema } from "./labels.schema";
+import { noteSchema } from "./notes.schema";
 
 export const bootstrapDataSchema = z.object({
   notesById: z.record(z.string().uuid(), noteSchema),

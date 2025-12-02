@@ -1,9 +1,9 @@
+import { loginSchema, registerSchema } from '@zeronotes/shared';
 import express, { Request, Response } from 'express';
 import { authenticate } from '../../middleware/auth.middleware';
 import { validate } from '../../middleware/validate.middleware';
 import { AuthError, NotFoundError } from '../../utils/AppError';
 import { asyncHandler } from '../../utils/asyncHandler';
-import { loginSchema, registerSchema } from './users.schemas';
 import { userService } from './users.service';
 
 const router = express.Router();

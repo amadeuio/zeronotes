@@ -1,4 +1,4 @@
-import { User } from './users.schemas';
+import { User } from '@zeronotes/shared';
 import { UserRow } from './users.types';
 
 export const userMappers = {

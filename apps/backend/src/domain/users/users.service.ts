@@ -1,10 +1,10 @@
+import { AuthResponse, LoginBody, RegisterBody, User } from '@zeronotes/shared';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthError, ConflictError } from '../../utils/AppError';
 import { hashPassword, verifyPassword } from '../../utils/crypto';
 import { createToken } from '../../utils/jwt';
 import { userMappers } from './users.mappers';
 import { userRepository } from './users.repository';
-import { AuthResponse, LoginBody, RegisterBody, User } from './users.schemas';
 
 export const userService = {
   register: async (data: RegisterBody): Promise<AuthResponse> => {

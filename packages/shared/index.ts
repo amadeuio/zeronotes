@@ -1,1 +1,1 @@
-export type { NoteShared } from './types';
+export * from "./schemas";

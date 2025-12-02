@@ -1,4 +1,4 @@
-import { Label } from './labels.schemas';
+import { Label } from '@zeronotes/shared';
 import { LabelRow } from './labels.types';
 
 export const labelMappers = {

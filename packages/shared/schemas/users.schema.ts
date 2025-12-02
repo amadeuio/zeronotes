@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const userSchema = z.object({
   id: z.string().uuid(),
@@ -13,11 +13,11 @@ export const authResponseSchema = z.object({
 export const registerSchema = {
   body: z
     .object({
-      email: z.string().email('Invalid email format'),
+      email: z.string().email("Invalid email format"),
       password: z
         .string()
-        .min(8, 'Password must be at least 8 characters')
-        .max(100, 'Password must be at most 100 characters'),
+        .min(8, "Password must be at least 8 characters")
+        .max(100, "Password must be at most 100 characters"),
     })
     .strict(),
 };
@@ -25,8 +25,8 @@ export const registerSchema = {
 export const loginSchema = {
   body: z
     .object({
-      email: z.string().email('Invalid email format'),
-      password: z.string().min(1, 'Password is required'),
+      email: z.string().email("Invalid email format"),
+      password: z.string().min(1, "Password is required"),
     })
     .strict(),
 };

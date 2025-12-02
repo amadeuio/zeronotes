@@ -1,7 +1,7 @@
+import { CreateNoteBody, Note, UpdateNoteBody } from '@zeronotes/shared';
 import { noteLabelRepository } from '../noteLabels/noteLabels.repository';
 import { noteMappers } from './notes.mappers';
 import { noteRepository } from './notes.repository';
-import { CreateNoteBody, Note, UpdateNoteBody } from './notes.schemas';
 
 export const noteService = {
   findAll: async (

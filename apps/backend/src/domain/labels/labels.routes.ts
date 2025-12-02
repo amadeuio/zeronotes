@@ -1,9 +1,9 @@
+import { createLabelSchema, deleteLabelSchema, updateLabelSchema } from '@zeronotes/shared';
 import express, { Request, Response } from 'express';
 import { authenticate } from '../../middleware/auth.middleware';
 import { validate } from '../../middleware/validate.middleware';
 import { NotFoundError } from '../../utils/AppError';
 import { asyncHandler } from '../../utils/asyncHandler';
-import { createLabelSchema, deleteLabelSchema, updateLabelSchema } from './labels.schemas';
 import { labelService } from './labels.service';
 
 const router = express.Router();

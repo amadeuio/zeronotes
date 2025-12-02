@@ -1,6 +1,6 @@
+import { BootstrapData } from '@zeronotes/shared';
 import { labelService } from '../labels/labels.service';
 import { noteService } from '../notes/notes.service';
-import { BootstrapData } from './bootstrap.schemas';
 
 export const bootstrapService = {
   findAll: async (userId: string): Promise<BootstrapData> => {

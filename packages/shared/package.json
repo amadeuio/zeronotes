@@ -1,6 +1,9 @@
 {
   "name": "@zeronotes/shared",
   "version": "1.0.0",
-  "main": "index.ts",
-  "types": "index.d.ts"
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "zod": "^4.1.13"
+  }
 }

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const labelSchema = z.object({
   id: z.string().uuid(),
@@ -8,8 +8,11 @@ export const labelSchema = z.object({
 export const createLabelSchema = {
   body: z
     .object({
-      id: z.string().uuid('Invalid UUID format'),
-      name: z.string().min(1, 'Name is required').max(100, 'Name must be at most 100 characters'),
+      id: z.string().uuid("Invalid UUID format"),
+      name: z
+        .string()
+        .min(1, "Name is required")
+        .max(100, "Name must be at most 100 characters"),
     })
     .strict(),
 };
@@ -17,12 +20,15 @@ export const createLabelSchema = {
 export const updateLabelSchema = {
   params: z
     .object({
-      id: z.string().uuid('Invalid label UUID format'),
+      id: z.string().uuid("Invalid label UUID format"),
     })
     .strict(),
   body: z
     .object({
-      name: z.string().min(1, 'Name is required').max(100, 'Name must be at most 100 characters'),
+      name: z
+        .string()
+        .min(1, "Name is required")
+        .max(100, "Name must be at most 100 characters"),
     })
     .strict(),
 };
@@ -30,7 +36,7 @@ export const updateLabelSchema = {
 export const deleteLabelSchema = {
   params: z
     .object({
-      id: z.string().uuid('Invalid label UUID format'),
+      id: z.string().uuid("Invalid label UUID format"),
     })
     .strict(),
 };

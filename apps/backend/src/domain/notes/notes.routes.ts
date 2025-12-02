@@ -1,19 +1,19 @@
-import express, { Request, Response } from 'express';
-import { authenticate } from '../../middleware/auth.middleware';
-import { validate } from '../../middleware/validate.middleware';
-import { NotFoundError } from '../../utils/AppError';
-import { asyncHandler } from '../../utils/asyncHandler';
-import { createLabelSchema } from '../labels/labels.schemas';
-import { labelService } from '../labels/labels.service';
 import {
   addLabelToNoteSchema,
   createLabelAndAddToNoteSchema,
+  createLabelSchema,
   createNoteSchema,
   deleteNoteSchema,
   removeLabelFromNoteSchema,
   reorderNotesSchema,
   updateNoteSchema,
-} from './notes.schemas';
+} from '@zeronotes/shared';
+import express, { Request, Response } from 'express';
+import { authenticate } from '../../middleware/auth.middleware';
+import { validate } from '../../middleware/validate.middleware';
+import { NotFoundError } from '../../utils/AppError';
+import { asyncHandler } from '../../utils/asyncHandler';
+import { labelService } from '../labels/labels.service';
 import { noteService } from './notes.service';
 
 const router = express.Router();

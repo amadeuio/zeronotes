@@ -1,6 +1,6 @@
+import { CreateLabelBody, Label, UpdateLabelBody } from '@zeronotes/shared';
 import { labelMappers } from './labels.mappers';
 import { labelRepository } from './labels.repository';
-import { CreateLabelBody, Label, UpdateLabelBody } from './labels.schemas';
 
 export const labelService = {
   findAll: async (userId: string): Promise<Record<string, Label>> => {
