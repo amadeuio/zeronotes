@@ -1,8 +1,8 @@
 import { Icon } from '@/components';
 import { useLabels } from '@/hooks';
 import { useSelectFilteredLabels } from '@/store';
-import type { Label } from '@zeronotes/shared';
 import type { DraftNote } from '@/types';
+import type { Label } from '@zeronotes/shared';
 import { useState, type Dispatch } from 'react';
 import type { NoteAction } from '../reducer';
 
@@ -11,9 +11,9 @@ interface CheckboxProps {
 }
 
 const Checkbox = ({ checked }: CheckboxProps) => (
-  <div className="relative size-[12px] flex-shrink-0 rounded-xs border border-neutral-300">
+  <div className="relative size-[12px] shrink-0 rounded-xs border border-neutral-300">
     {checked && (
-      <Icon name="check" size={12} className="absolute top-0 -left-[1px] text-neutral-300" />
+      <Icon name="check" size={12} className="absolute top-0 -left-px text-neutral-300" />
     )}
   </div>
 );
@@ -100,7 +100,7 @@ const EditLabelsMenu = ({ state, dispatch }: EditLabelsMenuProps) => {
   };
 
   return (
-    <div className="shadow-base w-56 rounded-sm bg-neutral-700 py-2 text-sm [&>*]:px-4">
+    <div className="shadow-base w-56 rounded-sm bg-neutral-700 py-2 text-sm *:px-4">
       <span>Label note</span>
       <Input value={search} onChange={setSearch} />
       {filteredLabels.length > 0 ? (
