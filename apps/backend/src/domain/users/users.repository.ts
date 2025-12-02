@@ -12,12 +12,28 @@ export const userRepository = {
     return result.rows[0] || null;
   },
 
-  create: async (id: string, email: string, passwordHash: string): Promise<UserRow> => {
+  create: async (
+    id: string,
+    email: string,
+    passwordHash: string,
+    encryptionSalt: string | null,
+    wrappedDataKey: string | null,
+    kdfIterations: number | null,
+    encryptionVersion: number | null,
+  ): Promise<UserRow> => {
     const result = await pool.query(
-      `INSERT INTO users (id, email, password_hash) 
-       VALUES ($1, $2, $3) 
+      `INSERT INTO users (
+         id,
+         email,
+         password_hash,
+         encryption_salt,
+         wrapped_data_key,
+         kdf_iterations,
+         encryption_version
+       ) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7) 
        RETURNING *`,
-      [id, email, passwordHash],
+      [id, email, passwordHash, encryptionSalt, wrappedDataKey, kdfIterations, encryptionVersion],
     );
     return result.rows[0];
   },

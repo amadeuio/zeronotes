@@ -14,6 +14,10 @@ CREATE TABLE users (
   id UUID NOT NULL DEFAULT gen_random_uuid(),
   email TEXT NOT NULL UNIQUE,
   password_hash TEXT NOT NULL,
+  encryption_salt TEXT,
+  wrapped_data_key TEXT,
+  kdf_iterations INTEGER,
+  encryption_version INTEGER,
   created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
