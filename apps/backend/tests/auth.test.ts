@@ -1,3 +1,4 @@
+import pool from '../src/db/client';
 import { createTestApi } from './setup/app';
 import { makeTestHelpers } from './setup/helpers';
 
@@ -105,6 +106,30 @@ describe('Auth Endpoints', () => {
       const response = await helpers.loginUser(uniqueEmail, 'wrongpassword');
 
       expect(response.status).toBe(401);
+    });
+
+    it('should reject login attempt when hash is used as password', async () => {
+      const uniqueEmail = helpers.uniqueEmail();
+      await helpers.registerUser(uniqueEmail);
+
+      // Get the stored hash from the database
+      const client = await pool.connect();
+      let storedHash: string;
+      try {
+        const result = await client.query('SELECT password_hash FROM users WHERE email = $1', [
+          uniqueEmail,
+        ]);
+        storedHash = result.rows[0].password_hash;
+      } finally {
+        client.release();
+      }
+
+      // Try to login using the hash itself as the password
+      const response = await helpers.loginUser(uniqueEmail, storedHash);
+
+      // Should fail because the hash is not the actual password
+      expect(response.status).toBe(401);
+      expect(response.body).not.toHaveProperty('token');
     });
 
     it('should not leak any user info on failed login', async () => {
