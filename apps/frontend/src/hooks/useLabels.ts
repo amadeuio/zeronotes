@@ -1,6 +1,6 @@
 import { labelsApi, withApiStatus } from '@/api';
 import { selectActions, useStore } from '@/store';
-import type { Label } from '@/types';
+import type { Label } from '@zeronotes/shared';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useLabels = () => {

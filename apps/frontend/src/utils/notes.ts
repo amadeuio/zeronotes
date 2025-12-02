@@ -1,5 +1,6 @@
 import { COLORS } from '@/constants';
-import type { DisplayNote, Filters, Label, Note } from '@/types';
+import type { Label, Note } from '@zeronotes/shared';
+import type { DisplayNote, Filters } from '@/types';
 
 export const filterNote = (note: Note, filters: Filters): boolean => {
   const q = filters.search.trim().toLowerCase();

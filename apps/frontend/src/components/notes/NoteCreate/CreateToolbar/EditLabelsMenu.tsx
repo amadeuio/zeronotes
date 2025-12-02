@@ -1,7 +1,8 @@
 import { Icon } from '@/components';
 import { useLabels } from '@/hooks';
 import { useSelectFilteredLabels } from '@/store';
-import type { DraftNote, Label } from '@/types';
+import type { Label } from '@zeronotes/shared';
+import type { DraftNote } from '@/types';
 import { useState, type Dispatch } from 'react';
 import type { NoteAction } from '../reducer';
 

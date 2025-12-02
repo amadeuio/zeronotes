@@ -1,4 +1,4 @@
-import type { Label, Note } from '@/types';
+import type { Label, Note } from '@zeronotes/shared';
 import { API_URL } from './constants';
 import { fetchWithAuth } from './utils';
 

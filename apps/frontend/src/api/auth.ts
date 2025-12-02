@@ -1,30 +1,8 @@
+import type { AuthResponse, LoginBody, RegisterBody, User } from '@zeronotes/shared';
 import { API_URL } from './constants';
 
-export interface RegisterRequest {
-  email: string;
-  password: string;
-}
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface AuthResponse {
-  token: string;
-  user: {
-    id: string;
-    email: string;
-  };
-}
-
-export interface MeResponse {
-  id: string;
-  email: string;
-}
-
 export const authApi = {
-  register: async (credentials: RegisterRequest): Promise<AuthResponse> => {
+  register: async (credentials: RegisterBody): Promise<AuthResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const res = await fetch(`${API_URL}/auth/register`, {
       method: 'POST',
@@ -46,7 +24,7 @@ export const authApi = {
     return data;
   },
 
-  login: async (credentials: LoginRequest): Promise<AuthResponse> => {
+  login: async (credentials: LoginBody): Promise<AuthResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const res = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
@@ -68,7 +46,7 @@ export const authApi = {
     return data;
   },
 
-  me: async (token: string): Promise<MeResponse> => {
+  me: async (token: string): Promise<User> => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const res = await fetch(`${API_URL}/auth/me`, {
       headers: {

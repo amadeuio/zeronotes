@@ -1,15 +1,4 @@
-import type { Label } from '@/types';
-
-export interface Note {
-  id: string;
-  title: string;
-  content: string;
-  colorId: string;
-  labelIds: string[];
-  isPinned: boolean;
-  isArchived: boolean;
-  isTrashed: boolean;
-}
+import type { Label, Note } from '@zeronotes/shared';
 
 export type DisplayNote = Omit<Note, 'labelIds'> & {
   labels: Label[];

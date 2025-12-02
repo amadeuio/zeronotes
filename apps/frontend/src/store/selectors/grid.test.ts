@@ -1,4 +1,4 @@
-import type { Note } from '@/types';
+import type { Note } from '@zeronotes/shared';
 import { describe, expect, it } from 'vitest';
 import type { Store } from '../store';
 import { selectNoteIdFromPosition, selectPositionFromNoteId, selectTotalHeight } from './grid';

@@ -1,6 +1,7 @@
 import { notesApi, withApiStatus } from '@/api';
 import { selectActions, useStore } from '@/store';
-import type { DraftNote, Note } from '@/types';
+import type { Note } from '@zeronotes/shared';
+import type { DraftNote } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useNotes = () => {

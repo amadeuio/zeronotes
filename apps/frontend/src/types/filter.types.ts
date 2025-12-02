@@ -1,4 +1,4 @@
-import type { Label } from './label.types';
+import type { Label } from '@zeronotes/shared';
 
 export type View =
   | { type: 'notes' }

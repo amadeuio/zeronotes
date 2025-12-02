@@ -1,7 +1,8 @@
 import { Icon } from '@/components';
 import { useNotes } from '@/hooks';
 import { useSelectFilteredLabels, useSelectNoteHasLabel } from '@/store';
-import type { DisplayNote, Label } from '@/types';
+import type { Label } from '@zeronotes/shared';
+import type { DisplayNote } from '@/types';
 import { useState } from 'react';
 
 interface CheckboxProps {

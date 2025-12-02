@@ -1,4 +1,4 @@
-import type { Label } from '@/types';
+import type { Label } from '@zeronotes/shared';
 
 export const labels: Label[] = [
   { id: '1', name: 'Dev' },

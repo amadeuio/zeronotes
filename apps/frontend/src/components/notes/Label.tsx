@@ -1,5 +1,5 @@
 import { IconButton } from '@/components';
-import type { Label as LabelType } from '@/types';
+import type { Label as LabelType } from '@zeronotes/shared';
 
 interface LabelProps {
   label: LabelType;

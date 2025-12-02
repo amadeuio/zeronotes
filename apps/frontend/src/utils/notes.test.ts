@@ -1,4 +1,5 @@
-import type { Filters, Label, Note } from '@/types';
+import type { Label, Note } from '@zeronotes/shared';
+import type { Filters } from '@/types';
 import { describe, expect, it } from 'vitest';
 import { filterNote, mapNoteToDisplay } from './notes';
 
