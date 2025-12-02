@@ -1,6 +1,6 @@
 -- Database Schema
 -- Modify this file directly for schema changes
--- Run: npm run migrate
+-- Run: pnpm migrate
 -- WARNING: This will DROP and recreate all tables, deleting all data!
 
 -- Drop existing tables (in reverse order due to foreign keys)
