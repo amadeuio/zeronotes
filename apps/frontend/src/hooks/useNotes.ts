@@ -1,7 +1,7 @@
 import { notesApi, withApiStatus } from '@/api';
 import { selectActions, useStore } from '@/store';
-import type { Note } from '@zeronotes/shared';
 import type { DraftNote } from '@/types';
+import type { Note } from '@zeronotes/shared';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useNotes = () => {
@@ -55,7 +55,7 @@ export const useNotes = () => {
   };
 
   const reorderNotes = async (notesOrder: string[]) => {
-    await api.reorderNotes(notesOrder);
+    await api.reorderNotes({ noteIds: notesOrder });
   };
 
   return {
