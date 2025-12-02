@@ -9,14 +9,12 @@ import { userService } from './users.service';
 const router = express.Router();
 
 const register = asyncHandler(async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  const result = await userService.register({ email, password });
+  const result = await userService.register(req.body);
   res.status(201).json(result);
 });
 
 const login = asyncHandler(async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  const result = await userService.login({ email, password });
+  const result = await userService.login(req.body);
   res.json(result);
 });
 
