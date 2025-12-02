@@ -46,3 +46,4 @@ export type User = z.infer<typeof userSchema>;
 export type AuthResponse = z.infer<typeof authResponseSchema>;
 export type RegisterBody = z.infer<typeof registerSchema.body>;
 export type LoginBody = z.infer<typeof loginSchema.body>;
+export type Encryption = z.infer<typeof encryptionSchema>;
