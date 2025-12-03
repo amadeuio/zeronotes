@@ -1,10 +1,5 @@
 import { authApi } from '@/api';
-import {
-  createEncryptionParamsForPassword,
-  deriveKEKFromEncryption,
-  setDataKey,
-  unwrapDataKey,
-} from '@/crypto';
+import { createEncryption, deriveKEK, setDataKey, unwrapDataKey } from '@/crypto';
 import { selectActions, useStore } from '@/store';
 import type { LoginBody, RegisterBody } from '@zeronotes/shared';
 
@@ -14,9 +9,13 @@ export const useAuth = () => {
   const login = async (credentials: LoginBody) => {
     const response = await authApi.login(credentials);
 
-    const kek = await deriveKEKFromEncryption(credentials.password, response.encryption);
+    const kek = await deriveKEK(
+      credentials.password,
+      response.encryption.salt,
+      response.encryption.kdfIterations,
+    );
     const dataKey = await unwrapDataKey(response.encryption.wrappedDataKey, kek);
-    
+
     setDataKey(dataKey);
 
     localStorage.setItem('token', response.token);
@@ -24,7 +23,7 @@ export const useAuth = () => {
   };
 
   const register = async (credentials: Omit<RegisterBody, 'encryption'>) => {
-    const { encryption, dataKey } = await createEncryptionParamsForPassword(credentials.password);
+    const { encryption, dataKey } = await createEncryption(credentials.password);
     const response = await authApi.register({ ...credentials, encryption });
 
     setDataKey(dataKey);

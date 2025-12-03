@@ -3,55 +3,16 @@ import {
   AES_ALGORITHM,
   ENCRYPTION_VERSION,
   GCM_IV_LENGTH,
-  PBKDF2_HASH,
   concatArrays,
   decodeBase64,
   encodeBase64,
-  encodeText,
   getSubtleCrypto,
   toUint8Array,
 } from './core';
+import { deriveKEK } from './deriveKek';
 
 const DEFAULT_KDF_ITERATIONS = 100_000;
 const SALT_LENGTH = 16;
-
-export const deriveKEK = async (
-  password: string,
-  saltBase64: string,
-  iterations: number,
-): Promise<CryptoKey> => {
-  const subtle = getSubtleCrypto();
-  const salt = decodeBase64(saltBase64);
-
-  const passwordKey = await subtle.importKey(
-    'raw',
-    encodeText(password) as BufferSource,
-    { name: 'PBKDF2' },
-    false,
-    ['deriveKey'],
-  );
-
-  return subtle.deriveKey(
-    {
-      name: 'PBKDF2',
-      salt,
-      iterations,
-      hash: PBKDF2_HASH,
-    },
-    passwordKey,
-    {
-      name: AES_ALGORITHM,
-      length: 256,
-    },
-    false,
-    ['wrapKey', 'unwrapKey'],
-  );
-};
-
-export const deriveKEKFromEncryption = async (
-  password: string,
-  encryption: Encryption,
-): Promise<CryptoKey> => deriveKEK(password, encryption.salt, encryption.kdfIterations);
 
 export const wrapDataKey = async (dataKey: CryptoKey, kek: CryptoKey): Promise<string> => {
   const subtle = getSubtleCrypto();
@@ -90,7 +51,7 @@ export const unwrapDataKey = async (wrappedBase64: string, kek: CryptoKey): Prom
   );
 };
 
-export const createEncryptionParamsForPassword = async (
+export const createEncryption = async (
   password: string,
 ): Promise<{ encryption: Encryption; dataKey: CryptoKey }> => {
   const saltBytes = crypto.getRandomValues(new Uint8Array(SALT_LENGTH));

@@ -1,4 +1,5 @@
 export * from './core';
 export * from './encryption';
-export * from './keys';
-export * from './runtime';
+export * from './session';
+export * from './deriveKek';
+export * from './wrapUnwrap';
