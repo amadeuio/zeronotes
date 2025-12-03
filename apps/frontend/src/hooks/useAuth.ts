@@ -13,9 +13,10 @@ export const useAuth = () => {
 
   const login = async (credentials: LoginBody) => {
     const response = await authApi.login(credentials);
-    // Derive KEK and unwrap the data key so we can decrypt notes/labels.
+
     const kek = await deriveKEKFromEncryption(credentials.password, response.encryption);
     const dataKey = await unwrapDataKey(response.encryption.wrappedDataKey, kek);
+    
     setDataKey(dataKey);
 
     localStorage.setItem('token', response.token);
@@ -26,7 +27,6 @@ export const useAuth = () => {
     const { encryption, dataKey } = await createEncryptionParamsForPassword(credentials.password);
     const response = await authApi.register({ ...credentials, encryption });
 
-    // Use the locally generated data key for this session.
     setDataKey(dataKey);
 
     localStorage.setItem('token', response.token);
