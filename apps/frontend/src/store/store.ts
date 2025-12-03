@@ -1,5 +1,5 @@
-import type { Label, Note } from '@zeronotes/shared';
 import type { Filters } from '@/types';
+import type { Label, Note } from '@zeronotes/shared';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
