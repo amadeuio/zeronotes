@@ -1,6 +1,6 @@
 import { labelsApi, withApiStatus } from '@/api';
+import { encryptString, requireDataKey } from '@/crypto';
 import { selectActions, useStore } from '@/store';
-import { encryptString, requireDataKey } from '@/utils/crypto';
 import type { Label } from '@zeronotes/shared';
 import { v4 as uuidv4 } from 'uuid';
 

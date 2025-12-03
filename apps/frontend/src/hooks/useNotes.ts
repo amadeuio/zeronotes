@@ -1,7 +1,7 @@
 import { notesApi, withApiStatus } from '@/api';
+import { encryptString, requireDataKey } from '@/crypto';
 import { selectActions, useStore } from '@/store';
 import type { DraftNote } from '@/types';
-import { encryptString, requireDataKey } from '@/utils/crypto';
 import type { Note } from '@zeronotes/shared';
 import { v4 as uuidv4 } from 'uuid';
 

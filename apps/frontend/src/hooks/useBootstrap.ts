@@ -1,6 +1,6 @@
 import { bootstrapApi } from '@/api';
+import { decryptString, requireDataKey } from '@/crypto';
 import { selectActions, useStore } from '@/store';
-import { decryptString, requireDataKey } from '@/utils/crypto';
 import { useEffect, useState } from 'react';
 
 export const useBootstrap = () => {

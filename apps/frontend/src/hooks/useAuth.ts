@@ -1,11 +1,11 @@
 import { authApi } from '@/api';
-import { selectActions, useStore } from '@/store';
 import {
   createEncryptionParamsForPassword,
   deriveKEKFromEncryption,
   setDataKey,
   unwrapDataKey,
-} from '@/utils/crypto';
+} from '@/crypto';
+import { selectActions, useStore } from '@/store';
 import type { LoginBody, RegisterBody } from '@zeronotes/shared';
 
 export const useAuth = () => {
