@@ -8,7 +8,16 @@ export function makeTestHelpers(api: SuperTest<Test>) {
     uniqueEmail,
 
     registerUser: async (email: string = 'test@example.com', password: string = 'password123') =>
-      api.post('/api/auth/register').send({ email, password }),
+      api.post('/api/auth/register').send({
+        email,
+        password,
+        encryption: {
+          salt: 'dGVzdC1zYWx0',
+          wrappedDataKey: 'dGVzdC1rZXk=',
+          kdfIterations: 100000,
+          version: 1,
+        },
+      }),
 
     loginUser: async (email: string = 'test@example.com', password: string = 'password123') =>
       api.post('/api/auth/login').send({ email, password }),
@@ -17,7 +26,16 @@ export function makeTestHelpers(api: SuperTest<Test>) {
       email: string = uniqueEmail(),
       password: string = 'password123',
     ): Promise<string> => {
-      await api.post('/api/auth/register').send({ email, password });
+      await api.post('/api/auth/register').send({
+        email,
+        password,
+        encryption: {
+          salt: 'dGVzdC1zYWx0',
+          wrappedDataKey: 'dGVzdC1rZXk=',
+          kdfIterations: 100000,
+          version: 1,
+        },
+      });
 
       const res = await api.post('/api/auth/login').send({ email, password });
       return res.body.token;

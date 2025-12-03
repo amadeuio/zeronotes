@@ -1,3 +1,4 @@
+import type { Encryption } from '@zeronotes/shared';
 import pool from '../../db/client';
 import { UserRow } from './users.types';
 
@@ -16,10 +17,7 @@ export const userRepository = {
     id: string,
     email: string,
     passwordHash: string,
-    encryptionSalt: string | null,
-    wrappedDataKey: string | null,
-    kdfIterations: number | null,
-    encryptionVersion: number | null,
+    encryption: Encryption,
   ): Promise<UserRow> => {
     const result = await pool.query(
       `INSERT INTO users (
@@ -33,7 +31,15 @@ export const userRepository = {
        ) 
        VALUES ($1, $2, $3, $4, $5, $6, $7) 
        RETURNING *`,
-      [id, email, passwordHash, encryptionSalt, wrappedDataKey, kdfIterations, encryptionVersion],
+      [
+        id,
+        email,
+        passwordHash,
+        encryption.salt,
+        encryption.wrappedDataKey,
+        encryption.kdfIterations,
+        encryption.version,
+      ],
     );
     return result.rows[0];
   },

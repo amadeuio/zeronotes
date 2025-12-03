@@ -6,8 +6,8 @@ export const userSchema = z.object({
 });
 
 export const encryptionSchema = z.object({
-  salt: z.string(), // base64
-  wrappedDataKey: z.string(), // base64
+  salt: z.string(),
+  wrappedDataKey: z.string(),
   kdfIterations: z.number(),
   version: z.number(),
 });
@@ -26,9 +26,7 @@ export const registerSchema = {
         .string()
         .min(8, "Password must be at least 8 characters")
         .max(100, "Password must be at most 100 characters"),
-      // Encryption details are optional for backward compatibility; once
-      // clients are updated to always send them, this can be made required.
-      encryption: encryptionSchema.optional(),
+      encryption: encryptionSchema,
     })
     .strict(),
 };
