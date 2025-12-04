@@ -77,6 +77,17 @@ export interface Store {
     auth: {
       set: (auth: Partial<Store['auth']>) => void;
       clear: () => void;
+      login: (data: {
+        token: string;
+        user: { id: string; email: string };
+        encryption: Encryption;
+      }) => void;
+      register: (data: {
+        token: string;
+        user: { id: string; email: string };
+        encryption: Encryption;
+      }) => void;
+      unlock: () => void;
     };
   };
 }
@@ -336,6 +347,36 @@ export const useStore = create<Store>()(
               encryption: null,
             },
           });
+        },
+        login: (data) => {
+          set({
+            auth: {
+              token: data.token,
+              user: data.user,
+              encryption: data.encryption,
+              isAuthenticated: true,
+              isUnlocked: true,
+            },
+          });
+        },
+        register: (data) => {
+          set({
+            auth: {
+              token: data.token,
+              user: data.user,
+              encryption: data.encryption,
+              isAuthenticated: true,
+              isUnlocked: true,
+            },
+          });
+        },
+        unlock: () => {
+          set((state) => ({
+            auth: {
+              ...state.auth,
+              isUnlocked: true,
+            },
+          }));
         },
       },
     },
