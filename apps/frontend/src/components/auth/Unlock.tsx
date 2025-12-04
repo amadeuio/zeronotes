@@ -1,31 +1,9 @@
 import logo from '@/assets/logo.png';
 import { useAuth } from '@/hooks';
 import { useNavigate } from '@tanstack/react-router';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { FormEvent } from 'react';
 import { useState } from 'react';
-
-const Input = ({
-  placeholder,
-  type,
-  value,
-  onChange,
-  disabled,
-}: {
-  placeholder: string;
-  type: string;
-  value: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  disabled?: boolean;
-}) => (
-  <input
-    className="rounded-lg bg-white/2 px-4 py-4 text-white/60 outline-none placeholder:text-white/20 disabled:cursor-not-allowed disabled:opacity-50"
-    type={type}
-    placeholder={placeholder}
-    value={value}
-    onChange={onChange}
-    disabled={disabled}
-  />
-);
+import Input from './Input';
 
 const Unlock = () => {
   const { unlock } = useAuth();
@@ -58,7 +36,7 @@ const Unlock = () => {
   return (
     <div className="bg-base flex h-screen flex-col items-center justify-center">
       <div className="flex flex-col items-center gap-y-4">
-        <div className="hover:shadow-base flex w-[340px] flex-col items-center gap-y-10 rounded-lg border p-8">
+        <div className="shadow-base flex w-[340px] flex-col items-center gap-y-10 rounded-lg border p-8">
           <div className="flex items-center gap-x-2">
             <img src={logo} alt="Keep logo" className="size-12" />
             <div className="text-[24px]">Zeronotes</div>
