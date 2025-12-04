@@ -56,8 +56,6 @@ export const unpackVersionedPayload = (
   return { version, payloadBase64 };
 };
 
-export const encodeText = (value: string): Uint8Array => {
-  const encoded = TEXT_ENCODER.encode(value);
-  return new Uint8Array(encoded);
-};
+export const encodeText = (value: string): Uint8Array => TEXT_ENCODER.encode(value);
+
 export const decodeText = (buffer: ArrayBuffer): string => TEXT_DECODER.decode(buffer);
