@@ -23,7 +23,7 @@ export const rootRoute = createRootRoute({
       throw redirect({ to: '/' });
     }
 
-    if (!isUnlocked && currentPath !== '/unlock') {
+    if (isAuthenticated && !isUnlocked && currentPath !== '/unlock') {
       throw redirect({ to: '/unlock' });
     }
   },
