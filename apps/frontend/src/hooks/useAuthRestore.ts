@@ -15,8 +15,8 @@ export const useAuthRestore = () => {
       }
 
       try {
-        const user = await authApi.me(token);
-        actions.auth.set({ user, token, isAuthenticated: true });
+        const { user, encryption } = await authApi.me(token);
+        actions.auth.set({ user, token, encryption, isAuthenticated: true, isUnlocked: false });
       } catch (err) {
         localStorage.removeItem('token');
         actions.auth.clear();

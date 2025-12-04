@@ -1,4 +1,4 @@
-import { AuthResponse, LoginBody, RegisterBody, User } from '@zeronotes/shared';
+import { AuthResponse, Encryption, LoginBody, RegisterBody, User } from '@zeronotes/shared';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthError, ConflictError } from '../../utils/AppError';
 import { hashPassword, verifyPassword } from '../../utils/crypto';
@@ -46,8 +46,14 @@ export const userService = {
     };
   },
 
-  findById: async (id: string): Promise<User | null> => {
+  findById: async (id: string): Promise<{ user: User; encryption: Encryption } | null> => {
     const user = await userRepository.findById(id);
-    return user ? userMappers.rowToUser(user) : null;
+    if (!user) {
+      return null;
+    }
+    return {
+      user: userMappers.rowToUser(user),
+      encryption: userMappers.rowToEncryption(user),
+    };
   },
 };

@@ -1,10 +1,11 @@
 import { authApi } from '@/api';
 import { createEncryption, deriveKEK, setDataKey, unwrapDataKey } from '@/crypto';
-import { selectActions, useStore } from '@/store';
+import { selectActions, selectAuth, useStore } from '@/store';
 import type { LoginBody, RegisterBody } from '@zeronotes/shared';
 
 export const useAuth = () => {
   const actions = useStore(selectActions);
+  const { encryption } = useStore(selectAuth);
 
   const login = async (credentials: LoginBody) => {
     const response = await authApi.login(credentials);
@@ -19,7 +20,13 @@ export const useAuth = () => {
     setDataKey(dataKey);
 
     localStorage.setItem('token', response.token);
-    actions.auth.set({ token: response.token, user: response.user, isAuthenticated: true });
+    actions.auth.set({
+      token: response.token,
+      user: response.user,
+      encryption: response.encryption,
+      isAuthenticated: true,
+      isUnlocked: true,
+    });
   };
 
   const register = async (credentials: Omit<RegisterBody, 'encryption'>) => {
@@ -29,7 +36,25 @@ export const useAuth = () => {
     setDataKey(dataKey);
 
     localStorage.setItem('token', response.token);
-    actions.auth.set({ token: response.token, user: response.user, isAuthenticated: true });
+    actions.auth.set({
+      token: response.token,
+      user: response.user,
+      encryption: response.encryption,
+      isAuthenticated: true,
+      isUnlocked: true,
+    });
+  };
+
+  const unlock = async (password: string) => {
+    if (!encryption) {
+      throw new Error('Encryption not found');
+    }
+
+    const kek = await deriveKEK(password, encryption.salt, encryption.kdfIterations);
+    const dataKey = await unwrapDataKey(encryption.wrappedDataKey, kek);
+
+    setDataKey(dataKey);
+    actions.auth.set({ isUnlocked: true });
   };
 
   const logout = () => {
@@ -41,6 +66,7 @@ export const useAuth = () => {
   return {
     login,
     register,
+    unlock,
     logout,
   };
 };

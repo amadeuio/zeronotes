@@ -1,5 +1,6 @@
 import App from '@/App';
 import Login from '@/components/auth/Login';
+import Unlock from '@/components/auth/Unlock';
 import { useStore } from '@/store';
 import {
   createRootRoute,
@@ -11,7 +12,7 @@ import {
 
 export const rootRoute = createRootRoute({
   beforeLoad: async ({ location }) => {
-    const { isAuthenticated } = useStore.getState().auth;
+    const { isAuthenticated, isUnlocked } = useStore.getState().auth;
     const currentPath = location.pathname;
 
     if (!isAuthenticated && currentPath !== '/login') {
@@ -21,8 +22,18 @@ export const rootRoute = createRootRoute({
     if (isAuthenticated && currentPath === '/login') {
       throw redirect({ to: '/' });
     }
+
+    if (!isUnlocked && currentPath !== '/unlock') {
+      throw redirect({ to: '/unlock' });
+    }
   },
   component: () => <Outlet />,
+});
+
+const unlockRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/unlock',
+  component: Unlock,
 });
 
 const loginRoute = createRoute({
@@ -37,6 +48,6 @@ const notesRoute = createRoute({
   component: App,
 });
 
-const routeTree = rootRoute.addChildren([loginRoute, notesRoute]);
+const routeTree = rootRoute.addChildren([unlockRoute, loginRoute, notesRoute]);
 
 export const router = createRouter({ routeTree });

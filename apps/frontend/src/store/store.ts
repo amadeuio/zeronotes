@@ -1,5 +1,5 @@
 import type { Filters } from '@/types';
-import type { Label, Note } from '@zeronotes/shared';
+import type { Encryption, Label, Note } from '@zeronotes/shared';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
@@ -28,8 +28,10 @@ export interface Store {
   };
   auth: {
     isAuthenticated: boolean;
+    isUnlocked: boolean;
     user: { id: string; email: string } | null;
     token: string | null;
+    encryption: Encryption | null;
   };
   actions: {
     notes: {
@@ -93,7 +95,7 @@ export const useStore = create<Store>()(
     filters: { search: '', view: { type: 'notes' } },
     ui: { isEditLabelsMenuOpen: false, isSidebarCollapsed: false, gridColumns: 5 },
     api: { loading: false, error: false },
-    auth: { user: null, token: null, loading: false },
+    auth: { user: null, token: null, isAuthenticated: false, isUnlocked: false, encryption: null },
     actions: {
       notes: {
         set: (notesMap) => {
@@ -325,7 +327,15 @@ export const useStore = create<Store>()(
           set((state) => ({ auth: { ...state.auth, ...auth } }));
         },
         clear: () => {
-          set({ auth: { user: null, token: null, isAuthenticated: false } });
+          set({
+            auth: {
+              user: null,
+              token: null,
+              isAuthenticated: false,
+              isUnlocked: false,
+              encryption: null,
+            },
+          });
         },
       },
     },

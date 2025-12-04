@@ -24,12 +24,12 @@ const me = asyncHandler(async (req: Request, res: Response) => {
     throw new AuthError();
   }
 
-  const user = await userService.findById(userId);
-  if (!user) {
+  const result = await userService.findById(userId);
+  if (!result) {
     throw new NotFoundError('User');
   }
 
-  res.json(user);
+  res.json(result);
 });
 
 router.post('/register', validate(registerSchema.body), register);
