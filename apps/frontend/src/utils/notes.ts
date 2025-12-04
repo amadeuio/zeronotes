@@ -1,4 +1,5 @@
 import { COLORS } from '@/constants';
+import { decryptString } from '@/crypto';
 import type { DisplayNote, Filters } from '@/types';
 import type { Label, Note } from '@zeronotes/shared';
 
@@ -38,4 +39,21 @@ export const mapNoteToDisplay = (note: Note, labels: Record<string, Label>): Dis
     labels: noteLabels,
     colorValue,
   };
+};
+
+export const decryptNotes = async (notes: Note[], dataKey: CryptoKey) => {
+  const notesById: Record<string, Note> = {};
+  const notesOrder: string[] = [];
+
+  await Promise.all(
+    notes.map(async (note) => {
+      const title = await decryptString(note.title, dataKey);
+      const content = await decryptString(note.content, dataKey);
+
+      notesById[note.id] = { ...note, title, content };
+      notesOrder.push(note.id);
+    }),
+  );
+
+  return { notesById, notesOrder };
 };

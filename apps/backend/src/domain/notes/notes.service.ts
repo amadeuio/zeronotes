@@ -4,25 +4,9 @@ import { noteMappers } from './notes.mappers';
 import { noteRepository } from './notes.repository';
 
 export const noteService = {
-  findAll: async (
-    userId: string,
-  ): Promise<{
-    notesById: Record<string, Note>;
-    notesOrder: string[];
-  }> => {
+  findAll: async (userId: string): Promise<Note[]> => {
     const rows = await noteRepository.findAllWithLabels(userId);
-    const sortedRows = [...rows].sort((a, b) => a.order - b.order);
-
-    const notesById: Record<string, Note> = {};
-    const notesOrder: string[] = [];
-
-    for (const row of sortedRows) {
-      const note = noteMappers.rowToNote(row);
-      notesById[note.id] = note;
-      notesOrder.push(note.id);
-    }
-
-    return { notesById, notesOrder };
+    return rows.map(noteMappers.rowToNote);
   },
 
   create: async (userId: string, data: CreateNoteBody): Promise<string> => {

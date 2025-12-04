@@ -6,4 +6,5 @@ export {
   getSectionHeight,
   getTotalWidth,
 } from './grid';
-export { filterNote, getColorValue, mapNoteToDisplay } from './notes';
+export { decryptLabels } from './labels';
+export { decryptNotes, filterNote, getColorValue, mapNoteToDisplay } from './notes';

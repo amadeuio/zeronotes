@@ -3,16 +3,9 @@ import { labelMappers } from './labels.mappers';
 import { labelRepository } from './labels.repository';
 
 export const labelService = {
-  findAll: async (userId: string): Promise<Record<string, Label>> => {
-    const labels = await labelRepository.findAll(userId);
-    const labelsById = labels.reduce(
-      (acc, label) => {
-        acc[label.id] = labelMappers.rowToLabel(label);
-        return acc;
-      },
-      {} as Record<string, Label>,
-    );
-    return labelsById;
+  findAll: async (userId: string): Promise<Label[]> => {
+    const rows = await labelRepository.findAll(userId);
+    return rows.map(labelMappers.rowToLabel);
   },
 
   create: async (userId: string, data: CreateLabelBody): Promise<string> => {
