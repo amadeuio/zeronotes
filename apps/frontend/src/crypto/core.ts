@@ -4,7 +4,6 @@ const TEXT_DECODER = new TextDecoder();
 export const AES_ALGORITHM = 'AES-GCM';
 export const GCM_IV_LENGTH = 12;
 export const PBKDF2_HASH = 'SHA-256';
-export const ENCRYPTION_VERSION = 1;
 
 export type EncryptedString = string;
 

@@ -1,6 +1,6 @@
+import { ENCRYPTION_VERSION } from '@zeronotes/shared';
 import {
   AES_ALGORITHM,
-  ENCRYPTION_VERSION,
   type EncryptedString,
   GCM_IV_LENGTH,
   concatArrays,

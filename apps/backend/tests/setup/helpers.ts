@@ -1,3 +1,4 @@
+import { ENCRYPTION_VERSION, KDF_ITERATIONS } from '@zeronotes/shared';
 import { SuperTest, Test } from 'supertest';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -14,8 +15,8 @@ export function makeTestHelpers(api: SuperTest<Test>) {
         encryption: {
           salt: 'dGVzdC1zYWx0',
           wrappedDataKey: 'dGVzdC1rZXk=',
-          kdfIterations: 100000,
-          version: 1,
+          kdfIterations: KDF_ITERATIONS,
+          version: ENCRYPTION_VERSION,
         },
       }),
 
@@ -32,8 +33,8 @@ export function makeTestHelpers(api: SuperTest<Test>) {
         encryption: {
           salt: 'dGVzdC1zYWx0',
           wrappedDataKey: 'dGVzdC1rZXk=',
-          kdfIterations: 100000,
-          version: 1,
+          kdfIterations: KDF_ITERATIONS,
+          version: ENCRYPTION_VERSION,
         },
       });
 

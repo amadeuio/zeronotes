@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ENCRYPTION_VERSION, KDF_ITERATIONS } from "../constants/encryption";
 
 export const userSchema = z.object({
   id: z.string().uuid(),
@@ -8,8 +9,15 @@ export const userSchema = z.object({
 export const encryptionSchema = z.object({
   salt: z.string(),
   wrappedDataKey: z.string(),
-  kdfIterations: z.number(),
-  version: z.number(),
+  kdfIterations: z
+    .number()
+    .min(KDF_ITERATIONS, `KDF iterations must be at least ${KDF_ITERATIONS}`),
+  version: z
+    .number()
+    .min(
+      ENCRYPTION_VERSION,
+      `Encryption version must be at least ${ENCRYPTION_VERSION}`
+    ),
 });
 
 export const authResponseSchema = z.object({

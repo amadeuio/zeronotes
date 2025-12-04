@@ -1,7 +1,6 @@
-import type { Encryption } from '@zeronotes/shared';
+import { ENCRYPTION_VERSION, KDF_ITERATIONS, type Encryption } from '@zeronotes/shared';
 import {
   AES_ALGORITHM,
-  ENCRYPTION_VERSION,
   GCM_IV_LENGTH,
   concatArrays,
   decodeBase64,
@@ -11,7 +10,6 @@ import {
 } from './core';
 import { deriveKEK } from './deriveKek';
 
-const DEFAULT_KDF_ITERATIONS = 100_000;
 const SALT_LENGTH = 16;
 
 export const wrapDataKey = async (dataKey: CryptoKey, kek: CryptoKey): Promise<string> => {
@@ -56,9 +54,8 @@ export const createEncryption = async (
 ): Promise<{ encryption: Encryption; dataKey: CryptoKey }> => {
   const saltBytes = crypto.getRandomValues(new Uint8Array(SALT_LENGTH));
   const saltBase64 = encodeBase64(saltBytes.buffer);
-  const kdfIterations = DEFAULT_KDF_ITERATIONS;
 
-  const kek = await deriveKEK(password, saltBase64, kdfIterations);
+  const kek = await deriveKEK(password, saltBase64, KDF_ITERATIONS);
 
   const subtle = getSubtleCrypto();
   const dataKey = await subtle.generateKey(
@@ -75,7 +72,7 @@ export const createEncryption = async (
   const encryption: Encryption = {
     salt: saltBase64,
     wrappedDataKey,
-    kdfIterations,
+    kdfIterations: KDF_ITERATIONS,
     version: ENCRYPTION_VERSION,
   };
 
