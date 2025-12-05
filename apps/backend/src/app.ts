@@ -5,6 +5,7 @@ import { labelsRouter } from './domain/labels';
 import { notesRouter } from './domain/notes';
 import { usersRouter } from './domain/users';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
+import { rateLimit } from './middleware/rateLimit.middleware';
 
 export function createApp() {
   const app = express();
@@ -16,6 +17,7 @@ export function createApp() {
     }),
   );
   app.use(express.json());
+  app.use(rateLimit(10, 10000));
   app.use('/api/bootstrap', bootstrapRouter);
   app.use('/api/auth', usersRouter);
   app.use('/api/notes', notesRouter);
