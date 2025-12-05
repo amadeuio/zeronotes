@@ -1,3 +1,4 @@
+import { Label, Note } from '@zeronotes/shared';
 import { v4 as uuidv4 } from 'uuid';
 import { createTestApi } from './setup/app';
 import { makeTestHelpers } from './setup/helpers';
@@ -131,10 +132,11 @@ describe('Notes and Labels Integration', () => {
       // Get all notes and verify labels
       const getResponse = await api.get('/api/notes').set('Authorization', `Bearer ${token}`);
 
-      const note = getResponse.body.notesById[noteId];
+      const note = getResponse.body.find((n: Note) => n.id === noteId);
       expect(note).toBeDefined();
       expect(note.labelIds).toBeDefined();
       expect(note.labelIds.length).toBe(3);
+      expect(note.labelIds).toEqual([label1Id, label2Id, label3Id]);
     });
 
     it("should handle deleting a label that's assigned to multiple notes", async () => {
@@ -176,17 +178,17 @@ describe('Notes and Labels Integration', () => {
       // Verify label is removed from both notes
       const getNotesResponse = await api.get('/api/notes').set('Authorization', `Bearer ${token}`);
 
-      const updatedNote1 = getNotesResponse.body.notesById[note1Id];
-      const updatedNote2 = getNotesResponse.body.notesById[note2Id];
+      const updatedNote1 = getNotesResponse.body.find((n: Note) => n.id === note1Id);
+      const updatedNote2 = getNotesResponse.body.find((n: Note) => n.id === note2Id);
 
       // Verify the label is not in the notes anymore
       if (updatedNote1.labels) {
-        const hasLabel1 = updatedNote1.labels.some((l: any) => l.id === labelId);
+        const hasLabel1 = updatedNote1.labels.some((l: Label) => l.id === labelId);
         expect(hasLabel1).toBe(false);
       }
 
       if (updatedNote2.labels) {
-        const hasLabel2 = updatedNote2.labels.some((l: any) => l.id === labelId);
+        const hasLabel2 = updatedNote2.labels.some((l: Label) => l.id === labelId);
         expect(hasLabel2).toBe(false);
       }
     });

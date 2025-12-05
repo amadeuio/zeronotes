@@ -1,3 +1,4 @@
+import { Label } from '@zeronotes/shared';
 import { v4 as uuidv4 } from 'uuid';
 import { createTestApi } from './setup/app';
 import { makeTestHelpers } from './setup/helpers';
@@ -84,11 +85,13 @@ describe('Labels Endpoints', () => {
       const response = await api.get('/api/labels').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(200);
-      expect(typeof response.body).toBe('object');
-      const labelIds = Object.keys(response.body);
-      expect(labelIds.length).toBeGreaterThanOrEqual(2);
-      expect(response.body[label1Id]).toBeDefined();
-      expect(response.body[label2Id]).toBeDefined();
+      expect(response.body).toHaveLength(2);
+      expect(Array.isArray(response.body)).toBe(true);
+
+      const ids = response.body.map((l: Label) => l.id);
+
+      expect(ids).toContain(label1Id);
+      expect(ids).toContain(label2Id);
     });
 
     it('should return 401 when not authenticated', async () => {

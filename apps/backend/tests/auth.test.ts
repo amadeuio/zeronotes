@@ -152,9 +152,15 @@ describe('Auth Endpoints', () => {
       const response = await api.get('/api/auth/me').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('id');
-      expect(response.body).toHaveProperty('email');
+      expect(response.body).toHaveProperty('user');
+      expect(response.body).toHaveProperty('encryption');
+
+      expect(response.body.user).toHaveProperty('id');
+      expect(response.body.user).toHaveProperty('email');
+
       expect(response.body).not.toHaveProperty('password');
+      expect(response.body.user).not.toHaveProperty('password');
+      expect(response.body.encryption).not.toHaveProperty('password');
     });
 
     it('should return 401 when not authenticated', async () => {

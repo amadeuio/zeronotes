@@ -18,8 +18,12 @@ describe('Bootstrap Endpoint', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toBeDefined();
-      // Bootstrap typically returns user's initial data (notes, labels, etc.)
-      expect(typeof response.body === 'object').toBe(true);
+      expect(response.body).toHaveProperty('notes');
+      expect(response.body).toHaveProperty('labels');
+      expect(Array.isArray(response.body.notes)).toBe(true);
+      expect(Array.isArray(response.body.labels)).toBe(true);
+      expect(response.body.notes).toHaveLength(0);
+      expect(response.body.labels).toHaveLength(0);
     });
 
     it('should return 401 when not authenticated', async () => {
@@ -30,6 +34,14 @@ describe('Bootstrap Endpoint', () => {
 
     it('should return 401 with invalid token', async () => {
       const response = await api.get('/api/bootstrap').set('Authorization', 'Bearer invalid-token');
+
+      expect(response.status).toBe(401);
+    });
+
+    it('should return 401 with corrupted token', async () => {
+      const response = await api
+        .get('/api/bootstrap')
+        .set('Authorization', `Bearer ${helpers.corruptTokenSignature(token)}`);
 
       expect(response.status).toBe(401);
     });
