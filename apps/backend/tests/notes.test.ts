@@ -1,3 +1,4 @@
+import { Note } from '@zeronotes/shared';
 import { v4 as uuidv4 } from 'uuid';
 import { createTestApi } from './setup/app';
 import { makeTestHelpers } from './setup/helpers';
@@ -54,7 +55,6 @@ describe('Notes Endpoints', () => {
 
   describe('GET /api/notes', () => {
     it('should return all notes for authenticated user', async () => {
-      // Create a couple of notes
       await helpers.createNote(token, {
         title: 'Note 1',
         content: 'Content 1',
@@ -67,10 +67,8 @@ describe('Notes Endpoints', () => {
       const response = await api.get('/api/notes').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('notesById');
-      expect(response.body).toHaveProperty('notesOrder');
-      expect(Array.isArray(response.body.notesOrder)).toBe(true);
-      expect(response.body.notesOrder.length).toBeGreaterThanOrEqual(2);
+      expect(Array.isArray(response.body)).toBe(true);
+      expect(response.body.length).toBeGreaterThanOrEqual(2);
     });
 
     it('should return 401 when not authenticated', async () => {
@@ -91,10 +89,11 @@ describe('Notes Endpoints', () => {
       const response = await api.get('/api/notes').set('Authorization', `Bearer ${token2}`);
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('notesById');
+      expect(Array.isArray(response.body)).toBe(true);
+
       // Second user should not see first user's notes
-      const notes = Object.values(response.body.notesById);
-      const hasUser1Note = notes.some((note: any) => note.title === 'User 1 Note');
+      const user2Notes = response.body;
+      const hasUser1Note = user2Notes.some((note: Note) => note.title === 'User 1 Note');
       expect(hasUser1Note).toBe(false);
     });
   });
@@ -182,7 +181,7 @@ describe('Notes Endpoints', () => {
 
       // Verify it's deleted
       const getResponse = await api.get('/api/notes').set('Authorization', `Bearer ${token}`);
-      expect(getResponse.body.notesById[noteId]).toBeUndefined();
+      expect(getResponse.body.some((note: Note) => note.id === noteId)).toBe(false);
     });
 
     it('should return 401 when not authenticated', async () => {
