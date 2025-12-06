@@ -1,4 +1,13 @@
-import { createLabelSchema, deleteLabelSchema, updateLabelSchema } from '@zeronotes/shared';
+import {
+  CreateLabelBody,
+  createLabelSchema,
+  DeleteLabelParams,
+  deleteLabelSchema,
+  Label,
+  UpdateLabelBody,
+  UpdateLabelParams,
+  updateLabelSchema,
+} from '@zeronotes/shared';
 import express, { Request, Response } from 'express';
 import { authenticate } from '../../middleware/auth.middleware';
 import { validate } from '../../middleware/validate.middleware';
@@ -8,31 +17,35 @@ import { labelService } from './labels.service';
 
 const router = express.Router();
 
-const getAllLabels = asyncHandler(async (req: Request, res: Response) => {
+const getAllLabels = asyncHandler(async (req: Request, res: Response<Label[]>) => {
   const labels = await labelService.findAll(req.userId!);
   res.json(labels);
 });
 
-const createLabel = asyncHandler(async (req: Request, res: Response) => {
-  const data = req.body;
-  const labelId = await labelService.create(req.userId!, data);
-  res.status(201).json({ id: labelId });
-});
+const createLabel = asyncHandler(
+  async (req: Request<{}, {}, CreateLabelBody>, res: Response<{ id: string }>) => {
+    const data = req.body;
+    const labelId = await labelService.create(req.userId!, data);
+    res.status(201).json({ id: labelId });
+  },
+);
 
-const updateLabel = asyncHandler(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const data = req.body;
+const updateLabel = asyncHandler(
+  async (req: Request<UpdateLabelParams, {}, UpdateLabelBody>, res: Response<{ id: string }>) => {
+    const { id } = req.params;
+    const data = req.body;
 
-  const labelId = await labelService.update(req.userId!, id, data);
+    const labelId = await labelService.update(req.userId!, id, data);
 
-  if (!labelId) {
-    throw new NotFoundError('Label');
-  }
+    if (!labelId) {
+      throw new NotFoundError('Label');
+    }
 
-  res.json({ id: labelId });
-});
+    res.json({ id: labelId });
+  },
+);
 
-const deleteLabel = asyncHandler(async (req: Request, res: Response) => {
+const deleteLabel = asyncHandler(async (req: Request<DeleteLabelParams>, res: Response<void>) => {
   const { id } = req.params;
   const deleted = await labelService.delete(req.userId!, id);
 

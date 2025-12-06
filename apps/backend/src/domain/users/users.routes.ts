@@ -1,4 +1,11 @@
-import { loginSchema, registerSchema } from '@zeronotes/shared';
+import {
+  AuthResponse,
+  LoginBody,
+  loginSchema,
+  MeResponse,
+  RegisterBody,
+  registerSchema,
+} from '@zeronotes/shared';
 import express, { Request, Response } from 'express';
 import { authenticate } from '../../middleware/auth.middleware';
 import { validate } from '../../middleware/validate.middleware';
@@ -8,17 +15,19 @@ import { userService } from './users.service';
 
 const router = express.Router();
 
-const register = asyncHandler(async (req: Request, res: Response) => {
-  const result = await userService.register(req.body);
-  res.status(201).json(result);
-});
+const register = asyncHandler(
+  async (req: Request<{}, {}, RegisterBody>, res: Response<AuthResponse>) => {
+    const result = await userService.register(req.body);
+    res.status(201).json(result);
+  },
+);
 
-const login = asyncHandler(async (req: Request, res: Response) => {
+const login = asyncHandler(async (req: Request<{}, {}, LoginBody>, res: Response<AuthResponse>) => {
   const result = await userService.login(req.body);
   res.json(result);
 });
 
-const me = asyncHandler(async (req: Request, res: Response) => {
+const me = asyncHandler(async (req: Request, res: Response<MeResponse>) => {
   const userId = req.userId;
   if (!userId) {
     throw new AuthError();
