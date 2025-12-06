@@ -1,4 +1,4 @@
-import type { AuthResponse, Encryption, LoginBody, RegisterBody, User } from '@zeronotes/shared';
+import type { AuthResponse, LoginBody, MeResponse, RegisterBody } from '@zeronotes/shared';
 import { API_URL } from './constants';
 
 export const authApi = {
@@ -46,7 +46,7 @@ export const authApi = {
     return data;
   },
 
-  me: async (token: string): Promise<{ user: User; encryption: Encryption }> => {
+  me: async (token: string): Promise<MeResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const res = await fetch(`${API_URL}/auth/me`, {
       headers: {
