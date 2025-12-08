@@ -93,15 +93,12 @@ interface LabelNoteMenuProps {
 
 const EditLabelsMenu = ({ note }: LabelNoteMenuProps) => {
   const [search, setSearch] = useState('');
-  const trimmedSearch = search.trim();
   const filteredLabels = useSelectFilteredLabels(search);
   const { createLabelAndAddToNote } = useNotes();
 
   const handleCreateLabel = () => {
-    if (trimmedSearch) {
-      createLabelAndAddToNote(note.id, trimmedSearch);
-      setSearch('');
-    }
+    createLabelAndAddToNote(note.id, search.trim());
+    setSearch('');
   };
 
   return (
@@ -110,7 +107,7 @@ const EditLabelsMenu = ({ note }: LabelNoteMenuProps) => {
       <Input value={search} onChange={setSearch} />
       {filteredLabels.length > 0 ? (
         filteredLabels.map((label) => <MenuItem key={label.id} noteId={note.id} label={label} />)
-      ) : trimmedSearch.length > 0 ? (
+      ) : search.trim().length > 0 ? (
         <CreateLabel name={search} onClick={handleCreateLabel} />
       ) : null}
     </div>
