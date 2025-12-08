@@ -89,14 +89,17 @@ export interface EditLabelsMenuProps {
 
 const EditLabelsMenu = ({ state, dispatch }: EditLabelsMenuProps) => {
   const [search, setSearch] = useState('');
+  const trimmedSearch = search.trim();
   const filteredLabels = useSelectFilteredLabels(search);
   const { createAndCallAction } = useLabels();
 
   const handleCreateLabel = async () => {
-    await createAndCallAction(search, (label) =>
-      dispatch({ type: 'ADD_LABEL', payload: label.id }),
-    );
-    setSearch('');
+    if (trimmedSearch) {
+      await createAndCallAction(trimmedSearch, (label) =>
+        dispatch({ type: 'ADD_LABEL', payload: label.id }),
+      );
+      setSearch('');
+    }
   };
 
   return (
@@ -107,7 +110,7 @@ const EditLabelsMenu = ({ state, dispatch }: EditLabelsMenuProps) => {
         filteredLabels.map((label) => (
           <MenuItem key={label.id} state={state} dispatch={dispatch} label={label} />
         ))
-      ) : search.length > 0 ? (
+      ) : trimmedSearch.length > 0 ? (
         <CreateLabel name={search} onClick={handleCreateLabel} />
       ) : null}
     </div>
