@@ -107,9 +107,9 @@ const EditLabelsMenu = ({ state, dispatch }: EditLabelsMenuProps) => {
         filteredLabels.map((label) => (
           <MenuItem key={label.id} state={state} dispatch={dispatch} label={label} />
         ))
-      ) : (
+      ) : search.length > 0 ? (
         <CreateLabel name={search} onClick={handleCreateLabel} />
-      )}
+      ) : null}
     </div>
   );
 };

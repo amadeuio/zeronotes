@@ -107,9 +107,9 @@ const EditLabelsMenu = ({ note }: LabelNoteMenuProps) => {
       <Input value={search} onChange={setSearch} />
       {filteredLabels.length > 0 ? (
         filteredLabels.map((label) => <MenuItem key={label.id} noteId={note.id} label={label} />)
-      ) : (
+      ) : search.length > 0 ? (
         <CreateLabel name={search} onClick={handleCreateLabel} />
-      )}
+      ) : null}
     </div>
   );
 };
