@@ -1,9 +1,9 @@
 import cors from 'cors';
 import express from 'express';
+import { authRouter } from './domain/auth';
 import { bootstrapRouter } from './domain/bootstrap';
 import { labelsRouter } from './domain/labels';
 import { notesRouter } from './domain/notes';
-import { usersRouter } from './domain/users';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { rateLimit } from './middleware/rateLimit.middleware';
 
@@ -19,7 +19,7 @@ export function createApp() {
   app.use(express.json());
   app.use(rateLimit(10, 10000));
   app.use('/api/bootstrap', bootstrapRouter);
-  app.use('/api/auth', usersRouter);
+  app.use('/api/auth', authRouter);
   app.use('/api/notes', notesRouter);
   app.use('/api/labels', labelsRouter);
 

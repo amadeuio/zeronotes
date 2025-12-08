@@ -1,8 +1,8 @@
 import type { Encryption } from '@zeronotes/shared';
 import pool from '../../db/client';
-import { UserRow } from './users.types';
+import { UserRow } from './auth.types';
 
-export const userRepository = {
+export const authRepository = {
   findByEmail: async (email: string): Promise<UserRow | null> => {
     const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
     return result.rows[0] || null;

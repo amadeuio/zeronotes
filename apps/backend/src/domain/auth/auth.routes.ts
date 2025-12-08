@@ -11,19 +11,19 @@ import { authenticate } from '../../middleware/auth.middleware';
 import { validate } from '../../middleware/validate.middleware';
 import { AuthError, NotFoundError } from '../../utils/AppError';
 import { asyncHandler } from '../../utils/asyncHandler';
-import { userService } from './users.service';
+import { authService } from './auth.service';
 
 const router = express.Router();
 
 const register = asyncHandler(
   async (req: Request<{}, {}, RegisterBody>, res: Response<AuthResponse>) => {
-    const result = await userService.register(req.body);
+    const result = await authService.register(req.body);
     res.status(201).json(result);
   },
 );
 
 const login = asyncHandler(async (req: Request<{}, {}, LoginBody>, res: Response<AuthResponse>) => {
-  const result = await userService.login(req.body);
+  const result = await authService.login(req.body);
   res.json(result);
 });
 
@@ -33,7 +33,7 @@ const me = asyncHandler(async (req: Request, res: Response<MeResponse>) => {
     throw new AuthError();
   }
 
-  const result = await userService.findById(userId);
+  const result = await authService.findById(userId);
   if (!result) {
     throw new NotFoundError('User');
   }

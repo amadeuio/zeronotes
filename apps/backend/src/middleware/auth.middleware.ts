@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { userService } from '../domain/users/users.service';
+import { authService } from '../domain/auth/auth.service';
 import { AuthError } from '../utils/AppError';
 import { verifyToken } from '../utils/jwt';
 
@@ -21,7 +21,7 @@ export const authenticate = async (req: Request, _res: Response, next: NextFunct
     const token = authHeader.substring(7);
 
     const userId = await verifyToken(token);
-    const user = await userService.findById(userId);
+    const user = await authService.findById(userId);
 
     if (!user) {
       throw new AuthError('User not found');

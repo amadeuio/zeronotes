@@ -1,7 +1,7 @@
 import { Encryption, encryptionSchema, User } from '@zeronotes/shared';
-import type { UserRow } from './users.types';
+import type { UserRow } from './auth.types';
 
-export const userMappers = {
+export const authMappers = {
   rowToUser: (row: UserRow): User => ({
     id: row.id,
     email: row.email,
