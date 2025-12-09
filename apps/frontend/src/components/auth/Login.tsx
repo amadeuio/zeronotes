@@ -72,18 +72,18 @@ const Login = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="mt-2 w-full cursor-pointer rounded-lg border border-white/10 bg-white/10 p-3 text-sm font-medium text-white/80 transition-colors duration-200 ease-in-out hover:border-white/12 hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-2 w-full cursor-pointer rounded-lg border border-white/10 bg-white/10 p-3 text-sm font-medium transition-colors duration-200 ease-in-out hover:border-white/12 hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <span className="text-white/80">{isLoading ? 'Logging in...' : 'Login'}</span>
+              Login
             </button>
             <Separator />
             <button
               type="submit"
               disabled={isLoading}
-              className="flex w-full cursor-pointer items-center justify-center gap-x-2 rounded-lg border border-white/18 p-3 text-sm font-medium text-white/80 transition-colors duration-200 ease-in-out hover:bg-white/2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex w-full cursor-pointer items-center justify-center gap-x-2 rounded-lg border border-white/18 p-3 text-sm font-medium transition-colors duration-200 ease-in-out hover:bg-white/2 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <Icon name="visibility" size={16} className="text-white/80" />
-              <span className="text-white/80">Demo Mode</span>
+              <Icon name="visibility" size={16} className="text-primary" />
+              <span>Demo Mode</span>
             </button>
             <div
               onClick={() => {
@@ -93,7 +93,7 @@ const Login = () => {
               className="mt-4 text-center text-sm text-white/40"
             >
               Don't have an account?{' '}
-              <span className="cursor-pointer text-white/90 transition-colors duration-200 ease-in-out hover:text-white/80">
+              <span className="text-primary cursor-pointer transition-colors duration-200 ease-in-out hover:text-white/80">
                 Sign up
               </span>
             </div>

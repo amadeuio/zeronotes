@@ -72,9 +72,9 @@ const SignUp = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="mt-2 w-full cursor-pointer rounded-lg border border-white/10 bg-white/10 p-3 text-sm font-medium text-white/80 transition-colors duration-200 ease-in-out hover:border-white/12 hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-2 w-full cursor-pointer rounded-lg border border-white/10 bg-white/10 p-3 text-sm font-medium transition-colors duration-200 ease-in-out hover:border-white/12 hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <span className="text-white/80">{isLoading ? 'Signing up...' : 'Sign up'}</span>
+              Create account
             </button>
             <div
               onClick={() => {
