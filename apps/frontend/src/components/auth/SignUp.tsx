@@ -6,17 +6,10 @@ import { useState } from 'react';
 import { Icon } from '../common';
 import Input from './Input';
 
-const Separator = () => (
-  <div className="flex w-full items-center gap-x-4 py-4">
-    <div className="h-px flex-1 bg-white/20"></div>
-    <span className="text-sm text-white/40">OR</span>
-    <div className="h-px flex-1 bg-white/20"></div>
-  </div>
-);
-
-const Login = () => {
-  const { login } = useAuth();
+const SignUp = () => {
+  const { register } = useAuth();
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,10 +27,10 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      await login({ email, password });
+      await register({ email, password });
       navigate({ to: '/' });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to login');
+      setError(err instanceof Error ? err.message : 'Failed to sign up');
     } finally {
       setIsLoading(false);
     }
@@ -52,6 +45,13 @@ const Login = () => {
             <div className="text-[24px]">Zeronotes</div>
           </div>
           <form className="flex w-full flex-col gap-y-4" onSubmit={handleSubmit}>
+            <Input
+              placeholder="Name (optional)"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled={isLoading}
+            />
             <Input
               placeholder="Email"
               type="email"
@@ -74,27 +74,18 @@ const Login = () => {
               disabled={isLoading}
               className="mt-2 w-full cursor-pointer rounded-lg border border-white/10 bg-white/10 p-3 text-sm font-medium text-white/80 transition-colors duration-200 ease-in-out hover:border-white/12 hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <span className="text-white/80">{isLoading ? 'Logging in...' : 'Login'}</span>
-            </button>
-            <Separator />
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="flex w-full cursor-pointer items-center justify-center gap-x-2 rounded-lg border border-white/18 p-3 text-sm font-medium text-white/80 transition-colors duration-200 ease-in-out hover:bg-white/2 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <Icon name="visibility" size={16} className="text-white/80" />
-              <span className="text-white/80">Demo Mode</span>
+              <span className="text-white/80">{isLoading ? 'Signing up...' : 'Sign up'}</span>
             </button>
             <div
               onClick={() => {
                 setError(null);
-                navigate({ to: '/signup' });
+                navigate({ to: '/login' });
               }}
               className="mt-4 text-center text-sm text-white/40"
             >
-              Don't have an account?{' '}
+              Already have an account?{' '}
               <span className="cursor-pointer text-white/90 transition-colors duration-200 ease-in-out hover:text-white/80">
-                Sign up
+                Login
               </span>
             </div>
           </form>
@@ -109,4 +100,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;

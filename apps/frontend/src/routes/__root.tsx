@@ -1,5 +1,6 @@
 import App from '@/App';
 import Login from '@/components/auth/Login';
+import SignUp from '@/components/auth/SignUp';
 import Unlock from '@/components/auth/Unlock';
 import { useStore } from '@/store';
 import {
@@ -15,11 +16,11 @@ export const rootRoute = createRootRoute({
     const { isAuthenticated, isUnlocked } = useStore.getState().auth;
     const currentPath = location.pathname;
 
-    if (!isAuthenticated && currentPath !== '/login') {
+    if (!isAuthenticated && currentPath !== '/login' && currentPath !== '/signup') {
       throw redirect({ to: '/login' });
     }
 
-    if (isAuthenticated && currentPath === '/login') {
+    if (isAuthenticated && (currentPath === '/login' || currentPath === '/signup')) {
       throw redirect({ to: '/' });
     }
 
@@ -42,12 +43,18 @@ const loginRoute = createRoute({
   component: Login,
 });
 
+const signupRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/signup',
+  component: SignUp,
+});
+
 const notesRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: App,
 });
 
-const routeTree = rootRoute.addChildren([unlockRoute, loginRoute, notesRoute]);
+const routeTree = rootRoute.addChildren([unlockRoute, loginRoute, signupRoute, notesRoute]);
 
 export const router = createRouter({ routeTree });
