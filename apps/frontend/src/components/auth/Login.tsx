@@ -3,12 +3,22 @@ import { useAuth } from '@/hooks';
 import { useNavigate } from '@tanstack/react-router';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
+import { Icon } from '../common';
 import Input from './Input';
+
+const Separator = () => (
+  <div className="flex w-full items-center gap-x-4 py-4">
+    <div className="h-px flex-1 bg-white/20"></div>
+    <span className="text-sm text-white/40">OR</span>
+    <div className="h-px flex-1 bg-white/20"></div>
+  </div>
+);
 
 const Login = () => {
   const { login, register } = useAuth();
-  const [email, setEmail] = useState('test@example.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSignUp, setIsSignUp] = useState(false);
@@ -42,14 +52,23 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-base flex h-screen flex-col items-center justify-center">
+    <div className="bg-base relative flex h-screen flex-col items-center justify-center">
       <div className="flex flex-col items-center gap-y-4">
-        <div className="shadow-base flex w-[340px] flex-col items-center gap-y-10 rounded-lg border p-8">
+        <div className="shadow-base flex w-[340px] flex-col items-center gap-y-8 rounded-lg border p-8">
           <div className="flex items-center gap-x-2">
             <img src={logo} alt="Keep logo" className="size-12" />
             <div className="text-[24px]">Zeronotes</div>
           </div>
           <form className="flex w-full flex-col gap-y-4" onSubmit={handleSubmit}>
+            {isSignUp && (
+              <Input
+                placeholder="Name (optional)"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                disabled={isLoading}
+              />
+            )}
             <Input
               placeholder="Email"
               type="email"
@@ -70,7 +89,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full cursor-pointer rounded-lg bg-white/2 p-4 text-white/80 transition-colors duration-200 ease-in-out hover:bg-white/3 disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-2 w-full cursor-pointer rounded-lg border border-white/10 bg-white/10 p-3 text-sm font-medium text-white/80 transition-colors duration-200 ease-in-out hover:border-white/12 hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <span className="text-white/80">
                 {isLoading
@@ -82,18 +101,35 @@ const Login = () => {
                     : 'Login'}
               </span>
             </button>
+            {!isSignUp && <Separator />}
+            {!isSignUp && (
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="flex w-full cursor-pointer items-center justify-center gap-x-2 rounded-lg border border-white/18 p-3 text-sm font-medium text-white/80 transition-colors duration-200 ease-in-out hover:bg-white/2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <Icon name="visibility" size={16} className="text-white/80" />
+                <span className="text-white/80">Demo Mode</span>
+              </button>
+            )}
+            <div
+              onClick={() => {
+                setError(null);
+                setIsSignUp((prev) => !prev);
+              }}
+              className="mt-4 text-center text-sm text-white/40"
+            >
+              Don't have an account?{' '}
+              <span className="cursor-pointer text-white/90 transition-colors duration-200 ease-in-out hover:text-white/80">
+                Sign up
+              </span>
+            </div>
           </form>
-          <button
-            type="button"
-            onClick={() => {
-              setError(null);
-              setIsSignUp((prev) => !prev);
-            }}
-            className="mt-4 text-sm text-white/40 transition-colors hover:text-white/70"
-            disabled={isLoading}
-          >
-            {isSignUp ? 'Already have an account? Login' : "Don't have an account? Sign up"}
-          </button>
+
+          <div className="absolute bottom-6 flex w-full items-center justify-center gap-x-1 text-sm text-white/40">
+            <Icon name="lock" size={18} className="text-white/40" />
+            <span>End-to-end encrypted</span>
+          </div>
         </div>
       </div>
     </div>
