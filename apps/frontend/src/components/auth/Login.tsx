@@ -4,6 +4,7 @@ import { useNavigate } from '@tanstack/react-router';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
 import { Icon } from '../common';
+import Button from './Button';
 import Input from './Input';
 
 const Separator = () => (
@@ -69,22 +70,13 @@ const Login = () => {
             {error && (
               <div className="rounded-lg bg-red-500/20 px-4 py-2 text-sm text-red-400">{error}</div>
             )}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="mt-2 w-full cursor-pointer rounded-lg border border-white/10 bg-white/10 p-3 text-sm font-medium transition-colors duration-200 ease-in-out hover:border-white/12 hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-50"
-            >
+            <Button isLoading={isLoading} className="mt-2">
               Login
-            </button>
+            </Button>
             <Separator />
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="flex w-full cursor-pointer items-center justify-center gap-x-2 rounded-lg border border-white/18 p-3 text-sm font-medium transition-colors duration-200 ease-in-out hover:bg-white/2 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <Icon name="visibility" size={16} className="text-primary" />
-              <span>Demo Mode</span>
-            </button>
+            <Button variant="secondary" isLoading={isLoading} iconName="visibility">
+              Demo Mode
+            </Button>
             <div
               onClick={() => {
                 setError(null);
