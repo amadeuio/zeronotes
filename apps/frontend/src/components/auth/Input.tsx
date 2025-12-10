@@ -10,7 +10,7 @@ interface InputProps {
 
 const Input = ({ placeholder, type, value, onChange, disabled }: InputProps) => (
   <input
-    className="text-primary rounded-lg bg-white/6 p-3 text-sm transition-colors duration-200 ease-in-out outline-none placeholder:text-sm placeholder:text-white/20 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+    className="text-primary rounded-lg border border-white/3 bg-white/6 p-3 text-sm transition-colors duration-200 ease-in-out outline-none placeholder:text-sm placeholder:text-white/20 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
     type={type}
     placeholder={placeholder}
     value={value}

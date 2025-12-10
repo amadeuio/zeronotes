@@ -93,7 +93,7 @@ const Login = () => {
 
           <div className="absolute bottom-6 flex w-full items-center justify-center gap-x-1 text-sm text-white/40">
             <Icon name="lock" size={18} className="text-white/40" />
-            <span>End-to-end encrypted</span>
+            <span>End-to-end encrypted notes</span>
           </div>
         </div>
       </div>
