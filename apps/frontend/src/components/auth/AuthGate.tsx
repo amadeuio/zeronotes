@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 
 const SpinnerScreen = () => (
   <div className="flex h-screen items-center justify-center">
-    <Spinner size={40} />
+    <Spinner size={34} thickness={4} />
   </div>
 );
 
