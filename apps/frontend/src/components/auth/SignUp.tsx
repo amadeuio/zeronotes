@@ -72,7 +72,7 @@ const SignUp = () => {
               <div className="rounded-lg bg-red-500/20 px-4 py-2 text-sm text-red-400">{error}</div>
             )}
             <Button isLoading={isLoading} className="mt-2">
-              {isLoading ? 'Creating account...' : 'Create account'}
+              Create account
             </Button>
             <div
               onClick={() => {

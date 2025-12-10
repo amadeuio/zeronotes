@@ -54,7 +54,7 @@ const Unlock = () => {
             {error && (
               <div className="rounded-lg bg-red-500/20 px-4 py-2 text-sm text-red-400">{error}</div>
             )}
-            <Button isLoading={isLoading}>{isLoading ? 'Unlocking...' : 'Unlock'}</Button>
+            <Button isLoading={isLoading}>Unlock</Button>
           </form>
           <div className="absolute bottom-6 flex w-full items-center justify-center gap-x-1 text-sm text-white/40">
             <Icon name="lock" size={18} className="text-white/40" />

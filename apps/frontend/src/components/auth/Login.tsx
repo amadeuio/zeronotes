@@ -72,7 +72,7 @@ const Login = () => {
               <div className="rounded-lg bg-red-500/20 px-4 py-2 text-sm text-red-400">{error}</div>
             )}
             <Button isLoading={isLoading} className="mt-2">
-              {isLoading ? 'Logging in...' : 'Login'}
+              Login
             </Button>
             <Button variant="secondary" disabled={isLoading} iconName="visibility">
               Demo Mode

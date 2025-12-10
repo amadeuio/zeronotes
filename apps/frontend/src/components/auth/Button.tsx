@@ -22,7 +22,7 @@ const Button = ({
   <button
     type="submit"
     className={cn(
-      'flex w-full cursor-pointer items-center justify-center gap-x-2 rounded-lg p-3 text-sm text-primary/80 font-medium transition-colors duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-50',
+      'text-primary/80 flex w-full cursor-pointer items-center justify-center gap-x-2 rounded-lg p-3 text-sm font-medium transition-colors duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-50',
       variant === 'primary' &&
         'border border-white/6 bg-white/10 hover:border-white/12 hover:bg-white/14',
       variant === 'secondary' && 'border border-white/18 hover:bg-white/2',
@@ -30,14 +30,14 @@ const Button = ({
     )}
     disabled={isLoading || disabled}
   >
-    <>
-      {isLoading ? (
-        <Spinner size={20} />
-      ) : (
-        iconName && <Icon name={iconName} size={16} />
-      )}
-      {children}
-    </>
+    {isLoading ? (
+      <Spinner size={20} />
+    ) : (
+      <>
+        {iconName && <Icon name={iconName} size={16} />}
+        {children}
+      </>
+    )}
   </button>
 );
 
