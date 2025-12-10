@@ -3,11 +3,11 @@ import { useId } from 'react';
 
 interface SpinnerProps {
   size?: number;
+  thickness?: number;
   className?: string;
 }
 
-const Spinner = ({ size = 24, className = '' }: SpinnerProps) => {
-  const strokeWidth = 6;
+const Spinner = ({ size = 24, thickness = 6, className = '' }: SpinnerProps) => {
   const id = useId();
   const spinnerId = `spinner-${id}`;
 
@@ -53,8 +53,8 @@ const Spinner = ({ size = 24, className = '' }: SpinnerProps) => {
           cy="25"
           r="20"
           fill="none"
-          stroke="currentColor"
-          strokeWidth={strokeWidth}
+          className="stroke-neutral-400"
+          strokeWidth={thickness}
           strokeLinecap="round"
         />
       </svg>
