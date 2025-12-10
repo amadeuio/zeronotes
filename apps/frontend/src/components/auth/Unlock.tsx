@@ -3,6 +3,7 @@ import { useAuth } from '@/hooks';
 import { useNavigate } from '@tanstack/react-router';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
+import { Icon } from '../common';
 import Button from './Button';
 import Input from './Input';
 
@@ -35,7 +36,7 @@ const Unlock = () => {
   };
 
   return (
-    <div className="bg-base flex h-screen flex-col items-center justify-center">
+    <div className="bg-base relative flex h-screen flex-col items-center justify-center">
       <div className="flex flex-col items-center gap-y-4">
         <div className="shadow-base flex w-[340px] flex-col items-center gap-y-10 rounded-lg border p-8">
           <div className="flex items-center gap-x-2">
@@ -55,6 +56,10 @@ const Unlock = () => {
             )}
             <Button isLoading={isLoading}>{isLoading ? 'Unlocking...' : 'Unlock'}</Button>
           </form>
+          <div className="absolute bottom-6 flex w-full items-center justify-center gap-x-1 text-sm text-white/40">
+            <Icon name="lock" size={18} className="text-white/40" />
+            <span>End-to-end encrypted</span>
+          </div>
         </div>
       </div>
     </div>

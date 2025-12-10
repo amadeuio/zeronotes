@@ -1,5 +1,6 @@
 import logo from '@/assets/logo.png';
 import { useAuth } from '@/hooks';
+import { cn } from '@/utils';
 import { useNavigate } from '@tanstack/react-router';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
@@ -17,8 +18,8 @@ const Separator = () => (
 
 const Login = () => {
   const { login } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('test@example.com');
+  const [password, setPassword] = useState('password123');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -71,21 +72,28 @@ const Login = () => {
               <div className="rounded-lg bg-red-500/20 px-4 py-2 text-sm text-red-400">{error}</div>
             )}
             <Button isLoading={isLoading} className="mt-2">
-              Login
+              {isLoading ? 'Logging in...' : 'Login'}
             </Button>
-            <Separator />
-            <Button variant="secondary" isLoading={isLoading} iconName="visibility">
+            <Button variant="secondary" disabled={isLoading} iconName="visibility">
               Demo Mode
             </Button>
             <div
               onClick={() => {
+                if (isLoading) return;
                 setError(null);
                 navigate({ to: '/signup' });
               }}
               className="mt-4 text-center text-sm text-white/40"
             >
               Don't have an account?{' '}
-              <span className="text-primary cursor-pointer transition-colors duration-200 ease-in-out hover:text-white/80">
+              <span
+                className={cn(
+                  'transition-colors duration-200 ease-in-out',
+                  isLoading
+                    ? 'cursor-not-allowed opacity-50'
+                    : 'text-primary cursor-pointer hover:text-white/80',
+                )}
+              >
                 Sign up
               </span>
             </div>
@@ -93,7 +101,7 @@ const Login = () => {
 
           <div className="absolute bottom-6 flex w-full items-center justify-center gap-x-1 text-sm text-white/40">
             <Icon name="lock" size={18} className="text-white/40" />
-            <span>End-to-end encrypted notes</span>
+            <span>End-to-end encrypted</span>
           </div>
         </div>
       </div>

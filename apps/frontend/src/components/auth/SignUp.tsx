@@ -1,5 +1,6 @@
 import logo from '@/assets/logo.png';
 import { useAuth } from '@/hooks';
+import { cn } from '@/utils';
 import { useNavigate } from '@tanstack/react-router';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
@@ -71,17 +72,25 @@ const SignUp = () => {
               <div className="rounded-lg bg-red-500/20 px-4 py-2 text-sm text-red-400">{error}</div>
             )}
             <Button isLoading={isLoading} className="mt-2">
-              Create account
+              {isLoading ? 'Creating account...' : 'Create account'}
             </Button>
             <div
               onClick={() => {
+                if (isLoading) return;
                 setError(null);
                 navigate({ to: '/login' });
               }}
               className="mt-4 text-center text-sm text-white/40"
             >
               Already have an account?{' '}
-              <span className="cursor-pointer text-white/90 transition-colors duration-200 ease-in-out hover:text-white/80">
+              <span
+                className={cn(
+                  'transition-colors duration-200 ease-in-out',
+                  isLoading
+                    ? 'cursor-not-allowed opacity-50'
+                    : 'cursor-pointer text-white/90 hover:text-white/80',
+                )}
+              >
                 Login
               </span>
             </div>
