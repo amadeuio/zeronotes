@@ -31,7 +31,7 @@ const Button = ({
     disabled={isLoading || disabled}
   >
     {isLoading ? (
-      <Spinner size={20} />
+      <Spinner size={20} className="stroke-neutral-300" />
     ) : (
       <>
         {iconName && <Icon name={iconName} size={16} />}

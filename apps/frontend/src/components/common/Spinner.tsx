@@ -43,20 +43,12 @@ const Spinner = ({ size = 24, thickness = 6, className = '' }: SpinnerProps) => 
         `}
       </style>
       <svg
-        className={cn(`spinner-${spinnerId}`, className)}
+        className={cn(`spinner-${spinnerId} stroke-neutral-400`, className)}
         width={size}
         height={size}
         viewBox="0 0 50 50"
       >
-        <circle
-          cx="25"
-          cy="25"
-          r="20"
-          fill="none"
-          className="stroke-neutral-400"
-          strokeWidth={thickness}
-          strokeLinecap="round"
-        />
+        <circle cx="25" cy="25" r="20" fill="none" strokeWidth={thickness} strokeLinecap="round" />
       </svg>
     </>
   );
