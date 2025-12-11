@@ -1,5 +1,4 @@
-import { IconButton } from '@/components';
-import Input from '@/components/auth/Input';
+import { IconButton, Input } from '@/components';
 import { selectActions, selectFiltersSearch, useStore } from '@/store';
 import { cn } from '@/utils';
 

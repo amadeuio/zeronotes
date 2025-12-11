@@ -1,11 +1,10 @@
 import logo from '@/assets/logo.png';
+import { Icon, Input } from '@/components';
 import { useAuth } from '@/hooks';
 import { useNavigate } from '@tanstack/react-router';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
-import { Icon } from '../common';
 import Button from './Button';
-import Input from './Input';
 
 const Unlock = () => {
   const { unlock } = useAuth();

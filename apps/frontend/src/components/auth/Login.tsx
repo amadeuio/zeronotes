@@ -1,12 +1,11 @@
 import logo from '@/assets/logo.png';
+import { Icon, Input } from '@/components';
 import { useAuth } from '@/hooks';
 import { cn } from '@/utils';
 import { useNavigate } from '@tanstack/react-router';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
-import { Icon } from '../common';
 import Button from './Button';
-import Input from './Input';
 
 const Separator = () => (
   <div className="flex w-full items-center gap-x-4 py-4">
