@@ -11,6 +11,7 @@ import {
   useStore,
 } from '@/store';
 import type { View } from '@/types';
+import { getEmptyStateConfig } from '@/utils';
 
 interface SectionTitleProps {
   label: string;
@@ -31,34 +32,7 @@ interface EmptyStateProps {
 }
 
 const EmptyState = ({ view }: EmptyStateProps) => {
-  const getConfig = () => {
-    switch (view.type) {
-      case 'notes':
-        return {
-          icon: 'lightbulb',
-          message: 'Notes you add appear here',
-        };
-      case 'archive':
-        return {
-          icon: 'archive',
-          message: 'Your archived notes appear here',
-        };
-      case 'trash':
-        return {
-          icon: 'delete',
-          message: 'No notes in Trash',
-        };
-      case 'label':
-        return {
-          icon: 'label',
-          message: 'No notes with this label yet',
-        };
-      default:
-        return null;
-    }
-  };
-
-  const config = getConfig();
+  const config = getEmptyStateConfig(view);
 
   if (!config) return null;
 
