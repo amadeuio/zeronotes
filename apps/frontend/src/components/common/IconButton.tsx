@@ -31,6 +31,7 @@ const IconButton = ({
 
   return (
     <button
+      type="button"
       className={cn(
         'group relative flex cursor-pointer items-center justify-center rounded-full p-3 transition-colors duration-150 ease-in-out hover:bg-white/8',
         className,

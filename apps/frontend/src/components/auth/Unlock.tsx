@@ -1,10 +1,11 @@
 import logo from '@/assets/logo.png';
-import { Icon, Input } from '@/components';
+import { Icon } from '@/components';
 import { useAuth } from '@/hooks';
 import { useNavigate } from '@tanstack/react-router';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
 import Button from './Button';
+import PasswordInput from './PasswordInput';
 
 const Unlock = () => {
   const { unlock } = useAuth();
@@ -43,9 +44,8 @@ const Unlock = () => {
             <div className="text-[24px]">Zeronotes</div>
           </div>
           <form className="flex w-full flex-col gap-y-4" onSubmit={handleSubmit}>
-            <Input
+            <PasswordInput
               placeholder="Password"
-              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}

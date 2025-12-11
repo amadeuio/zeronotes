@@ -6,6 +6,7 @@ import { useNavigate } from '@tanstack/react-router';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
 import Button from './Button';
+import PasswordInput from './PasswordInput';
 
 const Separator = () => (
   <div className="flex w-full items-center gap-x-4 py-4">
@@ -60,9 +61,8 @@ const Login = () => {
               onChange={(e) => setEmail(e.target.value)}
               disabled={isLoading}
             />
-            <Input
+            <PasswordInput
               placeholder="Password"
-              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}

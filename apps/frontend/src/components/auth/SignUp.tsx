@@ -6,6 +6,7 @@ import { useNavigate } from '@tanstack/react-router';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
 import Button from './Button';
+import PasswordInput from './PasswordInput';
 
 const SignUp = () => {
   const { register } = useAuth();
@@ -60,9 +61,8 @@ const SignUp = () => {
               onChange={(e) => setEmail(e.target.value)}
               disabled={isLoading}
             />
-            <Input
+            <PasswordInput
               placeholder="Password"
-              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}
