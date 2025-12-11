@@ -24,7 +24,7 @@ const Search = ({ value, onChange, onClear, className }: SearchProps) => (
       onClick={onClear}
       label="Clear"
       iconName="clear"
-      size={22}
+      size={20}
       className={cn(
         'absolute top-1/2 right-1 -translate-y-1/2 p-2 transition-opacity duration-150 ease-in-out',
         value.trim() ? 'opacity-100' : 'opacity-0',
