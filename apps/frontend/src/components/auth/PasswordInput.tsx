@@ -10,21 +10,21 @@ interface PasswordInputProps {
 }
 
 const PasswordInput = ({ placeholder, value, onChange, disabled }: PasswordInputProps) => {
-  const [showPassword, setShowPassword] = useState(false);
+  const [show, setShow] = useState(false);
 
   return (
     <div className="relative">
       <Input
         placeholder={placeholder}
-        type={showPassword ? 'text' : 'password'}
+        type={show ? 'text' : 'password'}
         value={value}
         onChange={onChange}
         disabled={disabled}
       />
       <IconButton
-        onClick={() => setShowPassword(!showPassword)}
-        label={showPassword ? 'Hide' : 'Show'}
-        iconName={showPassword ? 'visibility_off' : 'visibility'}
+        onClick={() => setShow((s) => !s)}
+        label={show ? 'Hide' : 'Show'}
+        iconName={show ? 'visibility_off' : 'visibility'}
         size={20}
         className="absolute top-1/2 right-1 -translate-y-1/2 p-2"
       />
