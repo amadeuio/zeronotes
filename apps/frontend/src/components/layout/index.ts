@@ -1,4 +1,4 @@
-export { default as Main } from './Main/Main';
-export { default as Navbar } from './Navbar/Navbar';
-export { default as EditLabelsModal } from './Sidebar/EditLabelsModal';
-export { default as Sidebar } from './Sidebar/Sidebar';
+export { default as EditLabelsModal } from './EditLabelsModal';
+export { default as Main } from './Main';
+export { default as Navbar } from './Navbar';
+export { default as Sidebar } from './Sidebar';
