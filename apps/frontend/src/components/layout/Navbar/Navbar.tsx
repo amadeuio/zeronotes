@@ -1,13 +1,68 @@
 import logo from '@/assets/logo.png';
-import { ApiStatus, IconButton } from '@/components';
+import { Icon, IconButton, Input, Spinner } from '@/components';
 import { useAuth } from '@/hooks';
-import { selectActions, useStore } from '@/store';
+import { selectActions, selectApiStatus, selectFiltersSearch, useStore } from '@/store';
+import { cn } from '@/utils';
 import { useNavigate } from '@tanstack/react-router';
-import Search from './Search';
-import User from './User';
+
+interface SearchProps {
+  value: string;
+  onChange: (value: string) => void;
+  onClear: () => void;
+  className?: string;
+}
+
+const Search = ({ value, onChange, onClear, className }: SearchProps) => (
+  <div className={cn('relative flex w-full max-w-[720px]', className)}>
+    <Input
+      type="text"
+      placeholder="Search"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    />
+    {value !== '' && (
+      <IconButton
+        onClick={onClear}
+        label="Clear"
+        iconName="clear"
+        size={22}
+        className="absolute top-1/2 right-1 -translate-y-1/2 p-2"
+      />
+    )}
+  </div>
+);
+
+interface ApiStatusProps {
+  loading: boolean;
+  error: boolean;
+}
+
+const ApiStatus = ({ loading, error }: ApiStatusProps) =>
+  loading ? (
+    <Spinner className="p-3" />
+  ) : error ? (
+    <Icon name="error" className="p-3 text-neutral-400" size={24} />
+  ) : (
+    <Icon name="cloud_done" className="p-3 text-neutral-400" size={24} />
+  );
+
+const Label = () => (
+  <div className="flex flex-col gap-1 text-left">
+    <span>Zeronotes</span>
+    <span className="text-neutral-400">by amadeu.io</span>
+  </div>
+);
+
+const User = () => (
+  <a href="https://github.com/amadeuio" target="_blank" rel="noopener noreferrer">
+    <IconButton iconName="person" label={<Label />} size={24} />
+  </a>
+);
 
 const Navbar = () => {
   const actions = useStore(selectActions);
+  const search = useStore(selectFiltersSearch);
+  const apiStatus = useStore(selectApiStatus);
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -30,10 +85,15 @@ const Navbar = () => {
           <img src={logo} alt="Keep logo" className="size-10" />
           <div className="text-[20px]">Zeronotes</div>
         </div>
-        <Search className="mx-4 md:mx-0" />
+        <Search
+          value={search}
+          onChange={(value) => actions.filters.set({ search: value })}
+          onClear={() => actions.filters.set({ search: '' })}
+          className="mx-4 md:mx-0"
+        />
       </div>
       <div className="flex items-center gap-x-2">
-        <ApiStatus />
+        <ApiStatus loading={apiStatus.loading} error={apiStatus.error} />
         <IconButton iconName="settings" label="Settings" size={24} className="hidden md:flex" />
         <IconButton iconName="logout" label="Logout" size={24} onClick={handleLogout} />
         <User />
