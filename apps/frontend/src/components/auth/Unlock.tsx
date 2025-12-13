@@ -1,4 +1,3 @@
-import logo from '@/assets/logo.png';
 import { Icon } from '@/components';
 import { useAuth } from '@/hooks';
 import { useNavigate } from '@tanstack/react-router';
@@ -19,7 +18,7 @@ const Unlock = () => {
     setError(null);
 
     if (!password) {
-      setError('Email and password are required');
+      setError('Password is required');
       return;
     }
 
@@ -40,8 +39,8 @@ const Unlock = () => {
       <div className="flex flex-col items-center gap-y-4">
         <div className="shadow-base flex w-[340px] flex-col items-center gap-y-10 rounded-lg border p-8">
           <div className="flex items-center gap-x-2">
-            <img src={logo} alt="Keep logo" className="size-12" />
-            <div className="text-[24px]">Zeronotes</div>
+            <Icon name="lock" size={24} />
+            <div className="text-xl">App Locked</div>
           </div>
           <form className="flex w-full flex-col gap-y-4" onSubmit={handleSubmit}>
             <PasswordInput
