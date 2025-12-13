@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks';
 import { selectActions, selectApiStatus, selectFiltersSearch, useStore } from '@/store';
 import { cn } from '@/utils';
 import { useNavigate } from '@tanstack/react-router';
+import { useState } from 'react';
 
 interface SearchProps {
   value: string;
@@ -38,14 +39,30 @@ interface ApiStatusProps {
   error: boolean;
 }
 
-const ApiStatus = ({ loading, error }: ApiStatusProps) =>
-  loading ? (
-    <Spinner className="p-3" />
-  ) : error ? (
-    <Icon name="error" className="p-3 text-neutral-400" size={24} />
-  ) : (
-    <Icon name="cloud_done" className="p-3 text-neutral-400" size={24} />
+const ApiStatus = ({ loading, error }: ApiStatusProps) => {
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setIsTooltipVisible(true)}
+      onMouseLeave={() => setIsTooltipVisible(false)}
+    >
+      {loading ? (
+        <Spinner className="p-3" />
+      ) : error ? (
+        <Icon name="error" className="p-3 text-neutral-400" size={24} />
+      ) : (
+        <Icon name="cloud_done" className="p-3 text-neutral-400" size={24} />
+      )}
+      {isTooltipVisible && (
+        <div className="absolute top-full left-1/2 z-20 -translate-x-1/2 translate-y-1 rounded bg-neutral-700 px-2 py-1 text-xs whitespace-nowrap text-white shadow-lg">
+          {loading ? 'Syncing...' : error ? 'Sync failed' : 'Synced'}
+        </div>
+      )}
+    </div>
   );
+};
 
 const Label = () => (
   <div className="flex flex-col gap-1 text-left">
