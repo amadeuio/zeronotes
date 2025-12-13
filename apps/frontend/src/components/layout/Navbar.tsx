@@ -63,7 +63,7 @@ const User = () => (
 const Navbar = () => {
   const actions = useStore(selectActions);
   const search = useStore(selectFiltersSearch);
-  const apiStatus = useStore(selectApiStatus);
+  const { loading, error } = useStore(selectApiStatus);
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -94,7 +94,7 @@ const Navbar = () => {
         />
       </div>
       <div className="flex items-center gap-x-2">
-        <ApiStatus loading={apiStatus.loading} error={apiStatus.error} />
+        <ApiStatus loading={loading} error={error} />
         <IconButton iconName="settings" label="Settings" size={24} className="hidden md:flex" />
         <IconButton iconName="logout" label="Logout" size={24} onClick={handleLogout} />
         <User />
