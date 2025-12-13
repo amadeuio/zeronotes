@@ -8,14 +8,6 @@ import { useState } from 'react';
 import Button from './Button';
 import PasswordInput from './PasswordInput';
 
-const Separator = () => (
-  <div className="flex w-full items-center gap-x-4 py-4">
-    <div className="h-px flex-1 bg-white/20"></div>
-    <span className="text-sm text-white/40">OR</span>
-    <div className="h-px flex-1 bg-white/20"></div>
-  </div>
-);
-
 const Login = () => {
   const { login } = useAuth();
   const [email, setEmail] = useState('test@example.com');
