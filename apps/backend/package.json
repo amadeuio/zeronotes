@@ -9,7 +9,6 @@
     "start": "node src/server.ts",
     "dev": "nodemon --exec ts-node src/server.ts",
     "migrate": "ts-node db/run.ts migrate",
-    "seed": "ts-node db/run.ts seed",
     "format": "prettier --write \"**/*.{ts,js,json,md}\"",
     "check": "tsc --noEmit",
     "test": "dotenv -e .env.test -- jest",
