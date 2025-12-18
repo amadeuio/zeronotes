@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
   id UUID NOT NULL DEFAULT gen_random_uuid(),
   email TEXT NOT NULL UNIQUE,
+  name TEXT,
   password_hash TEXT NOT NULL,
   encryption_salt TEXT NOT NULL,
   wrapped_data_key TEXT NOT NULL,

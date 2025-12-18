@@ -58,6 +58,38 @@ describe('Auth Endpoints', () => {
 
       expect(response.status).toBeGreaterThanOrEqual(400);
     });
+
+    it('should register a new user with name', async () => {
+      const response = await helpers.registerUser(helpers.uniqueEmail(), 'password123', 'John Doe');
+
+      expect(response.status).toBe(201);
+      expect(response.body).toHaveProperty('user');
+      expect(response.body.user).toHaveProperty('name', 'John Doe');
+    });
+
+    it('should register a new user without name (null)', async () => {
+      const response = await helpers.registerUser(helpers.uniqueEmail(), 'password123');
+
+      expect(response.status).toBe(201);
+      expect(response.body).toHaveProperty('user');
+      expect(response.body.user).toHaveProperty('name', null);
+    });
+
+    it('should register a new user with empty string name (converted to null)', async () => {
+      const response = await helpers.registerUser(helpers.uniqueEmail(), 'password123', '');
+
+      expect(response.status).toBe(201);
+      expect(response.body).toHaveProperty('user');
+      expect(response.body.user).toHaveProperty('name', null);
+    });
+
+    it('should register a new user with whitespace name (converted to null)', async () => {
+      const response = await helpers.registerUser(helpers.uniqueEmail(), 'password123', '  ');
+
+      expect(response.status).toBe(201);
+      expect(response.body).toHaveProperty('user');
+      expect(response.body.user).toHaveProperty('name', null);
+    });
   });
 
   describe('POST /api/auth/login', () => {

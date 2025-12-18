@@ -15,7 +15,13 @@ export const authService = {
     const passwordHash = await hashPassword(data.password);
 
     const userId = uuidv4();
-    const user = await authRepository.create(userId, data.email, passwordHash, data.encryption);
+    const user = await authRepository.create(
+      userId,
+      data.email,
+      data.name,
+      passwordHash,
+      data.encryption,
+    );
 
     const token = await createToken(user.id);
 

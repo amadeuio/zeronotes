@@ -8,10 +8,15 @@ export function makeTestHelpers(api: SuperTest<Test>) {
   return {
     uniqueEmail,
 
-    registerUser: async (email: string = 'test@example.com', password: string = 'password123') =>
+    registerUser: async (
+      email: string = 'test@example.com',
+      password: string = 'password123',
+      name: string | null = null,
+    ) =>
       api.post('/api/auth/register').send({
         email,
         password,
+        name,
         encryption: {
           salt: 'dGVzdC1zYWx0',
           wrappedDataKey: 'dGVzdC1rZXk=',
@@ -30,6 +35,7 @@ export function makeTestHelpers(api: SuperTest<Test>) {
       await api.post('/api/auth/register').send({
         email,
         password,
+        name: null,
         encryption: {
           salt: 'dGVzdC1zYWx0',
           wrappedDataKey: 'dGVzdC1rZXk=',

@@ -5,6 +5,7 @@ export const authMappers = {
   rowToUser: (row: UserRow): User => ({
     id: row.id,
     email: row.email,
+    name: row.name,
   }),
 
   rowToEncryption: (row: UserRow): Encryption =>

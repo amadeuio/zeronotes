@@ -4,6 +4,7 @@ import { ENCRYPTION_VERSION, KDF_ITERATIONS } from "../constants/encryption";
 export const userSchema = z.object({
   id: z.string().uuid(),
   email: z.string().email(),
+  name: z.string().nullable(),
 });
 
 export const encryptionSchema = z.object({
@@ -35,6 +36,11 @@ export const registerSchema = {
   body: z
     .object({
       email: z.string().email("Invalid email format"),
+      name: z.preprocess((val) => {
+        if (typeof val !== "string") return val;
+        const trimmed = val.trim();
+        return trimmed === "" ? null : trimmed;
+      }, z.string().nullable()),
       password: z
         .string()
         .min(8, "Password must be at least 8 characters")

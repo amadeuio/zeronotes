@@ -16,6 +16,7 @@ export const authRepository = {
   create: async (
     id: string,
     email: string,
+    name: string | null,
     passwordHash: string,
     encryption: Encryption,
   ): Promise<UserRow> => {
@@ -23,17 +24,19 @@ export const authRepository = {
       `INSERT INTO users (
          id,
          email,
+         name,
          password_hash,
          encryption_salt,
          wrapped_data_key,
          kdf_iterations,
          encryption_version
        ) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
        RETURNING *`,
       [
         id,
         email,
+        name,
         passwordHash,
         encryption.salt,
         encryption.wrappedDataKey,
