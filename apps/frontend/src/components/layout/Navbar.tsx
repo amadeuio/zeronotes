@@ -1,7 +1,7 @@
 import logo from '@/assets/logo.png';
 import { Icon, IconButton, Input, Spinner } from '@/components';
 import { useAuth } from '@/hooks';
-import { selectActions, selectApiStatus, selectFiltersSearch, useStore } from '@/store';
+import { selectActions, selectApiStatus, selectFiltersSearch, selectUser, useStore } from '@/store';
 import { cn } from '@/utils';
 import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
@@ -64,18 +64,22 @@ const ApiStatus = ({ loading, error }: ApiStatusProps) => {
   );
 };
 
-const Label = () => (
-  <div className="flex flex-col gap-1 text-left">
-    <span>Zeronotes</span>
-    <span className="text-neutral-400">by amadeu.io</span>
-  </div>
-);
+const User = () => {
+  const user = useStore(selectUser);
 
-const User = () => (
-  <a href="https://github.com/amadeuio" target="_blank" rel="noopener noreferrer">
-    <IconButton iconName="person" label={<Label />} size={24} />
-  </a>
-);
+  return (
+    <IconButton
+      iconName="person"
+      label={
+        <div className="flex flex-col gap-1 text-left">
+          {user?.name && <span>{user.name}</span>}
+          {user?.email && <span className="text-neutral-400">{user.email}</span>}
+        </div>
+      }
+      size={24}
+    />
+  );
+};
 
 const Navbar = () => {
   const actions = useStore(selectActions);

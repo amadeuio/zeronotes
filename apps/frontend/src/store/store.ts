@@ -1,5 +1,5 @@
 import type { Filters } from '@/types';
-import type { Encryption, Label, Note } from '@zeronotes/shared';
+import type { Encryption, Label, Note, User } from '@zeronotes/shared';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
@@ -29,7 +29,7 @@ export interface Store {
   auth: {
     isAuthenticated: boolean;
     isUnlocked: boolean;
-    user: { id: string; email: string } | null;
+    user: User | null;
     token: string | null;
     encryption: Encryption | null;
   };
@@ -77,16 +77,8 @@ export interface Store {
     auth: {
       set: (auth: Partial<Store['auth']>) => void;
       clear: () => void;
-      login: (data: {
-        token: string;
-        user: { id: string; email: string };
-        encryption: Encryption;
-      }) => void;
-      register: (data: {
-        token: string;
-        user: { id: string; email: string };
-        encryption: Encryption;
-      }) => void;
+      login: (data: { token: string; user: User; encryption: Encryption }) => void;
+      register: (data: { token: string; user: User; encryption: Encryption }) => void;
       unlock: () => void;
     };
   };

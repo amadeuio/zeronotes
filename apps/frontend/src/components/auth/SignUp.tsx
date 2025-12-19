@@ -29,7 +29,7 @@ const SignUp = () => {
     setIsLoading(true);
 
     try {
-      await register({ email, password });
+      await register({ email, password, name: name || null });
       navigate({ to: '/' });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to sign up');
