@@ -18,6 +18,7 @@ const Search = ({ value, onChange, onClear, className }: SearchProps) => (
     <Input
       type="text"
       placeholder="Search"
+      className="bg-white/14 hover:bg-white/18"
       value={value}
       onChange={(e) => onChange(e.target.value)}
     />
