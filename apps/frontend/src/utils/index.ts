@@ -1,4 +1,4 @@
-export { cn, getEmptyStateConfig } from './common';
+export { cn, getEmptyStateConfig, getUserInitials } from './common';
 export {
   getGridColumnsFromWidth,
   getNoteIdFromPosition,

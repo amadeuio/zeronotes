@@ -30,3 +30,20 @@ export const getEmptyStateConfig = (view: View): { icon: string; message: string
       return null;
   }
 };
+
+export const getUserInitials = (name: string | null, email: string): string => {
+  if (name?.trim()) {
+    const words = name.trim().split(/\s+/);
+    if (words.length >= 2) {
+      return (words[0][0] + words[1][0]).toUpperCase();
+    }
+    return words[0][0].toUpperCase();
+  }
+
+  if (email) {
+    const emailPrefix = email.trim().split('@')[0];
+    return emailPrefix[0].toUpperCase();
+  }
+
+  return '?';
+};
