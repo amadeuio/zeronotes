@@ -78,7 +78,7 @@ const User = () => {
   return (
     <div className="relative" ref={elementRef}>
       <div
-        className="text-md flex size-10 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/4 text-neutral-400 transition-colors duration-150 ease-in-out hover:bg-white/8"
+        className="text-md flex size-10 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/14 text-neutral-400 transition-colors duration-150 ease-in-out hover:bg-white/18"
         onClick={() => {
           setIsTooltipVisible(false);
           setIsMenuOpen((prev) => !prev);
