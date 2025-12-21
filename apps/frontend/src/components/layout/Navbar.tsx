@@ -1,8 +1,8 @@
 import logo from '@/assets/logo.png';
-import { Icon, IconButton, Input, Spinner } from '@/components';
+import { Icon, IconButton, Input, Menu, MenuTrigger, Spinner } from '@/components';
 import { useAuth } from '@/hooks';
 import { selectActions, selectApiStatus, selectFiltersSearch, selectUser, useStore } from '@/store';
-import { cn } from '@/utils';
+import { cn, getUserInitials } from '@/utils';
 import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 
@@ -66,19 +66,59 @@ const ApiStatus = ({ loading, error }: ApiStatusProps) => {
 };
 
 const User = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const user = useStore(selectUser);
+  const initials = getUserInitials(user!.name, user!.email);
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const userAvatar = (
+    <div className="relative">
+      <div
+        className="text-md flex size-10 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/4 text-neutral-400 transition-colors duration-150 ease-in-out hover:bg-white/8"
+        onClick={() => setIsTooltipVisible(false)}
+        onMouseEnter={() => {
+          if (!isMenuOpen) setIsTooltipVisible(true);
+        }}
+        onMouseLeave={() => {
+          if (!isMenuOpen) setIsTooltipVisible(false);
+        }}
+      >
+        {initials}
+      </div>
+      {isTooltipVisible && (
+        <div className="absolute top-full right-0 z-30 translate-y-1 rounded bg-neutral-700 px-2 py-1 text-xs text-white shadow-lg">
+          <div className="flex flex-col gap-1 text-left">
+            {user?.name && <span>{user.name}</span>}
+            {user?.email && <span className="text-neutral-400">{user.email}</span>}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   return (
-    <IconButton
-      iconName="person"
-      label={
-        <div className="flex flex-col gap-1 text-left">
-          {user?.name && <span>{user.name}</span>}
-          {user?.email && <span className="text-neutral-400">{user.email}</span>}
-        </div>
+    <MenuTrigger
+      onOpenChange={(isOpen) => {
+        setIsMenuOpen(isOpen);
+      }}
+      menu={
+        <Menu
+          items={[
+            {
+              label: 'Log out',
+              action: () => {
+                logout();
+                navigate({ to: '/login' });
+              },
+            },
+          ]}
+        />
       }
-      size={24}
-    />
+    >
+      {userAvatar}
+    </MenuTrigger>
   );
 };
 
@@ -86,13 +126,6 @@ const Navbar = () => {
   const actions = useStore(selectActions);
   const search = useStore(selectFiltersSearch);
   const { loading, error } = useStore(selectApiStatus);
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate({ to: '/login' });
-  };
 
   return (
     <nav className="flex h-16 justify-between border-b px-3 py-2">
@@ -115,10 +148,8 @@ const Navbar = () => {
           className="mx-4 md:mx-0"
         />
       </div>
-      <div className="flex items-center gap-x-2">
+      <div className="flex items-center gap-x-3">
         <ApiStatus loading={loading} error={error} />
-        <IconButton iconName="settings" label="Settings" size={24} className="hidden md:flex" />
-        <IconButton iconName="logout" label="Logout" size={24} onClick={handleLogout} />
         <User />
       </div>
     </nav>
