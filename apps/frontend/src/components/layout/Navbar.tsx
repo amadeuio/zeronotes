@@ -1,10 +1,10 @@
 import logo from '@/assets/logo.png';
-import { Icon, IconButton, Input, Menu, MenuTrigger, Spinner } from '@/components';
-import { useAuth } from '@/hooks';
+import { Icon, IconButton, Input, Menu, Spinner } from '@/components';
+import { useAuth, useClickOutside } from '@/hooks';
 import { selectActions, selectApiStatus, selectFiltersSearch, selectUser, useStore } from '@/store';
 import { cn, getUserInitials } from '@/utils';
 import { useNavigate } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 interface SearchProps {
   value: string;
@@ -70,14 +70,19 @@ const User = () => {
   const navigate = useNavigate();
   const user = useStore(selectUser);
   const initials = getUserInitials(user!.name, user!.email);
+  const elementRef = useRef<HTMLDivElement>(null);
+  useClickOutside({ elementRef, onClickOutside: () => setIsMenuOpen(false) });
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const userAvatar = (
-    <div className="relative">
+  return (
+    <div className="relative" ref={elementRef}>
       <div
         className="text-md flex size-10 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/4 text-neutral-400 transition-colors duration-150 ease-in-out hover:bg-white/8"
-        onClick={() => setIsTooltipVisible(false)}
+        onClick={() => {
+          setIsTooltipVisible(false);
+          setIsMenuOpen((prev) => !prev);
+        }}
         onMouseEnter={() => {
           if (!isMenuOpen) setIsTooltipVisible(true);
         }}
@@ -95,16 +100,9 @@ const User = () => {
           </div>
         </div>
       )}
-    </div>
-  );
-
-  return (
-    <MenuTrigger
-      onOpenChange={(isOpen) => {
-        setIsMenuOpen(isOpen);
-      }}
-      menu={
+      {isMenuOpen && (
         <Menu
+          className="absolute top-full right-0 z-30 translate-y-1"
           items={[
             {
               label: 'Log out',
@@ -115,10 +113,8 @@ const User = () => {
             },
           ]}
         />
-      }
-    >
-      {userAvatar}
-    </MenuTrigger>
+      )}
+    </div>
   );
 };
 
