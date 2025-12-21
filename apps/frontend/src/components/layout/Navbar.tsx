@@ -35,12 +35,12 @@ const Search = ({ value, onChange, onClear, className }: SearchProps) => (
   </div>
 );
 
-interface ApiStatusProps {
+interface SyncStatusProps {
   loading: boolean;
   error: boolean;
 }
 
-const ApiStatus = ({ loading, error }: ApiStatusProps) => {
+const SyncStatus = ({ loading, error }: SyncStatusProps) => {
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 
   return (
@@ -149,7 +149,7 @@ const Navbar = () => {
         />
       </div>
       <div className="flex items-center gap-x-3">
-        <ApiStatus loading={loading} error={error} />
+        <SyncStatus loading={loading} error={error} />
         <User />
       </div>
     </nav>
