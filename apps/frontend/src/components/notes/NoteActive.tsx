@@ -14,7 +14,7 @@ const NoteActive = () => {
   const note = useStore(selectActiveNoteDisplay)!;
   const position = useStore(selectActiveNotePosition);
   const actions = useStore(selectActions);
-  const { update, removeLabel } = useNotes();
+  const { update, updateTitle, updateContent, removeLabel } = useNotes();
   const { positionStyles, backdropStyles, initiateClose } = useNoteTransition({
     position,
     onClose: () => actions.activeNote.set({ id: null, position: null }),
@@ -47,13 +47,13 @@ const NoteActive = () => {
         <TextEdit
           isTitle
           value={note.title}
-          onChange={(value: string) => update(note.id, { title: value })}
+          onChange={(value: string) => updateTitle(note.id, value)}
           placeholder="Title"
           className="pr-6"
         />
         <TextEdit
           value={note.content}
-          onChange={(value: string) => update(note.id, { content: value })}
+          onChange={(value: string) => updateContent(note.id, value)}
           placeholder="Take a note..."
         />
         <div className="flex flex-wrap gap-1.5">

@@ -31,19 +31,23 @@ export const useNotes = () => {
 
   const update = async (id: string, updates: Partial<Note>) => {
     actions.notes.update(id, updates);
+    await api.update(id, updates);
+  };
+
+  const updateTitle = async (id: string, title: string) => {
+    actions.notes.update(id, { title });
 
     const dataKey = requireDataKey();
-    const encryptedUpdates: Partial<Note> = { ...updates };
+    const encryptedTitle = await encryptString(title, dataKey);
+    await api.update(id, { title: encryptedTitle });
+  };
 
-    if (updates.title !== undefined) {
-      encryptedUpdates.title = await encryptString(updates.title, dataKey);
-    }
+  const updateContent = async (id: string, content: string) => {
+    actions.notes.update(id, { content });
 
-    if (updates.content !== undefined) {
-      encryptedUpdates.content = await encryptString(updates.content, dataKey);
-    }
-
-    await api.update(id, encryptedUpdates);
+    const dataKey = requireDataKey();
+    const encryptedContent = await encryptString(content, dataKey);
+    await api.update(id, { content: encryptedContent });
   };
 
   const remove = async (id: string) => {
@@ -94,6 +98,8 @@ export const useNotes = () => {
   return {
     create,
     update,
+    updateTitle,
+    updateContent,
     remove,
     trash,
     restore,
