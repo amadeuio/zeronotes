@@ -1,5 +1,5 @@
 import { cn } from '@/utils';
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 interface EditableTextProps {
   value: string;
@@ -19,6 +19,12 @@ const TextEdit = ({
   isTitle = false,
 }: EditableTextProps) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const [localValue, setLocalValue] = useState(value);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
 
   const adjustTextareaHeight = () => {
     if (textareaRef.current) {
@@ -28,8 +34,23 @@ const TextEdit = ({
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onChange(event.target.value);
+    const newValue = event.target.value;
+    setLocalValue(newValue);
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+    debounceTimeoutRef.current = setTimeout(() => {
+      onChange(newValue);
+    }, 500);
   };
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   useLayoutEffect(() => {
     const textarea = textareaRef.current;
@@ -42,12 +63,12 @@ const TextEdit = ({
     resizeObserver.observe(textarea);
 
     return () => resizeObserver.disconnect();
-  }, [value]);
+  }, [localValue]);
 
   return (
     <textarea
       ref={textareaRef}
-      value={value}
+      value={localValue}
       onChange={handleChange}
       rows={1}
       className={cn(
