@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { RateLimitError } from '../utils/AppError';
 
 interface RateLimitInfo {
   count: number;
@@ -8,10 +9,10 @@ interface RateLimitInfo {
 export function rateLimit(limit: number, windowMs: number) {
   const store = new Map<string, RateLimitInfo>();
 
-  return function (req: Request, res: Response, next: NextFunction) {
+  return function (req: Request, _res: Response, next: NextFunction) {
     const ip = req.ip;
     if (!ip) {
-      return res.status(429).json({ error: 'No IP address found' });
+      return next(new RateLimitError('No IP address found'));
     }
 
     const now = Date.now();
@@ -30,7 +31,14 @@ export function rateLimit(limit: number, windowMs: number) {
 
     // Window still active
     if (info.count >= limit) {
-      return res.status(429).json({ error: 'Too many requests' });
+      const retryAfterMs = Math.max(0, info.expiresAt - now);
+      return next(
+        new RateLimitError('Too many requests', {
+          retryAfterMs,
+          limit,
+          windowMs,
+        }),
+      );
     }
 
     info.count++;

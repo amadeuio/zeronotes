@@ -8,10 +8,14 @@ export const validate =
     const result = schema.safeParse(req[property]);
 
     if (!result.success) {
+      const issues = result.error.issues.map((i) => ({
+        path: i.path,
+        message: i.message,
+      }));
       const message = result.error.issues
         .map((i) => `${i.path.join('.')}: ${i.message}`)
         .join(', ');
-      return next(new ValidationError(message));
+      return next(new ValidationError(message, { issues }));
     }
 
     req[property] = result.data;

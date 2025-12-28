@@ -30,26 +30,36 @@ describe('rateLimit middleware', () => {
     const middleware = rateLimit(1, 1000);
 
     const req: any = { ip: '2.2.2.2' };
-    const res: any = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+    const res: any = {};
     const next = jest.fn();
 
     middleware(req, res, next);
     middleware(req, res, next);
 
-    expect(res.status).toHaveBeenCalledWith(429);
+    expect(next).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        status: 429,
+        code: 'RATE_LIMITED',
+      }),
+    );
   });
 
   test('blocks requests when rate limit is exceeded', () => {
     const middleware = rateLimit(1, 1000);
 
     const req: any = { ip: '2.2.2.2' };
-    const res: any = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+    const res: any = {};
     const next = jest.fn();
 
     middleware(req, res, next);
     middleware(req, res, next);
 
-    expect(res.status).toHaveBeenCalledWith(429);
+    expect(next).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        status: 429,
+        code: 'RATE_LIMITED',
+      }),
+    );
   });
 
   test('blocks GET requests after limit is exceeded through full HTTP stack', async () => {
