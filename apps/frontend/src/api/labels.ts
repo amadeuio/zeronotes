@@ -8,20 +8,20 @@ import type {
 import { apiAuth } from './utils';
 
 export const labelsApi = {
-  getAll: (): Promise<Label[]> => apiAuth<Label[]>('/labels'),
+  getAll: (): Promise<Label[]> => apiAuth('/labels'),
 
   create: (label: CreateLabelBody): Promise<void> =>
-    apiAuth<void>('/labels', {
+    apiAuth('/labels', {
       method: 'POST',
       body: JSON.stringify(label),
     }),
 
   update: (id: UpdateLabelParams['id'], label: UpdateLabelBody): Promise<void> =>
-    apiAuth<void>(`/labels/${id}`, {
+    apiAuth(`/labels/${id}`, {
       method: 'PUT',
       body: JSON.stringify(label),
     }),
 
   delete: (id: DeleteLabelParams['id']): Promise<void> =>
-    apiAuth<void>(`/labels/${id}`, { method: 'DELETE' }),
+    apiAuth(`/labels/${id}`, { method: 'DELETE' }),
 };
