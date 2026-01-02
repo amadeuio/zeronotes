@@ -1,70 +1,26 @@
 import type { AuthResponse, LoginBody, MeResponse, RegisterBody } from '@zeronotes/shared';
-import { API_URL } from './constants';
+import { api } from './utils';
 
 export const authApi = {
-  register: async (credentials: RegisterBody): Promise<AuthResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const res = await fetch(`${API_URL}/auth/register`, {
+  register: (credentials: RegisterBody): Promise<AuthResponse> =>
+    api<AuthResponse>('/auth/register', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials),
-    });
+      trackStatus: false,
+    }),
 
-    if (!res.ok) {
-      if (res.status === 409) {
-        throw new Error('User already exists');
-      }
-      if (res.status === 400) {
-        throw new Error('Email and password are required');
-      }
-      throw new Error('Failed to register user');
-    }
-
-    const data = await res.json();
-    return data;
-  },
-
-  login: async (credentials: LoginBody): Promise<AuthResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const res = await fetch(`${API_URL}/auth/login`, {
+  login: (credentials: LoginBody): Promise<AuthResponse> =>
+    api<AuthResponse>('/auth/login', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials),
-    });
+      trackStatus: false,
+    }),
 
-    if (!res.ok) {
-      if (res.status === 401) {
-        throw new Error('Invalid credentials');
-      }
-      if (res.status === 400) {
-        throw new Error('Email and password are required');
-      }
-      throw new Error('Failed to login');
-    }
-
-    const data = await res.json();
-    return data;
-  },
-
-  me: async (token: string): Promise<MeResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const res = await fetch(`${API_URL}/auth/me`, {
+  me: (token: string): Promise<MeResponse> =>
+    api<MeResponse>('/auth/me', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    });
-
-    if (!res.ok) {
-      if (res.status === 401) {
-        throw new Error('Unauthorized');
-      }
-      if (res.status === 404) {
-        throw new Error('User not found');
-      }
-      throw new Error('Failed to get user');
-    }
-
-    const data = await res.json();
-    return data;
-  },
+      trackStatus: false,
+    }),
 };

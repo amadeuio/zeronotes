@@ -1,4 +1,4 @@
-import { notesApi, withApiStatus } from '@/api';
+import { notesApi } from '@/api';
 import { encryptString, requireDataKey } from '@/crypto';
 import { selectActions, useStore } from '@/store';
 import type { DraftNote } from '@/types';
@@ -7,7 +7,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const useNotes = () => {
   const actions = useStore(selectActions);
-  const api = withApiStatus(notesApi, actions);
 
   const create = async (note: DraftNote) => {
     const id = uuidv4();
@@ -26,12 +25,12 @@ export const useNotes = () => {
       labelIds: newNote.labelIds,
     };
 
-    await api.create(encryptedPayload);
+    await notesApi.create(encryptedPayload);
   };
 
   const update = async (id: string, updates: Partial<Note>) => {
     actions.notes.update(id, updates);
-    await api.update(id, updates);
+    await notesApi.update(id, updates);
   };
 
   const updateTitle = async (id: string, title: string) => {
@@ -39,7 +38,7 @@ export const useNotes = () => {
 
     const dataKey = requireDataKey();
     const encryptedTitle = await encryptString(title, dataKey);
-    await api.update(id, { title: encryptedTitle });
+    await notesApi.update(id, { title: encryptedTitle });
   };
 
   const updateContent = async (id: string, content: string) => {
@@ -47,34 +46,34 @@ export const useNotes = () => {
 
     const dataKey = requireDataKey();
     const encryptedContent = await encryptString(content, dataKey);
-    await api.update(id, { content: encryptedContent });
+    await notesApi.update(id, { content: encryptedContent });
   };
 
   const remove = async (id: string) => {
     actions.notes.delete(id);
-    await api.delete(id);
+    await notesApi.delete(id);
   };
 
   const trash = async (id: string) => {
     const updates = { isTrashed: true, isPinned: false, isArchived: false };
     actions.notes.update(id, updates);
-    await api.update(id, updates);
+    await notesApi.update(id, updates);
   };
 
   const restore = async (id: string) => {
     const updates = { isTrashed: false };
     actions.notes.update(id, updates);
-    await api.update(id, updates);
+    await notesApi.update(id, updates);
   };
 
   const addLabel = async (noteId: string, labelId: string) => {
     actions.notes.addLabel(noteId, labelId);
-    await api.addLabel(noteId, labelId);
+    await notesApi.addLabel(noteId, labelId);
   };
 
   const removeLabel = async (noteId: string, labelId: string) => {
     actions.notes.removeLabel(noteId, labelId);
-    await api.removeLabel(noteId, labelId);
+    await notesApi.removeLabel(noteId, labelId);
   };
 
   const createLabelAndAddToNote = async (noteId: string, name: string) => {
@@ -88,11 +87,11 @@ export const useNotes = () => {
       name: await encryptString(name, dataKey),
     };
 
-    await api.createLabelAndAddToNote(noteId, encryptedLabel);
+    await notesApi.createLabelAndAddToNote(noteId, encryptedLabel);
   };
 
   const reorderNotes = async (notesOrder: string[]) => {
-    await api.reorderNotes({ noteIds: notesOrder });
+    await notesApi.reorderNotes({ noteIds: notesOrder });
   };
 
   return {

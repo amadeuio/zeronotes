@@ -5,37 +5,23 @@ import type {
   UpdateLabelBody,
   UpdateLabelParams,
 } from '@zeronotes/shared';
-import { API_URL } from './constants';
-import { fetchWithAuth } from './utils';
+import { apiAuth } from './utils';
 
 export const labelsApi = {
-  getAll: async (): Promise<Label[]> => {
-    const res = await fetchWithAuth(`${API_URL}/labels`);
-    const data = await res.json();
-    return data;
-  },
+  getAll: (): Promise<Label[]> => apiAuth<Label[]>('/labels'),
 
-  create: async (label: CreateLabelBody): Promise<Label> => {
-    const res = await fetchWithAuth(`${API_URL}/labels`, {
+  create: (label: CreateLabelBody): Promise<void> =>
+    apiAuth<void>('/labels', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(label),
-    });
-    const data = await res.json();
-    return data;
-  },
+    }),
 
-  update: async (id: UpdateLabelParams['id'], label: UpdateLabelBody): Promise<Label> => {
-    const res = await fetchWithAuth(`${API_URL}/labels/${id}`, {
+  update: (id: UpdateLabelParams['id'], label: UpdateLabelBody): Promise<void> =>
+    apiAuth<void>(`/labels/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(label),
-    });
-    const data = await res.json();
-    return data;
-  },
+    }),
 
-  delete: async (id: DeleteLabelParams['id']): Promise<void> => {
-    await fetchWithAuth(`${API_URL}/labels/${id}`, { method: 'DELETE' });
-  },
+  delete: (id: DeleteLabelParams['id']): Promise<void> =>
+    apiAuth<void>(`/labels/${id}`, { method: 'DELETE' }),
 };

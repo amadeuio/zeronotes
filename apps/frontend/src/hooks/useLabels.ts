@@ -1,4 +1,4 @@
-import { labelsApi, withApiStatus } from '@/api';
+import { labelsApi } from '@/api';
 import { encryptString, requireDataKey } from '@/crypto';
 import { selectActions, useStore } from '@/store';
 import type { Label } from '@zeronotes/shared';
@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const useLabels = () => {
   const actions = useStore(selectActions);
-  const api = withApiStatus(labelsApi, actions);
 
   const create = async (name: string) => {
     const id = uuidv4();
@@ -19,7 +18,7 @@ export const useLabels = () => {
       name: await encryptString(name, dataKey),
     };
 
-    await api.create(encryptedLabel);
+    await labelsApi.create(encryptedLabel);
   };
 
   const update = async (id: string, name: string) => {
@@ -30,12 +29,12 @@ export const useLabels = () => {
       name: await encryptString(name, dataKey),
     };
 
-    await api.update(id, encryptedLabel);
+    await labelsApi.update(id, encryptedLabel);
   };
 
   const remove = async (id: string) => {
     actions.labels.delete(id);
-    await api.delete(id);
+    await labelsApi.delete(id);
   };
 
   const createAndCallAction = async (name: string, action: (label: Label) => void) => {
@@ -50,7 +49,7 @@ export const useLabels = () => {
       name: await encryptString(name, dataKey),
     };
 
-    await api.create(encryptedLabel);
+    await labelsApi.create(encryptedLabel);
   };
 
   return { create, update, remove, createAndCallAction };

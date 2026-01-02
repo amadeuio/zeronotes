@@ -1,38 +1,58 @@
-import { useStore, type Store } from '@/store';
+import { useStore } from '@/store';
+import { API_URL } from './constants';
 
-export const fetchWithAuth = async (url: string, options: RequestInit = {}): Promise<Response> => {
-  const { token } = useStore.getState().auth;
-  const headers = new Headers(options.headers);
-  headers.set('Authorization', `Bearer ${token}`);
+export interface ApiOptions extends RequestInit {
+  trackStatus?: boolean;
+}
 
-  return fetch(url, {
-    ...options,
-    headers,
-  });
-};
+export const api = async <T>(path: string, options: ApiOptions = {}): Promise<T> => {
+  const { trackStatus = true, ...fetchOptions } = options;
+  const actions = useStore.getState().actions;
 
-export const withApiStatus = <T extends Record<string, (...args: any[]) => Promise<any>>>(
-  api: T,
-  actions: Store['actions'],
-): T => {
-  const wrapWithStatus = async <R>(apiCall: () => Promise<R>): Promise<R> => {
+  if (trackStatus) {
     actions.api.set({ loading: true, error: false });
-    try {
-      const result = await apiCall();
-      actions.api.set({ loading: false });
-      return result;
-    } catch (error) {
-      actions.api.set({ loading: false, error: true });
+  }
+
+  try {
+    const res = await fetch(`${API_URL}${path}`, {
+      ...fetchOptions,
+      headers: {
+        'Content-Type': 'application/json',
+        ...fetchOptions.headers,
+      },
+    });
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({ message: 'API Error' }));
       throw error;
     }
-  };
 
-  const wrapped = {} as T;
-  for (const key in api) {
-    const originalMethod = api[key];
-    wrapped[key] = ((...args: any[]) => {
-      return wrapWithStatus(() => originalMethod(...args));
-    }) as T[typeof key];
+    if (trackStatus) {
+      actions.api.set({ loading: false });
+    }
+
+    if (res.status === 204 || res.headers.get('content-length') === '0') {
+      return {} as T;
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    if (trackStatus) {
+      actions.api.set({ loading: false, error: true });
+    }
+    throw error;
   }
-  return wrapped;
+};
+
+export const apiAuth = async <T>(path: string, options: ApiOptions = {}): Promise<T> => {
+  const token = useStore.getState().auth.token;
+
+  return api<T>(path, {
+    ...options,
+    headers: {
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
