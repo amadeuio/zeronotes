@@ -59,6 +59,7 @@ if (command === 'migrate') {
     process.exit(1);
   });
 } else {
-  console.error('Usage: ts-node db/run.ts migrate');
+  console.error('Usage: ts-node db/migrate.ts migrate');
   process.exit(1);
 }
+
