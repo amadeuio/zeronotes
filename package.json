@@ -10,8 +10,8 @@
     "build": "turbo build",
     "lint": "turbo lint",
     "test": "turbo test test",
-    "test:f": "turbo test --filter=@zeronotes/frontend test --",
-    "test:b": "turbo test --filter=@zeronotes/backend test --",
+    "test:f": "turbo test --filter=@zeronotes/frontend",
+    "test:b": "turbo test --filter=@zeronotes/backend",
     "check": "turbo check",
     "format": "turbo format"
   },
