@@ -69,7 +69,7 @@ const User = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const user = useStore(selectUser);
-  const initials = getUserInitials(user!.name, user!.email);
+  const initials = user ? getUserInitials(user.name, user.email) : 'N/A';
   const elementRef = useRef<HTMLDivElement>(null);
   useClickOutside({ elementRef, onClickOutside: () => setIsMenuOpen(false) });
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
