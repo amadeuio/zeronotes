@@ -16,7 +16,7 @@ export const noteRepository = {
       LEFT JOIN labels l ON nl.label_id = l.id
       WHERE n.user_id = $1
       GROUP BY n.id
-      ORDER BY n.created_at DESC
+      ORDER BY n."order" ASC
     `,
       [userId],
     );
