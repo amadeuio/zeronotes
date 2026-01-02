@@ -50,7 +50,7 @@ const SyncStatus = ({ loading, error }: SyncStatusProps) => {
       onMouseLeave={() => setIsTooltipVisible(false)}
     >
       {loading ? (
-        <Spinner className="-translate-x-[13px] translate-y-[2px]" thickness={6} size={22} />
+        <Spinner className="-translate-x-[13px] translate-y-[2px]" thickness={5} size={22} />
       ) : error ? (
         <Icon name="error" className="p-3 text-neutral-400" size={24} />
       ) : (
