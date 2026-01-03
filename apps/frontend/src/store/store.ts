@@ -24,7 +24,7 @@ export interface Store {
   };
   api: {
     loading: boolean;
-    error: boolean;
+    error: string | null;
   };
   auth: {
     isAuthenticated: boolean;
@@ -97,7 +97,7 @@ export const useStore = create<Store>()(
     },
     filters: { search: '', view: { type: 'notes' } },
     ui: { isEditLabelsMenuOpen: false, isSidebarCollapsed: false, gridColumns: 5 },
-    api: { loading: false, error: false },
+    api: { loading: false, error: null },
     auth: { user: null, token: null, isAuthenticated: false, isUnlocked: false, encryption: null },
     actions: {
       notes: {
@@ -331,6 +331,10 @@ export const useStore = create<Store>()(
         },
         clear: () => {
           set({
+            api: {
+              loading: true,
+              error: null,
+            },
             auth: {
               user: null,
               token: null,

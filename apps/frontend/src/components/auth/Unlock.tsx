@@ -1,5 +1,6 @@
 import { Icon } from '@/components';
 import { useAuth } from '@/hooks';
+import { getErrorMessage } from '@/utils';
 import { useNavigate } from '@tanstack/react-router';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
@@ -28,7 +29,7 @@ const Unlock = () => {
       await unlock(password);
       navigate({ to: '/' });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to unlock');
+      setError(getErrorMessage(err));
     } finally {
       setIsLoading(false);
     }

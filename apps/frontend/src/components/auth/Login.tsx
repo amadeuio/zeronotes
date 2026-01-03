@@ -1,7 +1,7 @@
 import logo from '@/assets/logo.png';
 import { Icon, Input } from '@/components';
 import { useAuth } from '@/hooks';
-import { cn } from '@/utils';
+import { cn, getErrorMessage } from '@/utils';
 import { useNavigate } from '@tanstack/react-router';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
@@ -31,7 +31,7 @@ const Login = () => {
       await login({ email, password });
       navigate({ to: '/' });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to login');
+      setError(getErrorMessage(err));
     } finally {
       setIsLoading(false);
     }

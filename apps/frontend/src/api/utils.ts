@@ -1,4 +1,5 @@
 import { useStore } from '@/store';
+import { getErrorMessage } from '@/utils';
 import { API_URL } from './constants';
 
 export interface ApiOptions extends RequestInit {
@@ -10,7 +11,7 @@ export const api = async <T>(path: string, options: ApiOptions = {}): Promise<T>
   const actions = useStore.getState().actions;
 
   if (trackStatus) {
-    actions.api.set({ loading: true, error: false });
+    actions.api.set({ loading: true, error: null });
   }
 
   try {
@@ -23,8 +24,8 @@ export const api = async <T>(path: string, options: ApiOptions = {}): Promise<T>
     });
 
     if (!res.ok) {
-      const error = await res.json().catch(() => ({ message: 'API Error' }));
-      throw error;
+      const errorBody = await res.json().catch(() => ({}));
+      throw errorBody;
     }
 
     if (trackStatus) {
@@ -39,7 +40,7 @@ export const api = async <T>(path: string, options: ApiOptions = {}): Promise<T>
     return data;
   } catch (error) {
     if (trackStatus) {
-      actions.api.set({ loading: false, error: true });
+      actions.api.set({ loading: false, error: getErrorMessage(error) });
     }
     throw error;
   }

@@ -37,7 +37,7 @@ const Search = ({ value, onChange, onClear, className }: SearchProps) => (
 
 interface SyncStatusProps {
   loading: boolean;
-  error: boolean;
+  error: string | null;
 }
 
 const SyncStatus = ({ loading, error }: SyncStatusProps) => {
@@ -58,7 +58,7 @@ const SyncStatus = ({ loading, error }: SyncStatusProps) => {
       )}
       {isTooltipVisible && (
         <div className="absolute top-full left-1/2 z-20 -translate-x-1/2 translate-y-1 rounded bg-neutral-700 px-2 py-1 text-xs whitespace-nowrap text-white shadow-lg">
-          {loading ? 'Syncing...' : error ? 'Sync failed' : 'Synced'}
+          {loading ? 'Syncing...' : error ? error : 'Synced'}
         </div>
       )}
     </div>

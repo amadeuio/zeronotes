@@ -1,7 +1,7 @@
 import logo from '@/assets/logo.png';
 import { Icon, Input } from '@/components';
 import { useAuth } from '@/hooks';
-import { cn } from '@/utils';
+import { cn, getErrorMessage } from '@/utils';
 import { useNavigate } from '@tanstack/react-router';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
@@ -32,7 +32,7 @@ const SignUp = () => {
       await register({ email, password, name: name || null });
       navigate({ to: '/' });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to sign up');
+      setError(getErrorMessage(err));
     } finally {
       setIsLoading(false);
     }

@@ -1,4 +1,5 @@
 export { cn, getEmptyStateConfig, getUserInitials } from './common';
+export { getErrorMessage } from './errors';
 export {
   getGridColumnsFromWidth,
   getNoteIdFromPosition,
