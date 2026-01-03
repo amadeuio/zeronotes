@@ -1,3 +1,4 @@
+import { apiAuth } from '@/utils';
 import type {
   AddLabelToNoteParams,
   CreateLabelAndAddToNoteParams,
@@ -10,7 +11,6 @@ import type {
   UpdateNoteBody,
   UpdateNoteParams,
 } from '@zeronotes/shared';
-import { apiAuth } from './utils';
 
 export const notesApi = {
   getAll: (): Promise<Note[]> => apiAuth('/notes'),

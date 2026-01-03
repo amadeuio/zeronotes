@@ -1,3 +1,4 @@
+import { apiAuth } from '@/utils';
 import type {
   CreateLabelBody,
   DeleteLabelParams,
@@ -5,7 +6,6 @@ import type {
   UpdateLabelBody,
   UpdateLabelParams,
 } from '@zeronotes/shared';
-import { apiAuth } from './utils';
 
 export const labelsApi = {
   getAll: (): Promise<Label[]> => apiAuth('/labels'),

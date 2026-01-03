@@ -1,6 +1,6 @@
+import { API_URL } from '@/constants';
 import { useStore } from '@/store';
-import { getErrorMessage } from '@/utils';
-import { API_URL } from './constants';
+import { getErrorMessage } from './errors';
 
 export interface ApiOptions extends RequestInit {
   trackStatus?: boolean;

@@ -1,5 +1,5 @@
+import { api } from '@/utils';
 import type { AuthResponse, LoginBody, MeResponse, RegisterBody } from '@zeronotes/shared';
-import { api } from './utils';
 
 export const authApi = {
   register: (credentials: RegisterBody): Promise<AuthResponse> =>
