@@ -5,7 +5,7 @@ import pool from '../src/db/client';
 
 dotenv.config();
 
-async function runMigrations(): Promise<void> {
+const runMigrations = async (): Promise<void> => {
   const migrationsDir = path.join(__dirname);
 
   // Read all migration files (schema.sql)
@@ -48,7 +48,7 @@ async function runMigrations(): Promise<void> {
     client.release();
     await pool.end();
   }
-}
+};
 
 // Run based on command line argument
 const command = process.argv[2];
@@ -62,4 +62,3 @@ if (command === 'migrate') {
   console.error('Usage: ts-node db/migrate.ts migrate');
   process.exit(1);
 }
-

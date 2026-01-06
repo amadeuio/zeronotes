@@ -2,7 +2,7 @@ import { ENCRYPTION_VERSION, KDF_ITERATIONS } from '@zeronotes/shared';
 import { SuperTest, Test } from 'supertest';
 import { v4 as uuidv4 } from 'uuid';
 
-export function makeTestHelpers(api: SuperTest<Test>) {
+export const makeTestHelpers = (api: SuperTest<Test>) => {
   const uniqueEmail = () => `test_${Date.now()}_${Math.random().toString(36).slice(2)}@example.com`;
 
   return {
@@ -77,4 +77,4 @@ export function makeTestHelpers(api: SuperTest<Test>) {
       return `${parts[0]}.${parts[1]}.${modified}`;
     },
   };
-}
+};

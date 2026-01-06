@@ -7,7 +7,7 @@ import { notesRouter } from './domain/notes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { rateLimit } from './middleware/rateLimit.middleware';
 
-export function createApp() {
+export const createApp = () => {
   const app = express();
 
   app.use(
@@ -27,4 +27,4 @@ export function createApp() {
   app.use(errorHandler);
 
   return app;
-}
+};

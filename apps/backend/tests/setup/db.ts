@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import pool from '../../src/db/client';
 
-export async function migrateTestDB() {
+export const migrateTestDB = async () => {
   const migrationsDir = path.join(__dirname, '..', '..', 'db');
   const schemaPath = path.join(migrationsDir, 'schema.sql');
   const sql = fs.readFileSync(schemaPath, 'utf8');
@@ -13,9 +13,9 @@ export async function migrateTestDB() {
   } finally {
     client.release();
   }
-}
+};
 
-export async function resetTestDB() {
+export const resetTestDB = async () => {
   const client = await pool.connect();
   try {
     await client.query(`
@@ -25,8 +25,8 @@ export async function resetTestDB() {
   } finally {
     client.release();
   }
-}
+};
 
-export async function closeDB() {
+export const closeDB = async () => {
   await pool.end();
-}
+};

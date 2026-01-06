@@ -6,10 +6,10 @@ interface RateLimitInfo {
   expiresAt: number;
 }
 
-export function rateLimit(limit: number, windowMs: number) {
+export const rateLimit = (limit: number, windowMs: number) => {
   const store = new Map<string, RateLimitInfo>();
 
-  return function (req: Request, _res: Response, next: NextFunction) {
+  return (req: Request, _res: Response, next: NextFunction) => {
     const ip = req.ip;
     if (!ip) {
       return next(new RateLimitError('No IP address found'));
@@ -45,4 +45,4 @@ export function rateLimit(limit: number, windowMs: number) {
     store.set(ip, info);
     next();
   };
-}
+};
