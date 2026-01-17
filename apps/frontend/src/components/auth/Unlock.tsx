@@ -49,6 +49,7 @@ const Unlock = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}
+              autoFocus
             />
             {error && (
               <div className="rounded-lg bg-red-500/20 px-4 py-2 text-sm text-red-400">{error}</div>

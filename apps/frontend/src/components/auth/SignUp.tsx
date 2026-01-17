@@ -52,6 +52,7 @@ const SignUp = () => {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              autoFocus
               disabled={isLoading}
             />
             <Input

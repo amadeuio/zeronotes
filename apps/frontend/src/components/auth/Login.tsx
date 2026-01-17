@@ -51,6 +51,7 @@ const Login = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoFocus
               disabled={isLoading}
             />
             <PasswordInput
