@@ -7,10 +7,19 @@ interface InputProps {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
+  autoFocus?: boolean;
   className?: string;
 }
 
-const Input = ({ placeholder, type, value, onChange, disabled, className }: InputProps) => (
+const Input = ({
+  placeholder,
+  type,
+  value,
+  onChange,
+  disabled,
+  autoFocus,
+  className,
+}: InputProps) => (
   <input
     className={cn(
       'text-primary w-full rounded-lg border border-white/3 bg-white/8 p-3 text-sm transition-colors duration-200 ease-in-out outline-none placeholder:text-sm placeholder:text-white/20 hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-50',
@@ -21,6 +30,7 @@ const Input = ({ placeholder, type, value, onChange, disabled, className }: Inpu
     value={value}
     onChange={onChange}
     disabled={disabled}
+    autoFocus={autoFocus}
   />
 );
 
