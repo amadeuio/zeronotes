@@ -7,9 +7,10 @@ interface PasswordInputProps {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
+  autoFocus?: boolean;
 }
 
-const PasswordInput = ({ placeholder, value, onChange, disabled }: PasswordInputProps) => {
+const PasswordInput = ({ placeholder, value, onChange, disabled, autoFocus }: PasswordInputProps) => {
   const [show, setShow] = useState(false);
 
   return (
@@ -20,6 +21,7 @@ const PasswordInput = ({ placeholder, value, onChange, disabled }: PasswordInput
         value={value}
         onChange={onChange}
         disabled={disabled}
+        autoFocus={autoFocus}
       />
       <IconButton
         onClick={() => setShow((s) => !s)}
