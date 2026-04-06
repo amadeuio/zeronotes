@@ -1,7 +1,7 @@
 import { authApi } from '@/api';
 import { createEncryption, deriveKEK, setDataKey, unwrapDataKey } from '@/crypto';
 import { selectActions, selectAuth, useStore } from '@/store';
-import type { LoginBody, RegisterBody } from '@zeronotes/shared';
+import type { ErrorResponse, LoginBody, RegisterBody } from '@zeronotes/shared';
 
 export const useAuth = () => {
   const actions = useStore(selectActions);
@@ -46,11 +46,24 @@ export const useAuth = () => {
       throw new Error('Encryption not found');
     }
 
-    const kek = await deriveKEK(password, auth.encryption.salt, auth.encryption.kdfIterations);
-    const dataKey = await unwrapDataKey(auth.encryption.wrappedDataKey, kek);
+    try {
+      const kek = await deriveKEK(password, auth.encryption.salt, auth.encryption.kdfIterations);
+      const dataKey = await unwrapDataKey(auth.encryption.wrappedDataKey, kek);
 
-    setDataKey(dataKey);
-    actions.auth.unlock();
+      setDataKey(dataKey);
+
+      actions.auth.unlock();
+    } catch (err) {
+      const unlockError: ErrorResponse = {
+        error: {
+          message: 'Incorrect password',
+          code: 'INVALID_UNLOCK_PASSWORD',
+          status: 401,
+          details: err,
+        },
+      };
+      throw unlockError;
+    }
   };
 
   const logout = () => {
