@@ -2,6 +2,8 @@
 
 End-to-end encrypted notes application with zero-knowledge architecture, domain-driven backend, and custom drag-and-drop grid.
 
+![Zeronotes — masonry grid, labels, and dark UI](apps/frontend/public/screenshots/screenshot.png)
+
 ---
 
 ## Features
