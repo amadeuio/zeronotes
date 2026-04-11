@@ -1,12 +1,13 @@
 import { Pool } from 'pg';
 import { env } from '../utils/env';
 
+// Railway provides DATABASE_URL, local uses individual vars
 const pool = new Pool({
-  host: env.DB_HOST,
-  port: env.DB_PORT,
-  database: env.DB_NAME,
-  user: env.DB_USER,
-  password: env.DB_PASSWORD,
+  connectionString:
+    env.DATABASE_URL ||
+    `postgresql://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}`,
+  // Railway's Postgres requires SSL in production usually
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
 });
 
 pool.on('connect', () => {
