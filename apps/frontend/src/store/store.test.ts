@@ -34,7 +34,7 @@ beforeEach(() => {
       isSidebarCollapsed: false,
       gridColumns: 5,
     },
-    api: { loading: false, error: false },
+    api: { loading: false, error: null },
   });
 });
 
