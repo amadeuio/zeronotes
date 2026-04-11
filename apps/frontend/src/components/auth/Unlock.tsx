@@ -9,7 +9,7 @@ import PasswordInput from './PasswordInput';
 
 const Unlock = () => {
   const { unlock } = useAuth();
-  const [password, setPassword] = useState('password123');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();

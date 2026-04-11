@@ -10,8 +10,8 @@ import PasswordInput from './PasswordInput';
 
 const Login = () => {
   const { login } = useAuth();
-  const [email, setEmail] = useState('test@example.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -65,9 +65,6 @@ const Login = () => {
             )}
             <Button isLoading={isLoading} className="mt-2">
               Login
-            </Button>
-            <Button variant="secondary" disabled={isLoading} iconName="visibility">
-              Demo Mode
             </Button>
             <div
               onClick={() => {
