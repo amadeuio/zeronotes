@@ -6,7 +6,7 @@
   "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
-    "start": "node src/server.ts",
+    "start": "node dist/apps/backend/src/server.js",
     "dev": "nodemon --exec ts-node src/server.ts",
     "migrate": "ts-node db/migrate.ts migrate",
     "format": "prettier --write \"**/*.{ts,js,json,md}\"",
@@ -35,7 +35,8 @@
     "jose": "^6.1.2",
     "pg": "^8.16.3",
     "uuid": "^9.0.1",
-    "zod": "^4.1.13"
+    "zod": "^4.1.13",
+    "@zeronotes/shared": "workspace:*"
   },
   "devDependencies": {
     "@types/argon2": "^0.14.1",
