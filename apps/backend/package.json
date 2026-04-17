@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "",
-  "main": "dist/server.js",
+  "main": "dist/apps/backend/src/server.js",
   "scripts": {
     "build": "tsc",
     "start": "node dist/apps/backend/src/server.js",
