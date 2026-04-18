@@ -1,0 +1,15 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "RAILPACK",
+    "buildCommand": "corepack enable && pnpm install && pnpm exec turbo build --filter=@zeronotes/frontend",
+    "watchPatterns": ["/apps/frontend/**", "/packages/shared/**"]
+  },
+  "deploy": {
+    "runtime": "V2",
+    "startCommand": "pnpm --filter=@zeronotes/frontend preview",
+    "sleepApplication": false,
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}
