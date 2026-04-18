@@ -12,4 +12,11 @@ export default defineConfig({
       '@zeronotes/shared': path.resolve(__dirname, '../../packages/shared'),
     },
   },
+  preview: {
+    host: '0.0.0.0',
+    allowedHosts: [
+      'zeronotesfrontend-production.up.railway.app',
+      'localhost'
+    ]
+  }
 });
