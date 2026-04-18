@@ -196,7 +196,7 @@ This reduces database round-trips from O(N) to O(1) when loading notes with labe
 1. **Clone and install dependencies**
 
    ```bash
-   git clone https://github.com/amadeuio/zeronotes.git
+   git clone https://github.com/amadeuserras/zeronotes.git
    cd zeronotes
    pnpm install
    ```
@@ -312,6 +312,6 @@ zeronotes/
 
 ---
 
-**Built by [Amadeu Serras](https://github.com/amadeuio)**
+**Built by [Amadeu Serras](https://github.com/amadeuserras)**
 
 Questions or feedback? Open an issue or reach out via [email](mailto:amadeuserras@gmail.com).

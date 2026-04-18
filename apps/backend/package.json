@@ -18,16 +18,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/amadeuio/zeronotes-backend.git"
+    "url": "git+https://github.com/amadeuserras/zeronotes.git",
+    "directory": "apps/backend"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/amadeuio/zeronotes-backend/issues"
+    "url": "https://github.com/amadeuserras/zeronotes/issues"
   },
-  "homepage": "https://github.com/amadeuio/zeronotes-backend#readme",
+  "homepage": "https://github.com/amadeuserras/zeronotes/tree/main/apps/backend",
   "dependencies": {
     "argon2": "^0.44.0",
     "cors": "^2.8.5",
