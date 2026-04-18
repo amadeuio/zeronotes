@@ -14,9 +14,6 @@ export default defineConfig({
   },
   preview: {
     host: '0.0.0.0',
-    allowedHosts: [
-      'zeronotesfrontend-production.up.railway.app',
-      'localhost'
-    ]
-  }
+    allowedHosts: process.env.VITE_ALLOWED_HOSTS?.split(',') || ['localhost'],
+  },
 });
