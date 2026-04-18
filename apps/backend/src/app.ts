@@ -12,7 +12,7 @@ export const createApp = () => {
 
   app.use(
     cors({
-      origin: 'http://localhost:5173',
+      origin: ['http://localhost:5173', 'https://zeronotesfrontend-production.up.railway.app'],
       credentials: true,
     }),
   );
