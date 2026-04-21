@@ -1,317 +1,123 @@
 # Zeronotes
 
-End-to-end encrypted notes application with zero-knowledge architecture, domain-driven backend, and custom drag-and-drop grid.
+A full-stack notes app inspired by Google Keep rebuilt from scratch with a focus on security, performance, and engineering rigour.
 
-![Zeronotes — masonry grid, labels, and dark UI](apps/frontend/public/screenshots/screenshot.png)
+> **What makes this different:** the drag-and-drop is custom-built with no libraries, and the encryption is a direct Web Crypto API implementation, not a wrapper around someone else's abstraction.
 
----
-
-## Features
-
-**Security**
-
-- Zero-knowledge architecture — server never sees unencrypted data or decryption keys
-- Client-side AES-GCM encryption with PBKDF2 key derivation (100,000 iterations)
-- Wrapped data key pattern: password-derived KEK encrypts a random data key stored server-side
-- Versioned encryption payload enables future algorithm upgrades without breaking old data
-
-**User Experience**
-
-- Google Keep-style masonry grid with drag-to-reorder
-- Custom drag-and-drop engine built from scratch using browser pointer events
-- Real-time layout reflow with CSS transforms for 60fps performance
-- Instant search and filtering across notes
-
-**Architecture**
-
-- Domain-driven backend with clear separation of concerns (domain, repository, service layers)
-- Monorepo structure with shared Zod schemas for end-to-end type safety
-- Optimized state management using Zustand with memoized selectors
-- PostgreSQL with `json_agg` for efficient relational queries
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white)
 
 ---
 
-## Tech Stack
+## What it does
 
-**Frontend**
+Zeronotes is a drag-and-drop notes app where your data is encrypted before it ever leaves your device. The server stores ciphertext: it has no access to your notes.
 
-- React 19 + TypeScript
-- Zustand for state management (centralized store with memoized selectors)
-- TanStack Router for routing
-- Tailwind CSS for styling
-- Zod for runtime validation
-- Vitest for unit testing
-- Vite for build tooling
-
-**Backend**
-
-- Node.js + Express + TypeScript
-- PostgreSQL with structured SQL queries
-- JWT authentication (Jose library)
-- Argon2 for password hashing
-- Domain-driven design pattern (repositories, services, mappers)
-- Jest + Supertest for integration testing
-
-**Infrastructure**
-
-- Monorepo managed by Turborepo + pnpm workspaces
-- Shared `@zeronotes/shared` package for schemas and constants
-- Migration tooling for database schema management
-
-**Testing**
-
-- Vitest for frontend unit tests
-- Jest for backend integration tests
-- Test coverage for encryption/decryption edge cases
-- Integration tests covering auth flows and data persistence
+- Create, edit, pin, and organise notes in a masonry grid
+- Drag and drop to reorder (smooth, physics-feel, no jank)
+- Notes are end-to-end encrypted: only you can read them
+- Full authentication flow with JWT-based auth
 
 ---
 
-## Architecture & Design Decisions
+## Technical highlights
 
-### Zero-Knowledge Encryption
+### Custom drag-and-drop engine
 
-Data is encrypted client-side before ever reaching the server. The backend stores encrypted blobs and has no access to decryption keys or user passwords. This architecture ensures that even with full database access, the server cannot decrypt user data.
+Most projects reach for `react-beautiful-dnd` or `dnd-kit`. I didn't.
 
-**Implementation:**
+The engine is built on pointer events, CSS transforms, and a position-tracking algorithm that handles reflow in a masonry grid. It matches Google Keep's behaviour (items shift smoothly as you drag, snapping into place on release) without a single drag-and-drop dependency.
 
-1. **Password-derived KEK:** PBKDF2 derives a Key Encryption Key (KEK) from the user's password with 100,000 iterations and a unique salt
-2. **Wrapped data key:** A random 256-bit AES key (the "data key") encrypts all note content. This data key is encrypted (wrapped) by the KEK and stored server-side
-3. **Per-note encryption:** Each note is encrypted with AES-GCM using the data key with a unique IV per note
-4. **Version field:** Encryption metadata includes a version field to support future algorithm upgrades without breaking old data
+This was the original challenge that started the project: _can I reproduce this interaction from first principles?_
 
-**Why this pattern:**
-
-- The server stores the wrapped data key but cannot unwrap it without the user's password
-- Password changes only require re-wrapping the data key, not re-encrypting all notes
-- Lost passwords are unrecoverable by design (true zero-knowledge)
-
-### Custom Drag-and-Drop
-
-Rather than using react-beautiful-dnd or dnd-kit, I built a drag system from scratch to understand the underlying mechanics: pointer events, coordinate transforms, collision detection, and layout reflow.
-
-**Implementation:**
-
-- Mouse event listeners track drag state and calculate pointer position
-- Collision detection uses grid position lookups from Zustand store
-- Layout reflow triggers immediately on swap with CSS transform animations
-- Anti-flicker logic prevents rapid re-ordering when notes shift under cursor
-
-**Why custom:**
-
-- Full control over animation performance (CSS transforms, no layout thrashing)
-- Deeper understanding of browser event model and coordinate systems
-- Smaller bundle size (no external dependency)
-- Masonry grid calculations integrate cleanly with drag logic
-
-### Domain-Driven Backend
-
-The backend follows DDD principles with clear boundaries between layers:
-
-- **Domain layer:** Business logic and entities (`domain/notes/`, `domain/auth/`)
-- **Repository layer:** Data access abstraction (SQL queries, no business logic)
-- **Service layer:** Orchestration and use cases (coordinates repositories)
-- **Mappers:** Translation between domain objects and database rows
-
-**Example flow (creating a note):**
-
-1. Route receives validated request → calls service
-2. Service orchestrates: get min order → create note → add labels
-3. Repository executes SQL queries and returns rows
-4. Mapper transforms database row → domain Note object
-
-This separation makes the codebase easier to test (mock repositories) and reason about as complexity grows. Each layer has a single responsibility.
-
-### State Management Strategy
-
-All application state lives in a single Zustand store with heavy use of memoized selectors. This eliminates prop drilling and reduces re-renders by isolating component subscriptions to specific slices.
-
-**Key pattern:**
-
-```typescript
-// Selector only re-computes when specific slice changes
-const sortedNotes = useStore(
-  useCallback(
-    (state) => state.notes.order.map((id) => state.notes.byId[id]),
-    [],
-  ),
-);
+```
+Pointer events → position delta → CSS transform (no layout reflow)
+                                      ↓
+                               Reorder algorithm → grid reflow on drop
 ```
 
-Store structure is normalized (`byId` maps) with separate `order` arrays for O(1) lookups and efficient reordering.
+### End-to-end encryption
 
-### Monorepo with Shared Schemas
+Encryption is implemented directly using the [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API) — no third-party crypto library.
 
-The `@zeronotes/shared` package contains Zod schemas used by both frontend and backend. This ensures:
+- **Key derivation:** PBKDF2 with a random salt, derived from the user's password
+- **Encryption:** AES-GCM with a unique IV per note
+- **What the server sees:** ciphertext + encryption metadata (e.g. salt, wrapped key, IVs/version) — never the plaintext, never the key
 
-- **Type safety:** TypeScript types inferred from schemas flow through entire stack
-- **Runtime validation:** Server validates requests, client validates responses
-- **Single source of truth:** Data structures defined once, used everywhere
-- **Refactoring safety:** Schema changes break the build if frontend/backend diverge
+The key is derived client-side on login and never transmitted. Server compromise does not expose note content.
 
-**Example:**
-
-```typescript
-// packages/shared/schemas/notes.schema.ts
-export const createNoteSchema = z.object({
-  id: z.string().uuid(),
-  title: z.string().max(500).optional(),
-  // ...
-});
-
-export type CreateNoteBody = z.infer<typeof createNoteSchema>;
+```
+password + salt → PBKDF2 → CryptoKey
+                                ↓
+plaintext + IV → AES-GCM encrypt → ciphertext  →  stored in DB
 ```
 
-Both frontend and backend import `CreateNoteBody` type, ensuring consistency.
+### Architecture
 
-### PostgreSQL Query Optimization
-
-The notes query uses `json_agg` to fetch all related labels in a single query rather than N+1 queries:
-
-```sql
-SELECT
-  n.*,
-  COALESCE(json_agg(l.id) FILTER (WHERE l.id IS NOT NULL), '[]'::json) as label_ids
-FROM notes n
-LEFT JOIN note_labels nl ON n.id = nl.note_id
-LEFT JOIN labels l ON nl.label_id = l.id
-WHERE n.user_id = $1
-GROUP BY n.id
-```
-
-This reduces database round-trips from O(N) to O(1) when loading notes with labels.
-
----
-
-## Running Locally
-
-### Prerequisites
-
-- Node.js 18+
-- PostgreSQL (running locally or connection string)
-- pnpm (recommended) or npm
-
-### Setup
-
-1. **Clone and install dependencies**
-
-   ```bash
-   git clone https://github.com/amadeuserras/zeronotes.git
-   cd zeronotes
-   pnpm install
-   ```
-
-2. **Set up database**
-
-   ```bash
-   # Create PostgreSQL database
-   createdb zeronotes
-
-   # Run migrations
-   cd apps/backend
-   pnpm migrate
-   ```
-
-3. **Configure environment variables**
-
-   Create `apps/backend/.env`:
-
-   ```bash
-   DATABASE_URL=postgresql://user:password@localhost:5432/zeronotes
-   JWT_SECRET=your-secret-key-here
-   PORT=3000
-   ```
-
-4. **Start development servers**
-
-   ```bash
-   # From project root (runs both frontend and backend)
-   pnpm dev
-
-   # Or separately:
-   cd apps/frontend && pnpm dev  # http://localhost:5173
-   cd apps/backend && pnpm dev   # http://localhost:3000
-   ```
-
-### Testing
-
-```bash
-# Run all tests
-pnpm test
-
-# Backend integration tests
-pnpm test:b
-
-# Frontend unit tests
-pnpm test:f
-
-# Watch mode
-cd apps/backend && pnpm test:watch
-```
-
----
-
-## Project Structure
+Monorepo structured around Domain-Driven Design principles:
 
 ```
 zeronotes/
 ├── apps/
-│   ├── frontend/              # React application
-│   │   ├── src/
-│   │   │   ├── components/    # UI components (auth, notes, layout)
-│   │   │   ├── store/         # Zustand store + memoized selectors
-│   │   │   ├── crypto/        # Encryption utilities (AES-GCM, PBKDF2, key wrapping)
-│   │   │   ├── hooks/         # Custom React hooks (useDrag, useNotes, useAuth)
-│   │   │   ├── api/           # HTTP client functions
-│   │   │   ├── routes/        # TanStack Router routes
-│   │   │   └── utils/         # Helper functions
-│   │   └── tests/
-│   │
-│   └── backend/               # Node.js API
-│       ├── src/
-│       │   ├── domain/        # Business logic by domain
-│       │   │   ├── auth/      # Authentication (service, repository, mappers, routes)
-│       │   │   ├── notes/     # Notes domain
-│       │   │   ├── labels/    # Labels domain
-│       │   │   └── bootstrap/ # Initial data loading
-│       │   ├── middleware/    # Express middleware (auth, validation, rate limiting)
-│       │   ├── utils/         # JWT, crypto, error handling
-│       │   └── db/            # Database client + migrations
-│       └── tests/
-│
-└── packages/
-    └── shared/                # Shared types and schemas
-        ├── schemas/           # Zod validation schemas
-        └── constants/         # Encryption constants (iterations, versions)
+│   ├── frontend/          # React + TypeScript frontend
+│   └── backend/          # Node.js + Express + TypeScript backend
+├── packages/
+│   └── shared/       # Shared types, validation schemas
+└── turbo.json        # Turborepo pipeline
 ```
 
----
-
-## Reflections
-
-### What Went Well
-
-- The custom drag-and-drop system performs smoothly even with 100+ notes due to CSS transform optimizations
-- Domain-driven backend structure made adding features easier over time (labels, pinning, archiving)
-- Monorepo setup with shared schemas prevented many type mismatches and runtime errors
-- Zero-knowledge encryption architecture forced clear thinking about data flow and security boundaries
-
-### What I'd Do Differently
-
-- **Offline support:** Would add service worker + IndexedDB for offline mode with sync on reconnect
-- **Migration tooling:** Would invest more upfront in database migration versioning (currently manual SQL file)
-- **Batch operations:** Reordering notes sends one request per drag. Would batch updates or use WebSocket for real-time sync
-
-### Potential Next Steps
-
-- Real-time collaboration using WebSockets + CRDT for conflict resolution
-- Mobile app using React Native with shared business logic from monorepo
-- End-to-end encrypted file attachments with chunked uploads
-- Export/import functionality with encrypted backup files
-- Rich text editing with Markdown support
+- **Frontend:** React, TypeScript, Zustand for state, Tailwind CSS for styling
+- **Backend:** Node.js, Express, TypeScript, structured SQL queries (no ORM)
+- **Auth:** JWT via the Jose library with rate limiting
+- **Monorepo:** pnpm workspaces + Turborepo
+- **Testing:** Integration and unit tests covering edge cases — not just happy paths
 
 ---
 
-**Built by [Amadeu Serras](https://github.com/amadeuserras)**
+## Stack
 
-Questions or feedback? Open an issue or reach out via [email](mailto:amadeuserras@gmail.com).
+| Layer    | Tech                                     |
+| -------- | ---------------------------------------- |
+| Frontend | React, TypeScript, Zustand, Tailwind CSS |
+| Backend  | Node.js, Express, TypeScript             |
+| Database | PostgreSQL (raw SQL)                     |
+| Auth     | JWT (Jose)                               |
+| Crypto   | Web Crypto API — AES-GCM, PBKDF2         |
+| Monorepo | pnpm workspaces, Turborepo               |
+| Testing  | Jest (Backend), Vitest (Frontend)        |
+
+---
+
+## Running locally
+
+```bash
+# Clone and install
+git clone https://github.com/amadeuserras/zeronotes
+cd zeronotes
+pnpm install
+
+# Set up environment variables
+cp apps/backend/.env.example apps/backend/.env
+cp apps/backend/.env.test.example apps/backend/.env.test
+cp apps/frontend/.env.example apps/frontend/.env
+
+# Run database migrations
+pnpm --filter @zeronotes/backend migrate
+
+# Start both apps in dev mode
+pnpm dev
+```
+
+Requires Node.js 18+, pnpm, and a PostgreSQL instance.
+
+---
+
+## Why I built this
+
+I wanted to understand what it actually takes to implement end-to-end encryption correctly; not call a library, but understand the primitives. And I wanted to know if I could reproduce Google Keep's drag-and-drop behaviour from scratch.
+
+Both turned out to be more interesting than I expected. The encryption work pushed me to understand key derivation, IVs, and authenticated encryption properly. The drag-and-drop required thinking outside of the box, and the best solution ended up being building a mathematical grid system that tracks note positions in state and renders them via CSS transforms.
+
+The result is an app I'd actually use and a codebase I'm proud to show.
