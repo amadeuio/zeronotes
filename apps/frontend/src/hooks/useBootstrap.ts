@@ -1,4 +1,5 @@
 import { bootstrapApi } from '@/api';
+import { DEMO_LABELS, DEMO_NOTES, DEMO_NOTES_ORDER } from '@/constants/demo';
 import { requireDataKey } from '@/crypto';
 import { selectActions, useStore } from '@/store';
 import { decryptLabels, decryptNotes } from '@/utils';
@@ -12,6 +13,13 @@ export const useBootstrap = () => {
     const fetchBootstrap = async () => {
       setIsLoading(true);
       try {
+        if (useStore.getState().auth.isDemo) {
+          actions.notes.set(DEMO_NOTES);
+          actions.notesOrder.set(DEMO_NOTES_ORDER);
+          actions.labels.set(DEMO_LABELS);
+          return;
+        }
+
         const response = await bootstrapApi.get();
         const dataKey = requireDataKey();
 

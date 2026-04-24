@@ -29,6 +29,7 @@ export interface Store {
   auth: {
     isAuthenticated: boolean;
     isUnlocked: boolean;
+    isDemo: boolean;
     user: User | null;
     token: string | null;
     encryption: Encryption | null;
@@ -80,6 +81,7 @@ export interface Store {
       login: (data: { token: string; user: User; encryption: Encryption }) => void;
       register: (data: { token: string; user: User; encryption: Encryption }) => void;
       unlock: () => void;
+      enterDemo: () => void;
     };
   };
 }
@@ -98,7 +100,14 @@ export const useStore = create<Store>()(
     filters: { search: '', view: { type: 'notes' } },
     ui: { isEditLabelsMenuOpen: false, isSidebarCollapsed: false, gridColumns: 5 },
     api: { loading: false, error: null },
-    auth: { user: null, token: null, isAuthenticated: false, isUnlocked: false, encryption: null },
+    auth: {
+      user: null,
+      token: null,
+      isAuthenticated: false,
+      isUnlocked: false,
+      isDemo: false,
+      encryption: null,
+    },
     actions: {
       notes: {
         set: (notesMap) => {
@@ -340,6 +349,7 @@ export const useStore = create<Store>()(
               token: null,
               isAuthenticated: false,
               isUnlocked: false,
+              isDemo: false,
               encryption: null,
             },
           });
@@ -352,6 +362,7 @@ export const useStore = create<Store>()(
               encryption: data.encryption,
               isAuthenticated: true,
               isUnlocked: true,
+              isDemo: false,
             },
           });
         },
@@ -363,6 +374,7 @@ export const useStore = create<Store>()(
               encryption: data.encryption,
               isAuthenticated: true,
               isUnlocked: true,
+              isDemo: false,
             },
           });
         },
@@ -373,6 +385,20 @@ export const useStore = create<Store>()(
               isUnlocked: true,
             },
           }));
+        },
+        enterDemo: () => {
+          set({
+            auth: {
+              user: null,
+              token: null,
+              encryption: null,
+              isAuthenticated: true,
+              isUnlocked: true,
+              isDemo: true,
+            },
+            notes: { byId: {}, order: [], heights: {}, active: { id: null, position: null } },
+            labels: { byId: {} },
+          });
         },
       },
     },

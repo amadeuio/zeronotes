@@ -1,6 +1,7 @@
 import logo from '@/assets/logo.png';
 import { Icon, Input } from '@/components';
 import { useAuth } from '@/hooks';
+import { selectActions, useStore } from '@/store';
 import { cn, getErrorMessage } from '@/utils';
 import { useNavigate } from '@tanstack/react-router';
 import type { FormEvent } from 'react';
@@ -10,11 +11,17 @@ import PasswordInput from './PasswordInput';
 
 const Login = () => {
   const { login } = useAuth();
+  const actions = useStore(selectActions);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const handleDemo = () => {
+    actions.auth.enterDemo();
+    navigate({ to: '/' });
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -87,6 +94,22 @@ const Login = () => {
               </span>
             </div>
           </form>
+
+          <div className="flex w-full items-center gap-x-3">
+            <div className="h-px flex-1 bg-white/10" />
+            <span className="text-xs text-white/30">or</span>
+            <div className="h-px flex-1 bg-white/10" />
+          </div>
+
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={handleDemo}
+            disabled={isLoading}
+            className="w-full"
+          >
+            Try demo
+          </Button>
 
           <div className="absolute bottom-6 flex w-full items-center justify-center gap-x-1 text-sm text-white/40">
             <Icon name="lock" size={18} className="text-white/40" />

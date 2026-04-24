@@ -37,10 +37,11 @@ const createStore = (overrides?: Partial<Store> & { gridColumns?: number }): Sto
     api: { loading: false, error: null },
     auth: {
       isAuthenticated: false,
+      isUnlocked: false,
+      isDemo: false,
       user: null,
       token: null,
       encryption: null,
-      isUnlocked: false,
     },
     actions: {} as Store['actions'],
     ...restOverrides,

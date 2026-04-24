@@ -4,23 +4,28 @@ import type { ReactNode } from 'react';
 
 interface ButtonProps {
   variant?: 'primary' | 'secondary';
+  type?: 'submit' | 'button' | 'reset';
   iconName?: string;
   isLoading?: boolean;
   disabled?: boolean;
+  onClick?: () => void;
   children: ReactNode;
   className?: string;
 }
 
 const Button = ({
   variant = 'primary',
+  type = 'submit',
   iconName,
   isLoading = false,
   disabled = false,
+  onClick,
   children,
   className = '',
 }: ButtonProps) => (
   <button
-    type="submit"
+    type={type}
+    onClick={onClick}
     className={cn(
       'text-primary/80 flex w-full cursor-pointer items-center justify-center gap-x-2 rounded-lg p-3 text-sm font-medium transition-colors duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-50',
       variant === 'primary' &&

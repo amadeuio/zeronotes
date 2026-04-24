@@ -1,6 +1,7 @@
 import logo from '@/assets/logo.png';
 import { Icon, Input } from '@/components';
 import { useAuth } from '@/hooks';
+import { selectIsDemo, useStore } from '@/store';
 import { cn, getErrorMessage } from '@/utils';
 import { useNavigate } from '@tanstack/react-router';
 import type { FormEvent } from 'react';
@@ -10,6 +11,7 @@ import PasswordInput from './PasswordInput';
 
 const SignUp = () => {
   const { register } = useAuth();
+  const isDemo = useStore(selectIsDemo);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -46,6 +48,13 @@ const SignUp = () => {
             <img src={logo} alt="Keep logo" className="size-12" />
             <div className="text-[24px]">Zeronotes</div>
           </div>
+          {isDemo && (
+            <div className="flex items-center gap-x-2 rounded-lg border border-amber-500/20 bg-amber-500/8 px-3 py-2 text-xs text-amber-300/80">
+              <Icon name="save" size={14} className="shrink-0 text-amber-400/70" />
+              Your demo notes will be saved to your new account
+            </div>
+          )}
+
           <form className="flex w-full flex-col gap-y-4" onSubmit={handleSubmit}>
             <Input
               placeholder="Name (optional)"
