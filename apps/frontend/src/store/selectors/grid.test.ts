@@ -41,6 +41,7 @@ const createStore = (overrides?: Partial<Store> & { gridColumns?: number }): Sto
       token: null,
       encryption: null,
       isUnlocked: false,
+      isDemoMode: false,
     },
     actions: {} as Store['actions'],
     ...restOverrides,

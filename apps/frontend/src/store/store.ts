@@ -32,6 +32,7 @@ export interface Store {
     user: User | null;
     token: string | null;
     encryption: Encryption | null;
+    isDemoMode: boolean;
   };
   actions: {
     notes: {
@@ -98,7 +99,14 @@ export const useStore = create<Store>()(
     filters: { search: '', view: { type: 'notes' } },
     ui: { isEditLabelsMenuOpen: false, isSidebarCollapsed: false, gridColumns: 5 },
     api: { loading: false, error: null },
-    auth: { user: null, token: null, isAuthenticated: false, isUnlocked: false, encryption: null },
+    auth: {
+      user: null,
+      token: null,
+      isAuthenticated: false,
+      isUnlocked: false,
+      encryption: null,
+      isDemoMode: false,
+    },
     actions: {
       notes: {
         set: (notesMap) => {
@@ -341,10 +349,12 @@ export const useStore = create<Store>()(
               isAuthenticated: false,
               isUnlocked: false,
               encryption: null,
+              isDemoMode: false,
             },
           });
         },
         login: (data) => {
+          const isDemoMode = data.user.email === 'demo@zeronotes.app';
           set({
             auth: {
               token: data.token,
@@ -352,19 +362,21 @@ export const useStore = create<Store>()(
               encryption: data.encryption,
               isAuthenticated: true,
               isUnlocked: true,
+              isDemoMode,
             },
           });
         },
         register: (data) => {
-          set({
+          set((state) => ({
             auth: {
+              ...state.auth,
               token: data.token,
               user: data.user,
               encryption: data.encryption,
               isAuthenticated: true,
               isUnlocked: true,
             },
-          });
+          }));
         },
         unlock: () => {
           set((state) => ({

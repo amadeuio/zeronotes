@@ -1,4 +1,5 @@
 import { EditLabelsModal, Main, Navbar, NoteActive, Sidebar, Spinner } from '@/components';
+import { DemoBanner } from '@/components/common';
 import { useBootstrap, useMobile } from '@/hooks';
 import { selectActions, selectActiveNoteId, selectUi, useStore } from '@/store';
 import { cn } from '@/utils';
@@ -13,6 +14,7 @@ const App = () => {
   return (
     <div className="flex h-screen flex-col">
       <Navbar />
+      <DemoBanner />
       {isLoading ? (
         <Spinner className="mx-auto my-auto" size={40} />
       ) : (

@@ -10,6 +10,7 @@
     "start": "node dist/server.js",
     "dev": "nodemon --exec ts-node src/server.ts",
     "migrate": "ts-node db/migrate.ts migrate",
+    "seed:demo": "ts-node db/seed-demo.ts",
     "format": "prettier --write \"**/*.{ts,js,json,md}\"",
     "check": "tsc --noEmit",
     "test": "dotenv -e .env.test -- jest",

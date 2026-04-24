@@ -9,6 +9,8 @@ interface ButtonProps {
   disabled?: boolean;
   children: ReactNode;
   className?: string;
+  type?: 'button' | 'submit' | 'reset';
+  onClick?: () => void;
 }
 
 const Button = ({
@@ -18,9 +20,12 @@ const Button = ({
   disabled = false,
   children,
   className = '',
+  type = 'submit',
+  onClick,
 }: ButtonProps) => (
   <button
-    type="submit"
+    type={type}
+    onClick={onClick}
     className={cn(
       'text-primary/80 flex w-full cursor-pointer items-center justify-center gap-x-2 rounded-lg p-3 text-sm font-medium transition-colors duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-50',
       variant === 'primary' &&

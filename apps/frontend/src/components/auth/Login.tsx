@@ -37,6 +37,20 @@ const Login = () => {
     }
   };
 
+  const handleDemoLogin = async () => {
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      await login({ email: 'demo@zeronotes.app', password: 'demo123demo' });
+      navigate({ to: '/' });
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="bg-base relative flex h-screen flex-col items-center justify-center">
       <div className="flex flex-col items-center gap-y-4">
@@ -65,6 +79,19 @@ const Login = () => {
             )}
             <Button isLoading={isLoading} className="mt-2">
               Login
+            </Button>
+            <div className="relative flex items-center gap-x-2">
+              <div className="h-px flex-1 bg-white/10" />
+              <span className="text-xs text-white/30">OR</span>
+              <div className="h-px flex-1 bg-white/10" />
+            </div>
+            <Button
+              type="button"
+              onClick={handleDemoLogin}
+              isLoading={isLoading}
+              className="bg-white/10 hover:bg-white/20"
+            >
+              Try Demo
             </Button>
             <div
               onClick={() => {
