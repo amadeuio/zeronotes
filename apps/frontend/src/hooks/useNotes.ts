@@ -106,6 +106,28 @@ export const useNotes = () => {
     await notesApi.reorderNotes({ noteIds: notesOrder });
   };
 
+  const uploadAllFromStore = async () => {
+    const allNotes = Object.values(useStore.getState().notes.byId);
+    const dataKey = requireDataKey();
+
+    await Promise.all(
+      allNotes
+        .filter((note) => !note.isTrashed)
+        .map(async (note) => {
+          const encryptedPayload = {
+            id: note.id,
+            title: await encryptString(note.title, dataKey),
+            content: await encryptString(note.content, dataKey),
+            colorId: note.colorId,
+            isPinned: note.isPinned,
+            isArchived: note.isArchived,
+            labelIds: note.labelIds,
+          };
+          await notesApi.create(encryptedPayload);
+        }),
+    );
+  };
+
   return {
     create,
     update,
@@ -118,5 +140,6 @@ export const useNotes = () => {
     removeLabel,
     createLabelAndAddToNote,
     reorderNotes,
+    uploadAllFromStore,
   };
 };

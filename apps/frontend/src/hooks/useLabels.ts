@@ -58,5 +58,20 @@ export const useLabels = () => {
     await labelsApi.create(encryptedLabel);
   };
 
-  return { create, update, remove, createAndCallAction };
+  const uploadAllFromStore = async () => {
+    const allLabels = Object.values(useStore.getState().labels.byId);
+    const dataKey = requireDataKey();
+
+    await Promise.all(
+      allLabels.map(async (label) => {
+        const encryptedLabel = {
+          id: label.id,
+          name: await encryptString(label.name, dataKey),
+        };
+        await labelsApi.create(encryptedLabel);
+      }),
+    );
+  };
+
+  return { create, update, remove, createAndCallAction, uploadAllFromStore };
 };

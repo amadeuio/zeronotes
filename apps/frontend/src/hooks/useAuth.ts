@@ -1,11 +1,15 @@
-import { authApi, labelsApi, notesApi } from '@/api';
-import { createEncryption, deriveKEK, encryptString, setDataKey, unwrapDataKey } from '@/crypto';
+import { authApi } from '@/api';
+import { createEncryption, deriveKEK, setDataKey, unwrapDataKey } from '@/crypto';
 import { selectActions, selectAuth, useStore } from '@/store';
 import type { ErrorResponse, LoginBody, RegisterBody } from '@zeronotes/shared';
+import { useLabels } from './useLabels';
+import { useNotes } from './useNotes';
 
 export const useAuth = () => {
   const actions = useStore(selectActions);
   const auth = useStore(selectAuth);
+  const { uploadAllFromStore: uploadAllNotes } = useNotes();
+  const { uploadAllFromStore: uploadAllLabels } = useLabels();
 
   const login = async (credentials: LoginBody) => {
     const response = await authApi.login(credentials);
@@ -28,9 +32,8 @@ export const useAuth = () => {
   };
 
   const register = async (credentials: Omit<RegisterBody, 'encryption'>) => {
-    const wasDemo = useStore.getState().auth.isDemo;
-    const demoNotes = wasDemo ? Object.values(useStore.getState().notes.byId) : [];
-    const demoLabels = wasDemo ? Object.values(useStore.getState().labels.byId) : [];
+    const currentLabels = Object.values(useStore.getState().labels.byId);
+    const currentNotes = Object.values(useStore.getState().notes.byId);
 
     const { encryption, dataKey } = await createEncryption(credentials.password);
     const response = await authApi.register({ ...credentials, encryption });
@@ -44,33 +47,12 @@ export const useAuth = () => {
       encryption: response.encryption,
     });
 
-    if (wasDemo) {
-      await Promise.all(
-        demoLabels.map(async (label) => {
-          const encryptedLabel = {
-            id: label.id,
-            name: await encryptString(label.name, dataKey),
-          };
-          await labelsApi.create(encryptedLabel);
-        }),
-      );
+    if (currentLabels.length > 0) {
+      await uploadAllLabels();
+    }
 
-      await Promise.all(
-        demoNotes
-          .filter((note) => !note.isTrashed)
-          .map(async (note) => {
-            const encryptedPayload = {
-              id: note.id,
-              title: await encryptString(note.title, dataKey),
-              content: await encryptString(note.content, dataKey),
-              colorId: note.colorId,
-              isPinned: note.isPinned,
-              isArchived: note.isArchived,
-              labelIds: note.labelIds,
-            };
-            await notesApi.create(encryptedPayload);
-          }),
-      );
+    if (currentNotes.length > 0) {
+      await uploadAllNotes();
     }
   };
 
