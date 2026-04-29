@@ -1,12 +1,14 @@
 import { Icon, Spinner } from '@/components/common';
 import { cn } from '@/utils';
-import type { ReactNode } from 'react';
+import type { MouseEventHandler, ReactNode } from 'react';
 
 interface ButtonProps {
   variant?: 'primary' | 'secondary';
   iconName?: string;
   isLoading?: boolean;
   disabled?: boolean;
+  type?: 'submit' | 'button';
+  onClick?: MouseEventHandler<HTMLButtonElement>;
   children: ReactNode;
   className?: string;
 }
@@ -16,11 +18,14 @@ const Button = ({
   iconName,
   isLoading = false,
   disabled = false,
+  type = 'submit',
+  onClick,
   children,
   className = '',
 }: ButtonProps) => (
   <button
-    type="submit"
+    type={type}
+    onClick={onClick}
     className={cn(
       'text-primary/80 flex w-full cursor-pointer items-center justify-center gap-x-2 rounded-lg p-3 text-sm font-medium transition-colors duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-50',
       variant === 'primary' &&

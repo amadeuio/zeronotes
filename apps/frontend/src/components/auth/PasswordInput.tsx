@@ -10,7 +10,13 @@ interface PasswordInputProps {
   autoFocus?: boolean;
 }
 
-const PasswordInput = ({ placeholder, value, onChange, disabled, autoFocus }: PasswordInputProps) => {
+const PasswordInput = ({
+  placeholder,
+  value,
+  onChange,
+  disabled,
+  autoFocus,
+}: PasswordInputProps) => {
   const [show, setShow] = useState(false);
 
   return (

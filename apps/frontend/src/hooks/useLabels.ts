@@ -1,16 +1,19 @@
 import { labelsApi } from '@/api';
 import { encryptString, requireDataKey } from '@/crypto';
-import { selectActions, useStore } from '@/store';
+import { selectActions, selectIsDemo, useStore } from '@/store';
 import type { Label } from '@zeronotes/shared';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useLabels = () => {
   const actions = useStore(selectActions);
+  const isDemo = useStore(selectIsDemo);
 
   const create = async (name: string) => {
     const id = uuidv4();
     const newLabel = { id, name };
     actions.labels.create(newLabel);
+
+    if (isDemo) return;
 
     const dataKey = requireDataKey();
     const encryptedLabel = {
@@ -24,6 +27,8 @@ export const useLabels = () => {
   const update = async (id: string, name: string) => {
     actions.labels.update(id, { name });
 
+    if (isDemo) return;
+
     const dataKey = requireDataKey();
     const encryptedLabel = {
       name: await encryptString(name, dataKey),
@@ -34,6 +39,7 @@ export const useLabels = () => {
 
   const remove = async (id: string) => {
     actions.labels.delete(id);
+    if (isDemo) return;
     await labelsApi.delete(id);
   };
 
@@ -42,6 +48,8 @@ export const useLabels = () => {
     const newLabel = { id, name };
     action(newLabel);
     actions.labels.create(newLabel);
+
+    if (isDemo) return;
 
     const dataKey = requireDataKey();
     const encryptedLabel = {

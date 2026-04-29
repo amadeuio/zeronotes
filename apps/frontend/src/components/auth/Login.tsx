@@ -66,6 +66,19 @@ const Login = () => {
             <Button isLoading={isLoading} className="mt-2">
               Login
             </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              iconName="play_circle"
+              disabled={isLoading}
+              onClick={() => {
+                if (isLoading) return;
+                setError(null);
+                navigate({ to: '/demo' });
+              }}
+            >
+              Try Demo
+            </Button>
             <div
               onClick={() => {
                 if (isLoading) return;

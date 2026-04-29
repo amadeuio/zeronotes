@@ -1,5 +1,6 @@
 import { bootstrapApi } from '@/api';
 import { requireDataKey } from '@/crypto';
+import { loadDemoIntoStore } from '@/data/loadDemoIntoStore';
 import { selectActions, useStore } from '@/store';
 import { decryptLabels, decryptNotes } from '@/utils';
 import { useEffect, useState } from 'react';
@@ -9,6 +10,12 @@ export const useBootstrap = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (window.location.pathname === '/demo') {
+      loadDemoIntoStore(actions);
+      setIsLoading(false);
+      return;
+    }
+
     const fetchBootstrap = async () => {
       setIsLoading(true);
       try {

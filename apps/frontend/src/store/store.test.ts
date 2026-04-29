@@ -33,8 +33,16 @@ beforeEach(() => {
       isEditLabelsMenuOpen: false,
       isSidebarCollapsed: false,
       gridColumns: 5,
+      isDemo: false,
     },
     api: { loading: false, error: null },
+    auth: {
+      user: null,
+      token: null,
+      isAuthenticated: false,
+      isUnlocked: false,
+      encryption: null,
+    },
   });
 });
 
