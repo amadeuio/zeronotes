@@ -4,7 +4,7 @@ export const notes: Note[] = [
   {
     id: '1',
     title: '👋 Welcome to Zeronotes',
-    content: 'A minimal & fast notes app with React.',
+    content: 'An end-to-end encrypted notes app.',
     colorId: 'default',
     labelIds: [],
     isArchived: false,
@@ -94,7 +94,7 @@ export const notes: Note[] = [
   },
   {
     id: '10',
-    title: '🌊 Minimalism',
+    title: 'Minimalism',
     content: "The best code is the one you don't have to write.",
     colorId: 'chalk',
     labelIds: ['1'],
