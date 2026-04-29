@@ -1,6 +1,6 @@
 import { bootstrapApi } from '@/api';
-import { DEMO_LABELS, DEMO_NOTES, DEMO_NOTES_ORDER } from '@/constants/demo';
 import { requireDataKey } from '@/crypto';
+import { getDemoBootstrapData } from '@/data';
 import { selectActions, useStore } from '@/store';
 import { decryptLabels, decryptNotes } from '@/utils';
 import { useEffect, useState } from 'react';
@@ -14,9 +14,10 @@ export const useBootstrap = () => {
       setIsLoading(true);
       try {
         if (useStore.getState().auth.isDemo) {
-          actions.notes.set(DEMO_NOTES);
-          actions.notesOrder.set(DEMO_NOTES_ORDER);
-          actions.labels.set(DEMO_LABELS);
+          const { labelsById, notesById, notesOrder } = getDemoBootstrapData();
+          actions.notes.set(notesById);
+          actions.notesOrder.set(notesOrder);
+          actions.labels.set(labelsById);
           return;
         }
 
