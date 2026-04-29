@@ -33,6 +33,7 @@ const createStore = (overrides?: Partial<Store> & { gridColumns?: number }): Sto
       isEditLabelsMenuOpen: false,
       isSidebarCollapsed: false,
       gridColumns,
+      isDemo: false,
     },
     api: { loading: false, error: null },
     auth: {
