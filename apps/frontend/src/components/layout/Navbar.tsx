@@ -1,7 +1,14 @@
 import logo from '@/assets/logo.png';
 import { Icon, IconButton, Input, Menu, Spinner } from '@/components';
 import { useAuth, useClickOutside } from '@/hooks';
-import { selectActions, selectApiStatus, selectFiltersSearch, selectUser, useStore } from '@/store';
+import {
+  selectActions,
+  selectApiStatus,
+  selectFiltersSearch,
+  selectIsDemo,
+  selectUser,
+  useStore,
+} from '@/store';
 import { cn, getUserInitials } from '@/utils';
 import { useNavigate } from '@tanstack/react-router';
 import { useRef, useState } from 'react';
@@ -68,7 +75,10 @@ const SyncStatus = ({ loading, error }: SyncStatusProps) => {
 const User = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const user = useStore(selectUser);
+  const actions = useStore(selectActions);
+  const isDemo = useStore(selectIsDemo);
+  const storeUser = useStore(selectUser);
+  const user = isDemo ? { name: 'Demo', email: 'demo@zeronotes.local' } : storeUser;
   const initials = user ? getUserInitials(user.name, user.email) : 'N/A';
   const elementRef = useRef<HTMLDivElement>(null);
   useClickOutside({ elementRef, onClickOutside: () => setIsMenuOpen(false) });
@@ -104,13 +114,21 @@ const User = () => {
         <Menu
           className="absolute top-full right-0 z-30 translate-y-1"
           items={[
-            {
-              label: 'Log out',
-              action: () => {
-                logout();
-                navigate({ to: '/login' });
-              },
-            },
+            isDemo
+              ? {
+                  label: 'Exit Demo',
+                  action: () => {
+                    actions.ui.exitDemo();
+                    navigate({ to: '/login' });
+                  },
+                }
+              : {
+                  label: 'Log out',
+                  action: () => {
+                    logout();
+                    navigate({ to: '/login' });
+                  },
+                },
           ]}
         />
       )}

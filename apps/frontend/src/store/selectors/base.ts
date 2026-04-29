@@ -16,3 +16,4 @@ export const selectGridColumns = (state: Store) => state.ui.gridColumns;
 export const selectApiStatus = (state: Store) => state.api;
 export const selectAuth = (state: Store) => state.auth;
 export const selectUser = (state: Store) => state.auth.user;
+export const selectIsDemo = (state: Store) => state.ui.isDemo;

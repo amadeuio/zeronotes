@@ -21,6 +21,7 @@ export interface Store {
     isEditLabelsMenuOpen: boolean;
     isSidebarCollapsed: boolean;
     gridColumns: number;
+    isDemo: boolean;
   };
   api: {
     loading: boolean;
@@ -70,6 +71,8 @@ export interface Store {
       toggleSidebar: () => void;
       closeSidebar: () => void;
       setGridColumns: (columns: number) => void;
+      setIsDemo: (isDemo: boolean) => void;
+      exitDemo: () => void;
     };
     api: {
       set: (status: Partial<Store['api']>) => void;
@@ -96,7 +99,12 @@ export const useStore = create<Store>()(
       byId: {},
     },
     filters: { search: '', view: { type: 'notes' } },
-    ui: { isEditLabelsMenuOpen: false, isSidebarCollapsed: false, gridColumns: 5 },
+    ui: {
+      isEditLabelsMenuOpen: false,
+      isSidebarCollapsed: false,
+      gridColumns: 5,
+      isDemo: false,
+    },
     api: { loading: false, error: null },
     auth: { user: null, token: null, isAuthenticated: false, isUnlocked: false, encryption: null },
     actions: {
@@ -318,6 +326,22 @@ export const useStore = create<Store>()(
         },
         setGridColumns: (columns) => {
           set((state) => ({ ui: { ...state.ui, gridColumns: columns } }));
+        },
+        setIsDemo: (isDemo) => {
+          set((state) => ({ ui: { ...state.ui, isDemo } }));
+        },
+        exitDemo: () => {
+          set((state) => ({
+            ui: { ...state.ui, isDemo: false },
+            notes: {
+              byId: {},
+              order: [],
+              heights: {},
+              active: { id: null, position: null },
+            },
+            labels: { byId: {} },
+            filters: { search: '', view: { type: 'notes' } },
+          }));
         },
       },
       api: {
