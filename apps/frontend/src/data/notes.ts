@@ -25,7 +25,7 @@ export const notes: Note[] = [
   {
     id: '3',
     title: 'Tech Stack',
-    content: '- React\n- TypeScript\n- Zustand\n- Tailwind CSS',
+    content: '- React\n- Node.js\n- Express\n- Web Crypto API',
     colorId: 'default',
     labelIds: ['1'],
     isArchived: false,
