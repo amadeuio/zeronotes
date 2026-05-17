@@ -19,6 +19,7 @@ export const loadDemoIntoStore = (actions: Store['actions']) => {
   );
 
   actions.ui.setIsDemo(true);
+  actions.api.set({ loading: false, error: null });
   actions.notes.set(notesById);
   actions.notesOrder.set(notes.map((n) => n.id));
   actions.labels.set(labelsById);

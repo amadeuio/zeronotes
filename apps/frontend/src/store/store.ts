@@ -356,7 +356,7 @@ export const useStore = create<Store>()(
         clear: () => {
           set({
             api: {
-              loading: true,
+              loading: false,
               error: null,
             },
             auth: {
