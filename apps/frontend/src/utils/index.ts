@@ -10,3 +10,4 @@ export {
 } from './grid';
 export { decryptLabels } from './labels';
 export { decryptNotes, filterNote, getColorValue, mapNoteToDisplay } from './notes';
+export { buildEncryptedWelcomeSeed } from './seed';
