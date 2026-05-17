@@ -1,6 +1,7 @@
-import { authApi } from '@/api';
+import { authApi, seedApi } from '@/api';
 import { createEncryption, deriveKEK, setDataKey, unwrapDataKey } from '@/crypto';
 import { selectActions, selectAuth, useStore } from '@/store';
+import { buildEncryptedWelcomeSeed } from '@/utils/seed';
 import type { ErrorResponse, LoginBody, RegisterBody } from '@zeronotes/shared';
 
 export const useAuth = () => {
@@ -39,6 +40,8 @@ export const useAuth = () => {
       user: response.user,
       encryption: response.encryption,
     });
+
+    await seedApi.create(await buildEncryptedWelcomeSeed(dataKey));
   };
 
   const unlock = async (password: string) => {
