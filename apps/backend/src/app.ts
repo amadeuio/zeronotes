@@ -4,6 +4,7 @@ import { authRouter } from './domain/auth';
 import { bootstrapRouter } from './domain/bootstrap';
 import { labelsRouter } from './domain/labels';
 import { notesRouter } from './domain/notes';
+import { seedRouter } from './domain/seed';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { rateLimit } from './middleware/rateLimit.middleware';
 
@@ -22,6 +23,7 @@ export const createApp = () => {
   app.use('/api/auth', authRouter);
   app.use('/api/notes', notesRouter);
   app.use('/api/labels', labelsRouter);
+  app.use('/api/seed', seedRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
