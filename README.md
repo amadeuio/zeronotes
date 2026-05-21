@@ -1,8 +1,6 @@
 # Zeronotes
 
-A full-stack notes app inspired by Google Keep rebuilt from scratch with a focus on security, performance, and engineering rigour.
-
-> **What makes this different:** the drag-and-drop is custom-built with no libraries, and the encryption is a direct Web Crypto API implementation, not a wrapper around someone else's abstraction.
+A full-stack notes app inspired by Google Keep, rebuilt from scratch — custom drag-and-drop engine, end-to-end encryption, no UI libraries.
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)
@@ -25,8 +23,6 @@ Zeronotes is a drag-and-drop notes app where your data is encrypted before it ev
 ## Technical highlights
 
 ### Custom drag-and-drop engine
-
-Most projects reach for `react-beautiful-dnd` or `dnd-kit`. I didn't.
 
 The engine is built on pointer events, CSS transforms, and a position-tracking algorithm that handles reflow in a masonry grid. It matches Google Keep's behaviour (items shift smoothly as you drag, snapping into place on release) without a single drag-and-drop dependency.
 
