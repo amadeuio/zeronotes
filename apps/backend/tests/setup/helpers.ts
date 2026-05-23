@@ -73,7 +73,7 @@ export const makeTestHelpers = (api: SuperTest<Test>) => {
     corruptTokenSignature: (token: string): string => {
       const parts = token.split('.');
       const sig = parts[2];
-      const modified = sig.replace(/.$/, (c) => (c === 'a' ? 'b' : 'a'));
+      const modified = (sig[0] === 'A' ? 'B' : 'A') + sig.slice(1);
       return `${parts[0]}.${parts[1]}.${modified}`;
     },
   };
