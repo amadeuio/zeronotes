@@ -1,13 +1,11 @@
-# Zeronotes
-
-A full-stack notes app inspired by Google Keep, rebuilt from scratch — custom drag-and-drop engine, end-to-end encryption, no UI libraries. [👉 Demo](https://zeronotes.dev) 
-
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white)
 
----
+# Zeronotes
+
+A full-stack notes app inspired by Google Keep, rebuilt from scratch — custom drag-and-drop engine, end-to-end encryption, no UI libraries. [👉 Demo](https://zeronotes.dev)
 
 ![Zeronotes screenshot](apps/frontend/public/screenshots/screenshot.png)
 
