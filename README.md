@@ -13,7 +13,7 @@ A full-stack notes app inspired by Google Keep, rebuilt from scratch — custom 
 
 Zeronotes is a drag-and-drop notes app where your data is encrypted before it ever leaves your device. The server stores ciphertext: it has no access to your notes.
 
-- Create, edit, pin, and organise notes in a masonry grid
+- Create, edit, pin, filter and organise notes in a masonry grid
 - Drag and drop to reorder (smooth, physics-feel, no jank)
 - Notes are end-to-end encrypted: only you can read them
 - Full authentication flow with JWT-based auth
