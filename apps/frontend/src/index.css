@@ -9,7 +9,8 @@
 @font-face {
   font-family: 'Material Symbols Outlined';
   font-style: normal;
-  src: url('./assets/fonts/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].woff2') format('woff2');
+  font-display: block;
+  src: url('/fonts/material-symbols-outlined.woff2') format('woff2');
 }
 
 @layer base {
